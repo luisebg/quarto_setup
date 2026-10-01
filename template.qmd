@@ -1,0 +1,37 @@
+---
+title: "[Course Name]: Homework [Number]"
+author: "Beltrán González Luis Enrique"
+date: "today"
+editor: source
+theme: cosmo
+format:
+  pdf:
+    keep-tex: true
+    geometry:
+      - top=10mm
+      - bottom=10mm
+      - left=15mm
+      - right=15mm
+---
+
+```{css, echo = FALSE}
+p {
+  text-align: justify !important
+}
+```
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(tidyverse)
+library(rio)
+library(haven)
+library(knitr)
+library(DT)
+library(huxtable)
+library(lmtest)
+library(sandwich)
+```
+
+# Title
+Description and equations
+$$
+P\timesQ-w\timesL
+$$
