@@ -13,7 +13,10 @@
         "ms-python.python",
         "ms-toolsai.jupyter",
         "mechatroner.rainbow-csv"
-      ]
+      ],
+      "settings": {
+        "quarto.render.onSave": true
+      }
     }
   }
 }
