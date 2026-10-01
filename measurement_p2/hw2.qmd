@@ -28,8 +28,17 @@ library(DT)
 library(huxtable)
 library(lmtest)
 library(sandwich)
+library(here)
 ```
 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+# Load data civ88-08_nutri.dta and civ88-08_mortality.dta
+civ_nutri <- read_dta(here::here("measurement_p2/data/civ88-08_nutri.dta"))
+civ_mortality <- read_dta(here::here("measurement_p2/data/civ88_mort.dta"))
+# save as csv
+write_csv(civ_nutri, "measurement_p2/data/civ88-08_nutri.csv")
+write_csv(civ_mortality, "measurement_p2/data/civ88-08_mortality.csv")
+```
 # 1 Child Mortality in Côte d'Ivoire (6 points)
 
 ## 1. Sampling (1 points)
