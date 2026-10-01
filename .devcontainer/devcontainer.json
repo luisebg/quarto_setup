@@ -15,5 +15,6 @@
         "exercises/computation.qmd"
       ]
     }
-  }
+  },
+  "postCreateCommand": "Rscript -e 'install.packages(c(\"tidyverse\", \"rio\", \"haven\", \"knitr\", \"DT\", \"huxtable\", \"lmtest\", \"sandwich\"), repos=\"https://cloud.r-project.org\")'"
 }
