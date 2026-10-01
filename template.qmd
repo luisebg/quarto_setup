@@ -1,5 +1,5 @@
 ---
-title: "[Course Name]: Homework [Number]"
+title: "[Course Name]: Homework 2"
 author: "Beltrán González Luis Enrique"
 date: "today"
 editor: source
@@ -14,7 +14,7 @@ format:
       - right=15mm
 ---
 
-```{css, echo = FALSE}
+```{css, echo=FALSE}
 p {
   text-align: justify !important
 }
@@ -33,5 +33,7 @@ library(sandwich)
 # Title
 Description and equations
 $$
-P\timesQ-w\timesL
+P \times Q-w \times L
 $$
+
+I am adding more content and more equations to my document. I can also add inline equations like $P \times Q-w \times L$ and more text. And more text.
