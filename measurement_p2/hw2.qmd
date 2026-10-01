@@ -1,0 +1,125 @@
+---
+title: "Measurement: Homework 2"
+author: "Beltrán González Luis Enrique"
+date: "today"
+editor: source
+theme: cosmo
+format:
+  pdf:
+    keep-tex: true
+    geometry:
+      - top=10mm
+      - bottom=10mm
+      - left=15mm
+      - right=15mm
+---
+
+```{css, echo=FALSE}
+p {
+  text-align: justify !important
+}
+```
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(tidyverse)
+library(rio)
+library(haven)
+library(knitr)
+library(DT)
+library(huxtable)
+library(lmtest)
+library(sandwich)
+```
+
+# 1 Child Mortality in Côte d'Ivoire (6 points)
+
+## 1. Sampling (1 points)
+
+**(a) How should you transform pweight to obtain a weight that allows you to estimate statistics on the population of women in Cote d'Ivoire? Explain your computations.**[cite: 29]
+
+[Your answer here]
+
+
+## 2. Measurement of under 5 mortality rate (5 points)
+
+**(a) What method can be deemed preferable and why? Give the pros and cons of both methods.**[cite: 29]
+*(Methods: Either take the population of children born 0 to 4 years ago and divide the number of deaths by the number of children; Or take the population of children born 5 to 9 years ago and divide the number of deaths between 0 and 4 years of age by the number of children.)*[cite: 29]
+
+[Your answer here]
+
+
+**(b) Child mortality rates in Côte d'Ivoire.**[cite: 29]
+
+**i. Compute mortality rates with both methods for boys and girls separately (don't forget the weights).**[cite: 29] 
+*(Hint: you can specify your model as follows: $lm(y \sim x, \text{data}, \text{weights} = \text{weight\_variable})$)*[cite: 29]
+
+[Your answer here]
+
+
+**ii. Compare and comment.**[cite: 29]
+
+[Your answer here]
+
+
+
+# 2 Health status, nutritional status and wealth in Côte d'Ivoire (7 points)
+
+*Stunted children are defined as children showing a height stature that is lower than the median of the reference population by 2 standard deviations measured on the same reference population. That is children such as the z-score is lower than -2 ($z \le -2$), where the z-score is given by the following formula:*[cite: 30]
+
+$$Z = \frac{\text{height} - \text{WHOMedian}(\text{sex}, \text{age})}{\text{WHOstdev}(\text{sex}, \text{age})}$$[cite: 30]
+
+## 1. Weight Unit Correction
+
+*In 2008, the weight could be measured in either kilograms or hectograms. However, the unit was not systematically reported. It was therefore assumed that all the weights were reported in kilograms.*[cite: 30]
+
+**(a) Derive an expression for the sample mean weight in this context, and show that, if we knew just one parameter, we could obtain a non-biased estimate of the mean weight despite the hectogram issue. (.5 point)**[cite: 30]
+
+[Your answer here]
+
+
+**(b) Come up with an empirical criterion to identify hectogram mistakes, and a graphical way to show the 2008 weight distribution, before and after correcting for mistakes, compared with the 1988 and 1993 weight distributions. (1 point)**[cite: 30]
+
+[Your answer here]
+
+
+## 2. Z-Score Computation
+
+**Using the variables medheight and stdheight, compute each child's z-score. (.5 point)**[cite: 30]
+
+[Your answer here]
+
+
+## 3. Height Stature over time and across regions (3 points)
+
+**(a) Estimate the stunting rate for 2-4 years old children over time in the North, in the South, and at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**[cite: 30]
+
+[Your answer here]
+
+
+**(b) Estimate the stunting rate for 2-4 years old children over time for boys and for girls at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**[cite: 30]
+
+[Your answer here]
+
+
+## 4. Height Stature and poverty (2 points)
+
+**Here, one would like to study how the gradient of the number of stunted children aged 2-4 years, and of household consumption per capita, as well as the relationship between the two, have changed over time.**[cite: 30]
+**Find a graphical or regression framework to represent this (many options are possible). Comment on your results and their limits.**[cite: 30]
+
+[Your answer here]
+
+
+
+# 3 A meaningful table (6 pts)
+
+**Construct a small statistical table showing a meaningful and policy relevant social fact about migration in the world. You may focus, or not, on a given region or country of origin, or on a particular subgroup of the population (children, etc.) A combination of originality, policy relevance and statistical accuracy will be very much appreciated. The table should fit in the top half of a page. It should have the attributes of a proper research-paper table: title, notes, etc. Table notes should indicate the source of data, the coverage (countries and population), the definition and units of variables and any other kind of information that is needed to read and understand the table. The bottom half of the page should be dedicated to a brief text, commenting upon the social fact that the table reveals.**[cite: 31]
+
+[Your table and text here]
+
+
+
+# Appendix: R Script
+
+*Please do not show your R script before every question, but put your entire R script at the end of the homework.*[cite: 29]
+
+```{r, eval=FALSE}
+# Place your complete, compiled R script here
