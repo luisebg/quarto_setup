@@ -1,6 +1,6 @@
 {
-  "name": "Policy & Spatial Data Environment",
-  "image": "ghcr.io/rocker-org/devcontainers/geospatial:4",
+  "name": "Econometrics Environment",
+  "image": "ghcr.io/rocker-org/devcontainer-images/tidyverse:latest",
   "features": {
     "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {},
     "ghcr.io/devcontainers/features/python:1": {}
