@@ -1,5 +1,5 @@
 {
-  "name": "Econometrics Environment",
+  "name": "Quarto",
   "image": "ghcr.io/rocker-org/devcontainer-images/tidyverse:latest",
   "features": {
     "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {},
