@@ -1,0 +1,19 @@
+{
+  "name": "Policy & Spatial Data Environment",
+  "image": "ghcr.io/rocker-org/devcontainer-images/geospatial:latest",
+  "features": {
+    "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "quarto.quarto",
+        "REditorSupport.r",
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "mechatroner.rainbow-csv"
+      ]
+    }
+  }
+}
