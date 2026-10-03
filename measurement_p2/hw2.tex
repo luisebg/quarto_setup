@@ -66,6 +66,46 @@
 \fi
 \makeatother
 
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 
 \usepackage{longtable,booktabs,array}
 \newcounter{none} % for unnumbered tables
@@ -108,6 +148,26 @@
  
 
 
+\usepackage{array}
+\providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
+\providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
+\providecommand{\huxtpad}[1]{\rule{0pt}{#1}}
+\providecommand{\huxbpad}[1]{\rule[-#1]{0pt}{#1}}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage[normalem]{ulem}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{calc}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage{wrapfig}
+\usepackage{adjustbox}
+\usepackage{hyperref}
 \KOMAoption{captions}{tableheading}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
@@ -170,7 +230,7 @@
 
 \title{Measurement: Homework 2}
 \author{Beltrán González Luis Enrique}
-\date{2026-10-01}
+\date{2026-10-03}
 \begin{document}
 \maketitle
 
@@ -184,7 +244,151 @@ points)}\label{child-mortality-in-cuxf4te-divoire-6-points}
 allows you to estimate statistics on the population of women in Cote
 d'Ivoire? Explain your computations.}{[}cite: 29{]}
 
-{[}Your answer here{]}
+I can use the pweight column to balance the class distribution of the
+sample to match the population distribution. The \texttt{pweight} column
+contains sample weights that modify the contribution of each observation
+to the overall statistics. It works as a frequency multiplier, where
+each observation is counted as if it were \texttt{pweight} number of
+observations. In practice, R can use the pweight column to compute
+weighted statistics, such as means and proportions by using the
+\texttt{weights} argument in functions like \texttt{lm()} or
+\texttt{survey::svydesign()}. Internally, weighted functions such as
+weighted means and lm will multiply each observation by its
+corresponding weight. For example a weighted mean will be computed using
+equation Equation~\ref{eq-weighted_mean}, and weighted linear regression
+will minimize the weighted sum of squared residuals, as shown in
+equation Equation~\ref{eq-weighted_lm}.
+
+\begin{equation}\protect\phantomsection\label{eq-weighted_mean}{
+\bar{x}_w = \frac{\sum_{i=1}^{n} w_i x_i}{\sum_{i=1}^{n} w_i}
+}\end{equation}
+
+\begin{equation}\protect\phantomsection\label{eq-weighted_lm}{
+\sum_{i=1}^{n} w_i (y_i - \hat{y}_i)^2
+}\end{equation}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Method 1}
+\CommentTok{\# Boys}
+\NormalTok{model\_1\_boys }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
+\NormalTok{  (dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(boys\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
+  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ boys\_l5}
+\NormalTok{)}
+
+\CommentTok{\# Girls}
+\NormalTok{model\_1\_girls }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
+\NormalTok{  (dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(girls\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
+  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ girls\_l5}
+\NormalTok{)}
+
+\CommentTok{\# Method 2}
+\CommentTok{\# Boys}
+\NormalTok{model\_2\_boys }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
+\NormalTok{  (dboys\_u5 }\SpecialCharTok{{-}}\NormalTok{ dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{((boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
+  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5)}
+\NormalTok{)}
+
+\CommentTok{\# Girls}
+\NormalTok{model\_2\_girls }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
+\NormalTok{  (dgirls\_u5 }\SpecialCharTok{{-}}\NormalTok{ dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
+  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{((girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
+  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5)}
+\NormalTok{)}
+
+\NormalTok{outreg }\OtherTok{\textless{}{-}}\FunctionTok{huxreg}\NormalTok{(}
+  \StringTok{\textasciigrave{}}\AttributeTok{M1 (Boys)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_1\_boys,}
+  \StringTok{\textasciigrave{}}\AttributeTok{M1 (Girls)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_1\_girls,}
+  \StringTok{\textasciigrave{}}\AttributeTok{M2 (Boys)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_2\_boys,}
+  \StringTok{\textasciigrave{}}\AttributeTok{M2 (Girls)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_2\_girls,}
+  \AttributeTok{coefs =} \FunctionTok{c}\NormalTok{(}\StringTok{"Mortality rate"} \OtherTok{=} \StringTok{"(Intercept)"}\NormalTok{),}
+  \AttributeTok{error\_format =} \StringTok{"(\{std.error\})"}\NormalTok{,}
+  \AttributeTok{error\_pos =} \StringTok{"below"}\NormalTok{,}
+  \AttributeTok{align =} \StringTok{"c"}\NormalTok{,}
+  \AttributeTok{statistics =} \FunctionTok{c}\NormalTok{(}\AttributeTok{N =} \StringTok{"nobs"}\NormalTok{, }\AttributeTok{R2 =} \StringTok{"r.squared"}\NormalTok{),}
+  \AttributeTok{stars =} \FunctionTok{c}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{***}\StringTok{\textasciigrave{}} \OtherTok{=} \FloatTok{0.01}\NormalTok{, }\StringTok{\textasciigrave{}}\AttributeTok{**}\StringTok{\textasciigrave{}} \OtherTok{=} \FloatTok{0.05}\NormalTok{, }\StringTok{\textasciigrave{}}\AttributeTok{*}\StringTok{\textasciigrave{}} \OtherTok{=} \FloatTok{0.1}\NormalTok{),}
+  \AttributeTok{note =} \StringTok{"Significance: \{stars\}"}
+\NormalTok{)}
+
+\NormalTok{outreg }\OtherTok{\textless{}{-}} \FunctionTok{set\_label}\NormalTok{(outreg, }\StringTok{"tbl{-}child\_mortality"}\NormalTok{)}
+\NormalTok{outreg }\OtherTok{\textless{}{-}} \FunctionTok{set\_caption}\NormalTok{(outreg, }\StringTok{"Child mortality rates in Côte d\textquotesingle{}Ivoire, by sex and method."}\NormalTok{)}
+\NormalTok{outreg}
+\end{Highlighting}
+\end{Shaded}
+
+ 
+\begin{table}[ht]
+\begin{centerbox}
+\begin{threeparttable}
+\captionsetup{justification=centering,singlelinecheck=off}
+\caption{Child mortality rates in Côte d'Ivoire, by sex and method.}
+ \label{tbl-child_mortality}\setlength{\tabcolsep}{0pt}
+\begin{tabular}{l l l l l}
+
+
+\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt}  \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} M1 (Boys) \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} M1 (Girls) \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} M2 (Boys) \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\centering \hspace{6pt} M2 (Girls) \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} Mortality rate \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.117 *** \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.084 *** \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.135 *** \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.115 *** \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt}  \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} (0.007) \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} (0.007) \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} (0.008) \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} (0.008) \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} N \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 1431 \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 1428 \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 1332 \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 1291 \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedright \hspace{6pt} R2 \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.000 \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.000 \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.000 \hspace{6pt}\huxbpad{6pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{6pt + 1em}\raggedleft \hspace{6pt} 0.000 \hspace{6pt}\huxbpad{6pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
+\arrayrulecolor{black}
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item[] Significance: *** p $<$ 0.01; ** p $<$ 0.05; * p $<$ 0.1
+\end{tablenotes}
+\end{threeparttable}\par\end{centerbox}
+
+\end{table}
+ 
 
 \subsection{2. Measurement of under 5 mortality rate (5
 points)}\label{measurement-of-under-5-mortality-rate-5-points}
@@ -304,8 +508,12 @@ upon the social fact that the table reveals.}{[}cite: 31{]}
 \emph{Please do not show your R script before every question, but put
 your entire R script at the end of the homework.}{[}cite: 29{]}
 
-\section{Place your complete, compiled R script
-here}\label{place-your-complete-compiled-r-script-here}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Place your complete, compiled R script here}
+\end{Highlighting}
+\end{Shaded}
+
 
 
 

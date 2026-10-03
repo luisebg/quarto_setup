@@ -36,8 +36,8 @@ library(here)
 civ_nutri <- read_dta(here::here("measurement_p2/data/civ88-08_nutri.dta"))
 civ_mortality <- read_dta(here::here("measurement_p2/data/civ88_mort.dta"))
 # save as csv
-write_csv(civ_nutri, "measurement_p2/data/civ88-08_nutri.csv")
-write_csv(civ_mortality, "measurement_p2/data/civ88-08_mortality.csv")
+# write_csv(civ_nutri, "measurement_p2/data/civ88-08_nutri.csv")
+# write_csv(civ_mortality, "measurement_p2/data/civ88-08_mortality.csv")
 ```
 # 1 Child Mortality in Côte d'Ivoire (6 points)
 
@@ -45,7 +45,87 @@ write_csv(civ_mortality, "measurement_p2/data/civ88-08_mortality.csv")
 
 **(a) How should you transform pweight to obtain a weight that allows you to estimate statistics on the population of women in Cote d'Ivoire? Explain your computations.**[cite: 29]
 
-[Your answer here]
+I can use the pweight column to balance the class distribution of the sample to match the population distribution. The `pweight` column contains sample weights that modify the contribution of each observation to the overall statistics. It works as a frequency multiplier, where each observation is counted as if it were `pweight` number of observations.
+In practice, R can use the pweight column to compute weighted statistics, such as means and proportions by using the `weights` argument in functions like `lm()` or `survey::svydesign()`. Internally, weighted functions such as weighted means and lm will multiply each observation by its corresponding weight. For example a weighted mean will be computed using equation @eq-weighted_mean, and weighted linear regression will minimize the weighted sum of squared residuals, as shown in equation @eq-weighted_lm.
+
+$$
+\bar{x}_w = \frac{\sum_{i=1}^{n} w_i x_i}{\sum_{i=1}^{n} w_i}
+$$ {#eq-weighted_mean}
+
+$$
+\sum_{i=1}^{n} w_i (y_i - \hat{y}_i)^2
+$$ {#eq-weighted_lm}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# Method 1
+# Boys
+model_1_boys <- lm(
+  (dboys_l5) / (boys_l5) ~ 1, 
+  data = civ_mortality %>% filter(boys_l5 > 0), 
+  weights = pweight * boys_l5
+)
+
+# Girls
+model_1_girls <- lm(
+  (dgirls_l5) / (girls_l5) ~ 1, 
+  data = civ_mortality %>% filter(girls_l5 > 0), 
+  weights = pweight * girls_l5
+)
+
+# Method 2
+# Boys
+model_2_boys <- lm(
+  (dboys_u5 - dboys_l5) / (boys - boys_l5) ~ 1, 
+  data = civ_mortality %>% filter((boys - boys_l5) > 0), 
+  weights = pweight * (boys - boys_l5)
+)
+
+# Girls
+model_2_girls <- lm(
+  (dgirls_u5 - dgirls_l5) / (girls - girls_l5) ~ 1, 
+  data = civ_mortality %>% filter((girls - girls_l5) > 0), 
+  weights = pweight * (girls - girls_l5)
+)
+
+outreg <-huxreg(
+  `M1 (Boys)` = model_1_boys,
+  `M1 (Girls)` = model_1_girls,
+  `M2 (Boys)` = model_2_boys,
+  `M2 (Girls)` = model_2_girls,
+  coefs = c("Mortality rate" = "(Intercept)"),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+
+outreg <- set_label(outreg, "tbl-child_mortality")
+outreg <- set_caption(outreg, "Child mortality rates in Côte d'Ivoire, by sex and method.")
+outreg
+```
+
+<!-- ```{r, message=FALSE, warning=FALSE, echo=TRUE}
+# make a comparative table with unweighted and weighted statistics from civ_mortality
+# 1 create the weighted columns for the following variables: hhsize
+# 2 run a linear model to compare weighted vs unweighted means
+
+unweighted_model <- lm(hhsize ~ 1, data = civ_mortality)
+weighted_model <- lm(hhsize ~ 1, data = civ_mortality, weights = pweight)
+
+huxreg(
+  `Unweighted` = unweighted_model,
+  `Weighted` = weighted_model,
+  coefs = c("Mean" = "(Intercept)"),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance {stars}"
+)
+``` -->
 
 
 ## 2. Measurement of under 5 mortality rate (5 points)
