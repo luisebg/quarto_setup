@@ -66,46 +66,6 @@
 \fi
 \makeatother
 
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{241,243,245}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
-\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 
 \usepackage{longtable,booktabs,array}
 \newcounter{none} % for unnumbered tables
@@ -242,7 +202,7 @@ points)}\label{child-mortality-in-cuxf4te-divoire-6-points}
 
 \textbf{(a) How should you transform pweight to obtain a weight that
 allows you to estimate statistics on the population of women in Cote
-d'Ivoire? Explain your computations.}{[}cite: 29{]}
+d'Ivoire? Explain your computations.}
 
 I can use the pweight column to balance the class distribution of the
 sample to match the population distribution. The \texttt{pweight} column
@@ -267,57 +227,17 @@ equation Equation~\ref{eq-weighted_lm}.
 \sum_{i=1}^{n} w_i (y_i - \hat{y}_i)^2
 }\end{equation}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Method 1}
-\CommentTok{\# Boys}
-\NormalTok{model\_1\_boys }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
-\NormalTok{  (dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
-  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(boys\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ boys\_l5}
-\NormalTok{)}
+\subsection{2. Measurement of under 5 mortality rate (5
+points)}\label{measurement-of-under-5-mortality-rate-5-points}
 
-\CommentTok{\# Girls}
-\NormalTok{model\_1\_girls }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
-\NormalTok{  (dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
-  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(girls\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ girls\_l5}
-\NormalTok{)}
+\textbf{(a) What method can be deemed preferable and why? Give the pros
+and cons of both methods.} Method 1 (M1): - Pros: - Cons: Method 2 (M2):
+- Pros: - Cons:
 
-\CommentTok{\# Method 2}
-\CommentTok{\# Boys}
-\NormalTok{model\_2\_boys }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
-\NormalTok{  (dboys\_u5 }\SpecialCharTok{{-}}\NormalTok{ dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
-  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{((boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5)}
-\NormalTok{)}
+\textbf{(b) Child mortality rates in Côte d'Ivoire.}
 
-\CommentTok{\# Girls}
-\NormalTok{model\_2\_girls }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
-\NormalTok{  (dgirls\_u5 }\SpecialCharTok{{-}}\NormalTok{ dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
-  \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{((girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5)}
-\NormalTok{)}
-
-\NormalTok{outreg }\OtherTok{\textless{}{-}}\FunctionTok{huxreg}\NormalTok{(}
-  \StringTok{\textasciigrave{}}\AttributeTok{M1 (Boys)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_1\_boys,}
-  \StringTok{\textasciigrave{}}\AttributeTok{M1 (Girls)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_1\_girls,}
-  \StringTok{\textasciigrave{}}\AttributeTok{M2 (Boys)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_2\_boys,}
-  \StringTok{\textasciigrave{}}\AttributeTok{M2 (Girls)}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ model\_2\_girls,}
-  \AttributeTok{coefs =} \FunctionTok{c}\NormalTok{(}\StringTok{"Mortality rate"} \OtherTok{=} \StringTok{"(Intercept)"}\NormalTok{),}
-  \AttributeTok{error\_format =} \StringTok{"(\{std.error\})"}\NormalTok{,}
-  \AttributeTok{error\_pos =} \StringTok{"below"}\NormalTok{,}
-  \AttributeTok{align =} \StringTok{"c"}\NormalTok{,}
-  \AttributeTok{statistics =} \FunctionTok{c}\NormalTok{(}\AttributeTok{N =} \StringTok{"nobs"}\NormalTok{, }\AttributeTok{R2 =} \StringTok{"r.squared"}\NormalTok{),}
-  \AttributeTok{stars =} \FunctionTok{c}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{***}\StringTok{\textasciigrave{}} \OtherTok{=} \FloatTok{0.01}\NormalTok{, }\StringTok{\textasciigrave{}}\AttributeTok{**}\StringTok{\textasciigrave{}} \OtherTok{=} \FloatTok{0.05}\NormalTok{, }\StringTok{\textasciigrave{}}\AttributeTok{*}\StringTok{\textasciigrave{}} \OtherTok{=} \FloatTok{0.1}\NormalTok{),}
-  \AttributeTok{note =} \StringTok{"Significance: \{stars\}"}
-\NormalTok{)}
-
-\NormalTok{outreg }\OtherTok{\textless{}{-}} \FunctionTok{set\_label}\NormalTok{(outreg, }\StringTok{"tbl{-}child\_mortality"}\NormalTok{)}
-\NormalTok{outreg }\OtherTok{\textless{}{-}} \FunctionTok{set\_caption}\NormalTok{(outreg, }\StringTok{"Child mortality rates in Côte d\textquotesingle{}Ivoire, by sex and method."}\NormalTok{)}
-\NormalTok{outreg}
-\end{Highlighting}
-\end{Shaded}
+\textbf{i. Compute mortality rates with both methods for boys and girls
+separately (don't forget the weights).}
 
  
 \begin{table}[ht]
@@ -390,29 +310,7 @@ equation Equation~\ref{eq-weighted_lm}.
 \end{table}
  
 
-\subsection{2. Measurement of under 5 mortality rate (5
-points)}\label{measurement-of-under-5-mortality-rate-5-points}
-
-\textbf{(a) What method can be deemed preferable and why? Give the pros
-and cons of both methods.}{[}cite: 29{]} \emph{(Methods: Either take the
-population of children born 0 to 4 years ago and divide the number of
-deaths by the number of children; Or take the population of children
-born 5 to 9 years ago and divide the number of deaths between 0 and 4
-years of age by the number of children.)}{[}cite: 29{]}
-
-{[}Your answer here{]}
-
-\textbf{(b) Child mortality rates in Côte d'Ivoire.}{[}cite: 29{]}
-
-\textbf{i. Compute mortality rates with both methods for boys and girls
-separately (don't forget the weights).}{[}cite: 29{]} \emph{(Hint: you
-can specify your model as follows:
-\(lm(y \sim x, \text{data}, \text{weights} = \text{weight\_variable})\))}{[}cite:
-29{]}
-
-{[}Your answer here{]}
-
-\textbf{ii. Compare and comment.}{[}cite: 29{]}
+\textbf{ii. Compare and comment.}
 
 {[}Your answer here{]}
 
@@ -506,14 +404,10 @@ upon the social fact that the table reveals.}{[}cite: 31{]}
 \section{Appendix: R Script}\label{appendix-r-script}
 
 \emph{Please do not show your R script before every question, but put
-your entire R script at the end of the homework.}{[}cite: 29{]}
+your entire R script at the end of the homework.}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Place your complete, compiled R script here}
-\end{Highlighting}
-\end{Shaded}
-
+\section{Place your complete, compiled R script
+here}\label{place-your-complete-compiled-r-script-here}
 
 
 

@@ -43,7 +43,7 @@ civ_mortality <- read_dta(here::here("measurement_p2/data/civ88_mort.dta"))
 
 ## 1. Sampling (1 points)
 
-**(a) How should you transform pweight to obtain a weight that allows you to estimate statistics on the population of women in Cote d'Ivoire? Explain your computations.**[cite: 29]
+**(a) How should you transform pweight to obtain a weight that allows you to estimate statistics on the population of women in Cote d'Ivoire? Explain your computations.**
 
 I can use the pweight column to balance the class distribution of the sample to match the population distribution. The `pweight` column contains sample weights that modify the contribution of each observation to the overall statistics. It works as a frequency multiplier, where each observation is counted as if it were `pweight` number of observations.
 In practice, R can use the pweight column to compute weighted statistics, such as means and proportions by using the `weights` argument in functions like `lm()` or `survey::svydesign()`. Internally, weighted functions such as weighted means and lm will multiply each observation by its corresponding weight. For example a weighted mean will be computed using equation @eq-weighted_mean, and weighted linear regression will minimize the weighted sum of squared residuals, as shown in equation @eq-weighted_lm.
@@ -56,6 +56,19 @@ $$
 \sum_{i=1}^{n} w_i (y_i - \hat{y}_i)^2
 $$ {#eq-weighted_lm}
 
+## 2. Measurement of under 5 mortality rate (5 points)
+
+**(a) What method can be deemed preferable and why? Give the pros and cons of both methods.**
+Method 1 (M1):
+  - Pros:
+  - Cons: 
+Method 2 (M2):
+  - Pros:
+  - Cons:
+
+**(b) Child mortality rates in Côte d'Ivoire.**
+
+**i. Compute mortality rates with both methods for boys and girls separately (don't forget the weights).** 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Method 1
 # Boys
@@ -106,45 +119,7 @@ outreg <- set_caption(outreg, "Child mortality rates in Côte d'Ivoire, by sex a
 outreg
 ```
 
-<!-- ```{r, message=FALSE, warning=FALSE, echo=TRUE}
-# make a comparative table with unweighted and weighted statistics from civ_mortality
-# 1 create the weighted columns for the following variables: hhsize
-# 2 run a linear model to compare weighted vs unweighted means
-
-unweighted_model <- lm(hhsize ~ 1, data = civ_mortality)
-weighted_model <- lm(hhsize ~ 1, data = civ_mortality, weights = pweight)
-
-huxreg(
-  `Unweighted` = unweighted_model,
-  `Weighted` = weighted_model,
-  coefs = c("Mean" = "(Intercept)"),
-  error_format = "({std.error})",
-  error_pos = "below",
-  align = "c",
-  statistics = c(N = "nobs", R2 = "r.squared"),
-  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
-  note = "Significance {stars}"
-)
-``` -->
-
-
-## 2. Measurement of under 5 mortality rate (5 points)
-
-**(a) What method can be deemed preferable and why? Give the pros and cons of both methods.**[cite: 29]
-*(Methods: Either take the population of children born 0 to 4 years ago and divide the number of deaths by the number of children; Or take the population of children born 5 to 9 years ago and divide the number of deaths between 0 and 4 years of age by the number of children.)*[cite: 29]
-
-[Your answer here]
-
-
-**(b) Child mortality rates in Côte d'Ivoire.**[cite: 29]
-
-**i. Compute mortality rates with both methods for boys and girls separately (don't forget the weights).**[cite: 29] 
-*(Hint: you can specify your model as follows: $lm(y \sim x, \text{data}, \text{weights} = \text{weight\_variable})$)*[cite: 29]
-
-[Your answer here]
-
-
-**ii. Compare and comment.**[cite: 29]
+**ii. Compare and comment.**
 
 [Your answer here]
 
@@ -208,7 +183,7 @@ $$Z = \frac{\text{height} - \text{WHOMedian}(\text{sex}, \text{age})}{\text{WHOs
 
 # Appendix: R Script
 
-*Please do not show your R script before every question, but put your entire R script at the end of the homework.*[cite: 29]
+*Please do not show your R script before every question, but put your entire R script at the end of the homework.*
 
 ```{r, eval=FALSE}
 # Place your complete, compiled R script here
