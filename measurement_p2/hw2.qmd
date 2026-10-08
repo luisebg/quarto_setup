@@ -19,6 +19,7 @@ p {
   text-align: justify !important
 }
 ```
+
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 library(tidyverse)
 library(rio)
@@ -41,14 +42,14 @@ civ_mortality <- read_dta(here::here("measurement_p2/data/civ88_mort.dta"))
 # write_csv(civ_nutri, "measurement_p2/data/civ88-08_nutri.csv")
 # write_csv(civ_mortality, "measurement_p2/data/civ88-08_mortality.csv")
 ```
+
 # 1 Child Mortality in Côte d'Ivoire (6 points)
 
 ## 1. Sampling (1 points)
 
 **(a) How should you transform pweight to obtain a weight that allows you to estimate statistics on the population of women in Cote d'Ivoire? Explain your computations.**
 
-I can use the pweight column to balance the class distribution of the sample to match the population distribution. The `pweight` column contains sample weights that modify the contribution of each observation to the overall statistics. It works as a frequency multiplier, where each observation is counted as if it were `pweight` number of observations.
-In practice, R can use the pweight column to compute weighted statistics, such as means and proportions by using the `weights` argument in functions like `lm()` or `survey::svydesign()`. Internally, weighted functions such as weighted means and lm will multiply each observation by its corresponding weight. For example a weighted mean will be computed using equation @eq-weighted_mean, and weighted linear regression will minimize the weighted sum of squared residuals, as shown in equation @eq-weighted_lm.
+I can use the pweight column to balance the class distribution of the sample to match the population distribution. The `pweight` column contains sample weights that modify the contribution of each observation to the overall statistics. It works as a frequency multiplier, where each observation is counted as if it were `pweight` number of observations. In practice, R can use the pweight column to compute weighted statistics, such as means and proportions by using the `weights` argument in functions like `lm()` or `survey::svydesign()`. Internally, weighted functions such as weighted means and lm will multiply each observation by its corresponding weight. For example a weighted mean will be computed using equation @eq-weighted_mean, and weighted linear regression will minimize the weighted sum of squared residuals, as shown in equation @eq-weighted_lm.
 
 $$
 \bar{x}_w = \frac{\sum_{i=1}^{n} w_i x_i}{\sum_{i=1}^{n} w_i}
@@ -66,19 +67,20 @@ The preferable method is method 2 (M2) because method 1 (M1) underestimates the 
 
 M1
 
-* Pros: it is easy to compute, captures the most recent deaths (recency).
-* Cons: underestimates the mortality rate, downward biased, does not capture deaths after the survey period.
+- Pros: it is easy to compute, captures the most recent deaths (recency).
+- Cons: underestimates the mortality rate, downward biased, does not capture deaths after the survey period.
 
 M2
 
-* Pros: provides a robust estimate of the true mortality rate.
-* Cons: it requires a longer period of time to capture deaths, less recent than M1.
+- Pros: provides a robust estimate of the true mortality rate.
+- Cons: it requires a longer period of time to capture deaths, less recent than M1.
 
 ![Mortality estimator analysis](img/mortality_chart.png){#fig-mortality width="50%"}
 
 **(b) Child mortality rates in Côte d'Ivoire.**
 
-**i. Compute mortality rates with both methods for boys and girls separately (don't forget the weights).** 
+**i. Compute mortality rates with both methods for boys and girls separately (don't forget the weights).**
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # Method 1
 # Boys
@@ -148,6 +150,26 @@ ct_diff_girls <- ct_girls[2, , drop = FALSE]
 class(ct_diff_girls) <- "coeftest"
 rownames(ct_diff_girls) <- "(Intercept)"
 
+# 1. Create Pooled Data for Sex Comparison (Method 2 Only)
+m2_sex_pooled <- bind_rows(
+  # Boys Method 2 (Indicator = 0)
+  civ_mortality %>% 
+    filter((boys - boys_l5) > 0) %>% 
+    transmute(rate = (dboys_u5 - dboys_l5) / (boys - boys_l5), w = pweight * (boys - boys_l5), is_girl = 0),
+  # Girls Method 2 (Indicator = 1)
+  civ_mortality %>% 
+    filter((girls - girls_l5) > 0) %>% 
+    transmute(rate = (dgirls_u5 - dgirls_l5) / (girls - girls_l5), w = pweight * (girls - girls_l5), is_girl = 1)
+)
+
+# 2. Run the Difference Regression (Girls M2 - Boys M2)
+diff_sex_m2 <- lm(rate ~ is_girl, data = m2_sex_pooled, weights = w)
+
+# 3. Isolate the gender difference coefficient and disguise it for huxreg alignment
+ct_diff_sex_m2 <- coeftest(diff_sex_m2)[2, , drop = FALSE]
+class(ct_diff_sex_m2) <- "coeftest"
+rownames(ct_diff_sex_m2) <- "(Intercept)"
+
 # 6. Generate the single-row 6-Column Table
 outreg <- huxreg(
   `M1 (Boys)` = model_1_boys,
@@ -156,6 +178,7 @@ outreg <- huxreg(
   `M1 (Girls)` = model_1_girls,
   `M2 (Girls)` = model_2_girls,
   `Diff (Girls)` = ct_diff_girls,
+  `Diff M2 G-B` = ct_diff_sex_m2, # New column added here
   coefs = c("Mortality rate" = "(Intercept)"),
   error_format = "({std.error})",
   error_pos = "below",
@@ -167,69 +190,96 @@ outreg <- huxreg(
 
 outreg <- set_label(outreg, "tbl-child_mortality")
 outreg <- set_caption(outreg, "Child mortality rates in Côte d'Ivoire, by sex and method.")
+outreg <- set_all_padding(outreg, 1.5)
 outreg
 ```
 
 **ii. Compare and comment.**
 
-Table \ref{tbl-child_mortality} shows the estimated child mortality rates in Côte d'Ivoire for boys and girls using both methods and their differences. The results confirm our theory of M1 underestimating the true mortality rate. We can clearly see the method estimates differences are positive indicating that M1 systematically underestimates the true mortality rate estimated by M2. Using the best method (M2), the average mortality rate for boys is 13.5% and for girls is 11.9%. The difference between boys and girls is 1.6 percentage points, indicating that boys have a higher mortality rate than girls in Côte d'Ivoire.
-
+Table \ref{tbl-child_mortality} shows the estimated child mortality rates in Côte d'Ivoire for boys and girls using both methods and their differences. The results confirm our theory of M1 underestimating the true mortality rate. We can clearly see the method estimates differences are positive indicating that M1 systematically underestimates the true mortality rate estimated by M2. Using the best method (M2), the average mortality rate for boys is 13.5% and for girls is 11.9%. The difference between girls and boys is -2 percentage points and statitically significant at the 90% confidence level, indicating that boys have a higher mortality rate than girls.
 
 # 2 Health status, nutritional status and wealth in Côte d'Ivoire (7 points)
 
-*Stunted children are defined as children showing a height stature that is lower than the median of the reference population by 2 standard deviations measured on the same reference population. That is children such as the z-score is lower than -2 ($z \le -2$), where the z-score is given by the following formula:*[cite: 30]
+*Stunted children are defined as children showing a height stature that is lower than the median of the reference population by 2 standard deviations measured on the same reference population. That is children such as the z-score is lower than -2 (*$z \le -2$), where the z-score is given by the following formula:
 
-$$Z = \frac{\text{height} - \text{WHOMedian}(\text{sex}, \text{age})}{\text{WHOstdev}(\text{sex}, \text{age})}$$[cite: 30]
+$$Z = \frac{\text{height} - \text{WHOMedian}(\text{sex}, \text{age})}{\text{WHOstdev}(\text{sex}, \text{age})}$$
 
 ## 1. Weight Unit Correction
 
-*In 2008, the weight could be measured in either kilograms or hectograms. However, the unit was not systematically reported. It was therefore assumed that all the weights were reported in kilograms.*[cite: 30]
+*In 2008, the weight could be measured in either kilograms or hectograms. However, the unit was not systematically reported. It was therefore assumed that all the weights were reported in kilograms.*
 
-**(a) Derive an expression for the sample mean weight in this context, and show that, if we knew just one parameter, we could obtain a non-biased estimate of the mean weight despite the hectogram issue. (.5 point)**[cite: 30]
+**(a) Derive an expression for the sample mean weight in this context, and show that, if we knew just one parameter, we could obtain a non-biased estimate of the mean weight despite the hectogram issue. (.5 point)**
 
-[Your answer here]
+Let's denote the estimated mean weight as $W_{\text{obs}}$, the true mean weight as $W_{\text{true}}$, and the proportion of weights measured in hectograms as $p_h$. The observed mean weight can be expressed as the sum of the mean weights measured in kg and in hectograms multiplied by their corresponding probabilities:
 
+$$
+\begin{aligned}
+E[W_{\text{obs}}] &= (1 - p_h) \cdot W_{\text{true}} + p_h \cdot W_{\text{true}}\cdot 10\\
+  &= W_{\text{true}} \cdot (1 - p_h + 10 p_h)\\
+  &= W_{\text{true}} \cdot (1 + 9 p_h)
+\end{aligned}
+$$
 
-**(b) Come up with an empirical criterion to identify hectogram mistakes, and a graphical way to show the 2008 weight distribution, before and after correcting for mistakes, compared with the 1988 and 1993 weight distributions. (1 point)**[cite: 30]
+Thus, having an estimate of $p_h$ would allow us to correct the observed mean weight. Notice that if $p_h = 0$, then $E[W_{\text{obs}}] = W_{\text{true}}$, and if $p_h = 1$, then $E[W_{\text{obs}}] = 10 W_{\text{true}}$. 
 
-[Your answer here]
+**(b) Come up with an empirical criterion to identify hectogram mistakes, and a graphical way to show the 2008 weight distribution, before and after correcting for mistakes, compared with the 1988 and 1993 weight distributions. (1 point)**
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(gridExtra)
+plot1 <- civ_nutri %>%
+  ggplot(aes(x=weightkg)) +
+    geom_histogram(binwidth=2) +
+    ylab("Number of observations") +
+    ggtitle("Original") + xlim(0, 200)
+plot2 <- civ_nutri %>%
+  ggplot(aes(x=weightkg)) +
+    geom_histogram(binwidth=2) +
+    ylab("Number of observations") +
+    ggtitle("Distribution of Weight (kg)") + xlim(0, 200)
+grid.arrange(plot1, plot2, ncol=2, top = "Distribution of Weight (kg) Before and After Correction")
+```
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(civ_nutri, aes(weightkg, fill = factor(year), colour = factor(year))) +
+  geom_density(alpha = 0.3) +
+  labs(fill = "Year", colour = "Year")+
+  xlim(25, 200) +
+  geom_histogram(aes(
+    civ_nutri, aes(weightkg, fill = factor(year), colour = factor(year))
+  ))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(civ_nutri, mapping = aes(x = factor(year), y = weightkg)) +
+  geom_boxplot() + ylim(0, 20)
+```
 ## 2. Z-Score Computation
 
-**Using the variables medheight and stdheight, compute each child's z-score. (.5 point)**[cite: 30]
+**Using the variables medheight and stdheight, compute each child's z-score. (.5 point)**
 
-[Your answer here]
-
+\[Your answer here\]
 
 ## 3. Height Stature over time and across regions (3 points)
 
-**(a) Estimate the stunting rate for 2-4 years old children over time in the North, in the South, and at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**[cite: 30]
+**(a) Estimate the stunting rate for 2-4 years old children over time in the North, in the South, and at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**
 
-[Your answer here]
+\[Your answer here\]
 
+**(b) Estimate the stunting rate for 2-4 years old children over time for boys and for girls at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**
 
-**(b) Estimate the stunting rate for 2-4 years old children over time for boys and for girls at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**[cite: 30]
-
-[Your answer here]
-
+\[Your answer here\]
 
 ## 4. Height Stature and poverty (2 points)
 
-**Here, one would like to study how the gradient of the number of stunted children aged 2-4 years, and of household consumption per capita, as well as the relationship between the two, have changed over time.**[cite: 30]
-**Find a graphical or regression framework to represent this (many options are possible). Comment on your results and their limits.**[cite: 30]
+**Here, one would like to study how the gradient of the number of stunted children aged 2-4 years, and of household consumption per capita, as well as the relationship between the two, have changed over time.** **Find a graphical or regression framework to represent this (many options are possible). Comment on your results and their limits.**
 
-[Your answer here]
-
-
+\[Your answer here\]
 
 # 3 A meaningful table (6 pts)
 
-**Construct a small statistical table showing a meaningful and policy relevant social fact about migration in the world. You may focus, or not, on a given region or country of origin, or on a particular subgroup of the population (children, etc.) A combination of originality, policy relevance and statistical accuracy will be very much appreciated. The table should fit in the top half of a page. It should have the attributes of a proper research-paper table: title, notes, etc. Table notes should indicate the source of data, the coverage (countries and population), the definition and units of variables and any other kind of information that is needed to read and understand the table. The bottom half of the page should be dedicated to a brief text, commenting upon the social fact that the table reveals.**[cite: 31]
+**Construct a small statistical table showing a meaningful and policy relevant social fact about migration in the world. You may focus, or not, on a given region or country of origin, or on a particular subgroup of the population (children, etc.) A combination of originality, policy relevance and statistical accuracy will be very much appreciated. The table should fit in the top half of a page. It should have the attributes of a proper research-paper table: title, notes, etc. Table notes should indicate the source of data, the coverage (countries and population), the definition and units of variables and any other kind of information that is needed to read and understand the table. The bottom half of the page should be dedicated to a brief text, commenting upon the social fact that the table reveals.**\[cite: 31\]
 
-[Your table and text here]
-
-
+\[Your table and text here\]
 
 # Appendix: R Script
 
