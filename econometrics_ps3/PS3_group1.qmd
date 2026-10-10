@@ -137,6 +137,7 @@ model_base <- lm(
 <!-- Write your interpretation here -->
 
 As shown in Table \ref{tbl-model_base_summary}, the coefficient of the household head's education is statistically significant at the 1% significant level, with a p-value of $<2e-16$ (almost zero). This means the minimum significance level at which we can reject the null hypothesis that the education level of the household head does not affect total household consumption is $<2e-16$.
+:::
 
 ```{r model_base_summary}
 outreg <- huxreg(
@@ -163,11 +164,6 @@ outreg <- set_caption(outreg, "Log-Linear model summary. Dependent variable: log
 outreg <- set_all_padding(outreg, 1.5)
 outreg
 ```
-
-- **p-value:** 
-- **Interpretation:** The minimum significance level ($\alpha$) at which we can reject $H_0: \beta_{\text{educ}} = 0$ is equal to the exact p-value (approx. ...).
-
-:::
 
 ---
 
