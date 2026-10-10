@@ -1,0 +1,318 @@
+---
+title: "PS2_group1"
+format: pdf
+editor: source
+---
+
+# Q4
+
+```{r imports, echo=FALSE, warning=FALSE, message=FALSE}
+library(modelsummary)
+library(knitr)
+library(kableExtra)
+library(rio)
+library(tidyverse)
+library(lmtest)
+library(car)
+library(tseries)
+library(here)
+library(DT)
+
+db <- read_dta(here::here("nichh.dta"))
+```
+
+##1. Write a paragraph describing the dataset using the standard descriptive statistics (also called summary statistics, or \`\`D-stats''). Add a table with the d-stats.
+
+```{r, echo=FALSE}
+
+variable_labels <- c(
+  constot  = "Total household consumption (Cordobas)",
+  adultm   = "Number of adult males (15–64)",
+  adultf   = "Number of adult females (15–64)",
+  headage  = "Age of household head (years)",
+  headeduc = "Education of household head (years)",
+  landarea = "Owned land area (ha)",
+  healthkm = "Distance to health centre (km)",
+  schoolkm = "Distance to school (km)"
+)
+
+variable_order <- c(
+  "constot",
+  "adultm", "adultf", "headage", "headeduc", "landarea",
+  "healthkm", "schoolkm"
+)
+
+summary_table <- db |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "Variable",
+    values_to = "Value"
+  ) |>
+  group_by(Variable) |>
+  summarise(
+    N = sum(!is.na(Value)),
+    Mean = mean(Value, na.rm = TRUE),
+    Median = median(Value, na.rm = TRUE),
+    SD = sd(Value, na.rm = TRUE),
+    Min = min(Value, na.rm = TRUE),
+    Max = max(Value, na.rm = TRUE)
+  ) |>
+  arrange(match(Variable, variable_order)) |>
+  mutate(Label = variable_labels[Variable]) |>
+  select(Label, N, Mean, Median, SD, Min, Max)
+
+summary_table_latex <- summary_table |>
+  knitr::kable(
+    format = "latex",
+    digits = 2,
+    caption = "Summary statistics",
+    booktabs = TRUE,
+    align = c("l", "c", "c", "c", "c", "c", "c")
+  ) |>
+  kableExtra::kable_styling(
+    latex_options = "hold_position",
+    full_width = FALSE,
+    position = "center",
+    font_size = 9
+  )
+
+summary_table
+
+writeLines(summary_table_latex, "summary_statistics.tex")
+```
+
+## 2. Specify a model that allows for increasing returns to household assets. Estimate the model and give a careful interpretation of each of the coefficients (sign, size and significance!).
+
+```{r, include= FALSE}
+model_log <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+
+modelsummary(
+  model_log,
+  coef_rename = c(
+    "(Intercept)" = "Intercept",
+    "adultm" = "Number of male adults",
+    "adultf" = "Number of female adults",
+    "headage" = "Age of household head (years)",
+    "headeduc" = "Education of household head (years)",
+    "landarea" = "Land owned (ha)",
+    "healthkm" = "Distance to health centre (km)",
+    "schoolkm" = "Distance to school (km)"
+  ),
+  fmt = 3,
+  stars = c(
+    "*" = 0.10,
+    "**" = 0.05,
+    "***" = 0.01
+  ),
+  notes = "Standard errors in parentheses.",
+  gof_omit = "IC|Log",
+  title = "Regression of log household consumption (Cordobas)",
+  output = "model_log.tex"
+)
+
+
+
+```
+
+## 3. What is the minimum significance level at which one can reject that hypothesis that age of the household head does not affect total household consumption?
+
+```{r}
+model_log_summary <- summary(model_log)
+model_log_summary$coefficients["headage", ]
+
+headage_pvalue <- data.frame(
+  Variable = "Age of household head (years)",
+  Estimate = sprintf("%.3f", model_log_summary$coefficients["headage", "Estimate"]),
+  `Std. Error` = sprintf("%.3f", model_log_summary$coefficients["headage", "Std. Error"]),
+  `t-value` = sprintf("%.3f", model_log_summary$coefficients["headage", "t value"]),
+  `p-value` = sprintf("%.6f", model_log_summary$coefficients["headage", "Pr(>|t|)"]),
+  check.names = FALSE
+)
+
+headage_table <- headage_pvalue |>
+  knitr::kable(
+    format = "latex",
+    booktabs = TRUE,
+    caption = "Coefficient test for age of household head",
+    align = c("l", "r", "r", "r", "r"),
+    escape = FALSE
+  ) |>
+  kableExtra::kable_styling(
+    full_width = FALSE,
+    position = "center",
+    font_size = 9,
+    latex_options = "hold_position"
+  )
+
+writeLines(headage_table, "headage_pvalue.tex")
+```
+
+# 4. One could hypothesize that household consumption would start declining after a household head has reached a certain threshold age. Can you find evidence in support of this hypothesis? If so, at which age does it start declining?
+
+```{r}
+model_age <- lm(
+  log(constot) ~ adultm + adultf + headage+ I(headage^2) + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+
+modelsummary(
+  model_age,
+  coef_rename = c(
+    "(Intercept)" = "Intercept",
+    "adultm" = "Number of male adults",
+    "adultf" = "Number of female adults",
+    "headage" = "Age of household head (years)",
+    "I(headage^2)" = "Age of household head²",
+    "headeduc" = "Education of household head (years)",
+    "landarea" = "Land owned (ha)",
+    "healthkm" = "Distance to health centre (km)",
+    "schoolkm" = "Distance to school (km)"
+  ),
+  fmt = 5,
+  stars = c(
+    "*" = 0.10,
+    "**" = 0.05,
+    "***" = 0.01
+  ),
+  notes = "Standard errors in parentheses.",
+  gof_omit = "IC|Log",
+  title = "Regression of log household consumption (Cordobas) including a quadratic term for the age of household head ",
+  output = "model_age.tex"
+)
+
+```
+
+```{r}
+beta <- coef(model_age)
+
+turning_point <- -beta["headage"] /
+  (2 * beta["I(headage^2)"])
+
+turning_point
+```
+
+```{r}
+# finding how many household heads over 78 years there are
+
+db |> 
+  filter(headage > 78) |> 
+  nrow()
+
+# what % of all observations?
+mean(db$headage > 78, na.rm = TRUE) * 100
+```
+
+# 5. Estimate the model you specified in part (2) separately for households with household heads with at least primary school completed (i.e. 6 years of schooling or more) versus all others. Can you use these estimations to conclude that the returns to female labor are higher for households in which the household head is more educated?
+
+```{r}
+db_heduc <- db |> 
+  filter(headeduc >=6)
+
+db_leduc <- db |> 
+  filter(headeduc < 6)
+
+# for the less educated:
+
+model_leduc <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db_leduc
+)
+
+# for the more educated:
+model_heduc <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db_heduc
+)
+models_education <- list(
+  "Less than primary" = model_leduc,
+  "At least primary" = model_heduc
+)
+
+# table
+modelsummary(
+  models_education,
+  coef_rename = c(
+    "(Intercept)" = "Intercept",
+    "adultm" = "Number of male adults",
+    "adultf" = "Number of female adults",
+    "headage" = "Age of household head (years)",
+    "headeduc" = "Education of household head (years)",
+    "landarea" = "Land owned (ha)",
+    "healthkm" = "Distance to health centre (km)",
+    "schoolkm" = "Distance to school (km)"
+  ),
+  fmt = 3,
+  stars = c(
+    "*" = 0.10,
+    "**" = 0.05,
+    "***" = 0.01
+  ),
+  notes = "Standard errors in parentheses.",
+  gof_omit = "IC|Log",
+  title = "Household consumption by the education level of household head",
+  output = "models_education.tex"
+)
+
+```
+
+#6 Consider the alternatives of using either household consumption or log(household consumption) as dependent variables. For which of the 2 alternatives is the normality assumption more likely to hold. Why?
+
+```{r}
+consumption_plot <- db |>
+  transmute(
+    Consumption = constot,
+    `Log consumption` = log(constot)
+  ) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "Variable",
+    values_to = "Value"
+  )
+
+consumption_figure <- ggplot(consumption_plot, aes(x = Value)) +
+  geom_histogram(bins = 30) +
+  facet_wrap(~ Variable, scales = "free_x") +
+  labs(
+    x = NULL,
+    y = "Count"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      hjust = 0.5
+    ),
+    plot.subtitle = element_text(
+      hjust = 0.5
+    ),
+    strip.text = element_text(
+      face = "bold"
+    )
+  )
+
+ggsave(
+  "consumption_distribution.pdf",
+  plot = consumption_figure,
+  width = 7,
+  height = 4.5
+)
+
+# Jarque-Bera test for normality
+
+model_lin <- lm(
+  constot ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+
+jarque.bera.test(residuals(model_lin))
+jarque.bera.test(residuals(model_log))
+
+```

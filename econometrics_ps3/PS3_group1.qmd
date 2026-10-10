@@ -1,0 +1,264 @@
+---
+title: "Econometrics 1 — Problem Set 3"
+subtitle: "Submission Deadline: Thursday, October 15th, 2026 at 1:00 PM | Instructor: Liam Wren-Lewis, TA: Elisa Alonso Herrero"
+author: "Antonina Wawrzak, David Pérez Cano, Luis Enrique Beltrán González"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    code-fold: show
+    code-tools: true
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+    fig-cap-location: top
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Overview & Group Work Division
+
+- **Exercise 1 (Theoretical / Reading Critique):**
+- **Computer Exercise (Empirical Analysis in R):**
+---
+
+# Exercise 1: Theoretical & Reading Questions
+
+::: {.callout-important title="Classmates' Assignment"}
+This section contains Exercise 1 (Part A and Part B). Space has been allocated below for your classmates to fill in their solutions and write-ups.
+:::
+
+## Part A: Article Critique
+
+> **Reading:** *“Legal determinants of World Cup Success”* (by Mark West).
+
+### Question 1: Econometric Strategy & Gauss-Markov Critique
+*Formulate a critique related to the econometric strategy used in the paper. Think about which of the Gauss-Markov assumptions might be violated in the regressions and what that tells you about the interpretation of the results. Limit your critique to one page.*
+
+::: {.callout-note title="Answer — Exercise 1.A.1"}
+<!-- Classmates: Insert critique here (max 1 page) -->
+
+**Violated Gauss-Markov Assumptions & Implications:**
+
+- **Zero Conditional Mean Assumption $E(u|X) = 0$ (Omitted Variable Bias):** 
+  
+- **Homoskedasticity / Uncorrelated Errors:** 
+
+- **Interpretation of Coefficients:** 
+
+:::
+
+\newpage
+
+### Question 2: Reliability of Estimations
+*The 4 different estimations in this paper seem to lead to quite different results. If you wanted to conclude anything related to the determinants of World Cup soccer success, would you rely on any of these estimations? If so, on which one?*
+
+::: {.callout-note title="Answer — Exercise 1.A.2"}
+<!-- Classmates: Insert answer here -->
+
+**Assessment:**
+
+:::
+
+---
+
+## Part B: True or False
+
+*Missing observations can lead to both biased estimates and imprecise estimates. T/F? Explain.*
+
+::: {.callout-note title="Answer — Exercise 1.B"}
+<!-- Classmates: Insert T/F answer and explanation here -->
+
+**Statement:** **[True / False]**
+
+**Explanation:**
+
+- **Biased Estimates:** 
+
+- **Imprecise Estimates:** 
+
+:::
+
+---
+
+# Computer Exercise: Empirical Analysis in R
+
+::: {.callout-tip title="Your Assignment"}
+This section contains the 7 empirical questions using the dataset `nichh.dta`. Code chunks are prepared below for execution in VS Code / R.
+:::
+
+## Data Setup & Model Estimation
+```{r, imports}
+library(modelsummary)
+library(knitr)
+library(rio)
+library(tidyverse)
+library(lmtest)
+library(here)
+library(DT)
+library(haven)
+library(huxtable)
+library(sandwich)
+library(dplyr)
+library(broom)
+library(gridExtra)
+library(ggridges)
+library(ggplot2)
+
+db <- read_dta(here::here("econometrics_ps3/nichh.dta"))
+```
+
+```{r, model_base}
+model_base <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+# summary(model_base)
+```
+
+> **Dataset:** `nichh.dta` (subset of 1998 Nicaragua LSMS dataset, 582 households).
+>
+> **Task:** Estimate a log-linear model that allows understanding the *ceteris paribus* relationships between total household consumption (in logs) and household head’s age, head’s education, male and female labor endowments, land endowments, and distances to the health clinic and school.
+
+---
+
+## Question (1): Education Significance
+
+*What is the minimum significance level at which one can reject the hypothesis that the education level of the household head does not affect total household consumption?*
+
+::: {.callout-note title="Answer — Question (1)"}
+<!-- Write your interpretation here -->
+
+As shown in Table \ref{tbl-model_base_summary}, the coefficient of the household head's education is statistically significant at the 1% significant level, with a p-value of $<2e-16$ (almost zero). This means the minimum significance level at which we can reject the null hypothesis that the education level of the household head does not affect total household consumption is $<2e-16$.
+
+```{r model_base_summary}
+outreg <- huxreg(
+  `Log-Linear Model` = model_base,
+  coefs = c(
+    "Intercept" = "(Intercept)",
+    "Number of male adults" = "adultm",
+    "Number of female adults" = "adultf",
+    "Age of household head (years)" = "headage",
+    "Education of household head (years)" = "headeduc",
+    "Land owned (ha)" = "landarea",
+    "Distance to health centre (km)" = "healthkm",
+    "Distance to school (km)" = "schoolkm"
+    ),
+  error_format = "({std.error}) [p = {p.value}]",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+outreg <- set_label(outreg, "tbl-model_base_summary")
+outreg <- set_caption(outreg, "Log-Linear model summary. Dependent variable: log(total household consumption).")
+outreg <- set_all_padding(outreg, 1.5)
+outreg
+```
+
+- **p-value:** 
+- **Interpretation:** The minimum significance level ($\alpha$) at which we can reject $H_0: \beta_{\text{educ}} = 0$ is equal to the exact p-value (approx. ...).
+
+:::
+
+---
+
+## Question (2): Male vs. Female Labor Returns
+
+*Do your results allow you to conclude the returns to male adults in the household are larger than the returns to female adults? State the null hypothesis and the alternative hypothesis you are testing, and the significance level you are considering. Do the test and discuss. Does your answer differ depending on which significance level you consider?*
+
+::: {.callout-note title="Answer — Question (2)"}
+<!-- Write your interpretation here -->
+
+- **Hypotheses:**
+  - $H_0: \beta_{\text{male}} \le \beta_{\text{female}}$ (or $\beta_{\text{male}} - \beta_{\text{female}} = 0$)
+  - $H_1: \beta_{\text{male}} > \beta_{\text{female}}$
+- **Test Results & Discussion:**
+- **Sensitivity to Significance Level ($\alpha = 0.05$ vs. $\alpha = 0.10$):**
+
+:::
+
+---
+
+## Question (3): Joint Significance of Distance Variables
+
+*Test whether the 2 distance variables are jointly significant. Calculate the test by hand (using R). What can you conclude about the role of isolation on household welfare?*
+
+
+::: {.callout-note title="Answer — Question (3)"}
+<!-- Write your interpretation here -->
+
+- **F-statistic (by hand):** 
+- **p-value:** 
+- **Conclusion on Isolation & Household Welfare:** 
+
+:::
+
+---
+
+## Question (4): Correlation Between Education and Age
+
+*Analyze the correlation between households’ education and age. What does this correlation imply for your estimates? If you are estimating this model to obtain an estimate of the returns to household’s heads education on household welfare, should you keep household age in the model?*
+
+::: {.callout-note title="Answer — Question (4)"}
+<!-- Write your interpretation here -->
+
+- **Correlation Coefficient:** 
+- **Implications for Estimates & Omitted Variable Bias:**
+- **Should Age be kept in the model?** 
+
+:::
+
+---
+
+## Question (5): Testing Coefficient equal to 0.06
+
+*Test whether the coefficient of education is different from 0.06.*
+
+::: {.callout-note title="Answer — Question (5)"}
+<!-- Write your interpretation here -->
+
+- **t-statistic:** 
+- **p-value / 95% CI:** 
+- **Conclusion:** 
+
+:::
+
+---
+
+## Question (6): Outliers in Land Area Variable
+
+*Look at the distribution of the landarea variable. Then re-estimate the model excluding households with more than 100 ha. Analyze the change of the coefficient of the land area variable compared to the previous regression. Explain.*
+
+::: {.callout-note title="Answer — Question (6)"}
+<!-- Write your interpretation here -->
+
+- **Distribution Analysis / Outliers:**
+- **Comparison of Coefficients:**
+- **Explanation of Changes:**
+
+:::
+
+---
+
+## Question (7): Omitted Variable Thought Experiment
+
+*Give an example of an additional variable you might want to include in the regression, but for which you don’t have data, and indicate the expected effect of that variable, as well as any changes you would anticipate to occur in the point estimates of the other variables.*
+
+::: {.callout-note title="Answer — Question (7)"}
+<!-- Write your interpretation here -->
+
+- **Omitted Variable Example:** (e.g., land quality / soil fertility, household unobserved ability/entrepreneurship, access to credit)
+- **Expected Direct Effect on Consumption ($\beta_{\text{ommitted}}$):** 
+- **Correlation with Included Regressors ($\text{Cov}(x_j, \text{omitted})$):** 
+- **Anticipated Changes in Point Estimates (Bias Direction):** 
+
+:::
