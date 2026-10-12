@@ -172,13 +172,34 @@ outreg
 *Do your results allow you to conclude the returns to male adults in the household are larger than the returns to female adults? State the null hypothesis and the alternative hypothesis you are testing, and the significance level you are considering. Do the test and discuss. Does your answer differ depending on which significance level you consider?*
 
 ::: {.callout-note title="Answer — Question (2)"}
-<!-- Write your interpretation here -->
+Recalling the model functional form:
+$$
+\begin{aligned}
+\label{eq:functional_form}
+\log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u
+& \text{Where } \text{Z} \text{ represents the vector of control variables and C is the vector of their coefficients.} 
+\end{align}
+$$
 
-- **Hypotheses:**
-  - $H_0: \beta_{\text{male}} \le \beta_{\text{female}}$ (or $\beta_{\text{male}} - \beta_{\text{female}} = 0$)
-  - $H_1: \beta_{\text{male}} > \beta_{\text{female}}$
-- **Test Results & Discussion:**
-- **Sensitivity to Significance Level ($\alpha = 0.05$ vs. $\alpha = 0.10$):**
+Using Equation \ref{eq:functional_form} the null and alternative hypotheses are as follows:
+
+$$
+\begin{aligned}
+H_0: & \beta_1 \leq \beta_2 \\
+H_1: & \beta_1 > \beta_2
+\end{aligned}
+$$
+
+```{r male_vs_female_test}
+summary_base <- summary(model_base)
+diff = model_base$coefficients["adultm"] - model_base$coefficients["adultf"]
+se_diff = sqrt(summary_base$coefficients[2, 2]^2 + summary_base$coefficients[3, 2]^2 - 2 * vcov(model_base)["adultm", "adultf"])
+
+t_statistic = diff / se_diff
+t_statistic
+```
+
+Running a one sided t-test to verify that $\beta_1 - \beta_2 > 0$, the results show a t-statistic of $-2.090923$ which $t$ is less than any critical value for the significance levels of 1%, 5%, or 10%. In fact, for one sided tests any t-statistic less than zero will fail to reject the null hypothesis because its p-value will be greater than the significance level. Therefore, we can not conclude that returns to male adults in the household are larger than the returns to female adults regardless of the significance level considered.
 
 :::
 
@@ -188,13 +209,39 @@ outreg
 
 *Test whether the 2 distance variables are jointly significant. Calculate the test by hand (using R). What can you conclude about the role of isolation on household welfare?*
 
-
 ::: {.callout-note title="Answer — Question (3)"}
 <!-- Write your interpretation here -->
+Let's estimate the restricted and unrestricted models and calculate the F-statistic by hand:
 
-- **F-statistic (by hand):** 
-- **p-value:** 
-- **Conclusion on Isolation & Household Welfare:** 
+```{r}
+r_model <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea,
+  data = db
+)
+u_model <- model_base
+
+# save the residual sum of squares for both models
+rss_r <- sum(r_model$residuals^2)
+rss_u <- sum(u_model$residuals^2)
+# calculate the F-statistic
+F_stat <- ((rss_r - rss_u) / 2) / (rss_u / (df.residual(u_model)))
+F_stat
+
+# get the critical value for the F-distribution with 2 and n-k-1 degrees of freedom
+critical_value <- qf(0.90, 2, df.residual(u_model))
+critical_value
+```
+
+Using the standard formula for the F-statistic:
+$$
+\begin{aligned}
+F &= \frac{(RSS_R - RSS_U) / q}{RSS_U / (n - k - 1)}\\
+& = \frac{(192.4492-190.7043)/2}{190.7043/(575-7-1)} = 2.59
+\end{aligned}
+$$
+
+Since the critical value for the F-distribution with 2 restrictions and 567 degrees of freedom is 3.01, we fail to reject the null hypothesis that the two distance variables are jointly insignificant. However, we can reject the null hypothesis at a 10% significance level, as the critical value for that level is 2.31. This suggest that isolation (measured by distance to health clinic and school) has a weak but significant effect on household welfare, and that the two distance variables are jointly significant at a 10% significance level.
 
 :::
 
@@ -207,9 +254,39 @@ outreg
 ::: {.callout-note title="Answer — Question (4)"}
 <!-- Write your interpretation here -->
 
-- **Correlation Coefficient:** 
-- **Implications for Estimates & Omitted Variable Bias:**
-- **Should Age be kept in the model?** 
+```{r}
+correlation <- cor(db$headage, db$headeduc, use = "complete.obs")
+correlation
+
+# estimate linear model without age of household head
+model_no_age <- lm(
+  log(constot) ~ adultm + adultf + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+
+# summarize with huxtable
+huxreg(
+  `Model with Age` = model_base,
+  `Model without Age` = model_no_age,
+  coefs = c(
+    "Intercept" = "(Intercept)",
+    "Number of male adults" = "adultm",
+    "Number of female adults" = "adultf",
+    "Age of household head (years)" = "headage",
+    "Education of household head (years)" = "headeduc",
+    "Land owned (ha)" = "landarea",
+    "Distance to health centre (km)" = "healthkm",
+    "Distance to school (km)" = "schoolkm"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+```
 
 :::
 
@@ -222,10 +299,6 @@ outreg
 ::: {.callout-note title="Answer — Question (5)"}
 <!-- Write your interpretation here -->
 
-- **t-statistic:** 
-- **p-value / 95% CI:** 
-- **Conclusion:** 
-
 :::
 
 ---
@@ -237,10 +310,6 @@ outreg
 ::: {.callout-note title="Answer — Question (6)"}
 <!-- Write your interpretation here -->
 
-- **Distribution Analysis / Outliers:**
-- **Comparison of Coefficients:**
-- **Explanation of Changes:**
-
 :::
 
 ---
@@ -251,10 +320,5 @@ outreg
 
 ::: {.callout-note title="Answer — Question (7)"}
 <!-- Write your interpretation here -->
-
-- **Omitted Variable Example:** (e.g., land quality / soil fertility, household unobserved ability/entrepreneurship, access to credit)
-- **Expected Direct Effect on Consumption ($\beta_{\text{ommitted}}$):** 
-- **Correlation with Included Regressors ($\text{Cov}(x_j, \text{omitted})$):** 
-- **Anticipated Changes in Point Estimates (Bias Direction):** 
 
 :::
