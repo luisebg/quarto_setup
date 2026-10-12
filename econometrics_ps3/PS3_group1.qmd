@@ -310,7 +310,8 @@ $$
 # let's calculate the t-statistic manually
 abs(coef(summary_base)["headeduc", "Estimate"] - 0.06) / coef(summary_base)["headeduc", "Std. Error"]
 
-
+coef(summary_base)["headeduc", "Estimate"] + 1.96*coef(summary_base)["headeduc", "Std. Error"]
+coef(summary_base)["headeduc", "Estimate"] - 1.96*coef(summary_base)["headeduc", "Std. Error"]
 ```
 
 Estimating the t-statistic using $t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}$, we obtain a t-statistic of 1.171443, which is less than the critical value of 1.96 for a two-sided test at the 5% significance level. Therefore, we fail to reject the null hypothesis that the coefficient of education is equal to 0.06. In other words, we do not have enough evidence to conclude that the coefficient of education is different from 0.06 at the 5% significance level.
@@ -327,6 +328,13 @@ Estimating the t-statistic using $t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}
 
 :::
 
+```{r distribution_chart}
+library(ggridges)
+library(ggplot2)
+
+ggplot(db, aes(landarea)) + ylab("Kernel Density") + xlab("Land Owned (ha)") + ggtitle("Distribution of landarea") + geom_density(alpha = 0.5) +
+  labs(fill = "Year", colour = "Year") + ylim(0, NA) + theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "none")
+```
 ---
 
 ## Question (7): Omitted Variable Thought Experiment
