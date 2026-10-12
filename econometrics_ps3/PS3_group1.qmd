@@ -329,11 +329,39 @@ Estimating the t-statistic using $t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}
 :::
 
 ```{r distribution_chart}
-library(ggridges)
-library(ggplot2)
+ggplot(db, aes(landarea)) + ylab("Kernel Density") + xlab("Land Owned (ha)") + ggtitle("Distribution of landarea") + geom_density(alpha = 0.5) + geom_vline(xintercept = 100, linetype = "dashed") + ylim(0, NA) + theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "none")
 
-ggplot(db, aes(landarea)) + ylab("Kernel Density") + xlab("Land Owned (ha)") + ggtitle("Distribution of landarea") + geom_density(alpha = 0.5) +
-  labs(fill = "Year", colour = "Year") + ylim(0, NA) + theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "none")
+model_landare_lt_100 <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db %>% filter(landarea <= 100)
+)
+
+outreg <- huxreg(
+  `Base model` = model_base,
+  `Land Area <= 100` = model_landare_lt_100,
+  coefs = c(
+    "Intercept" = "(Intercept)",
+    "Number of male adults" = "adultm",
+    "Number of female adults" = "adultf",
+    "Age of household head (years)" = "headage",
+    "Education of household head (years)" = "headeduc",
+    "Land owned (ha)" = "landarea",
+    "Distance to health centre (km)" = "healthkm",
+    "Distance to school (km)" = "schoolkm"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+
+outreg <- set_label(outreg, "tbl-model_leq_100")
+outreg <- set_caption(outreg, "Log-Linear model summary. Dependent variable: log(total household consumption).")
+outreg <- set_all_padding(outreg, 1.5)
+outreg
 ```
 ---
 
