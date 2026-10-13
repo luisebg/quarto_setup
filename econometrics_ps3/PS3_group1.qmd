@@ -121,6 +121,18 @@ model_base <- lm(
   landarea + healthkm + schoolkm,
   data = db
 )
+
+model_no_age <- lm(
+  log(constot) ~ adultm + adultf + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+
+model_landare_lt_100 <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db %>% filter(landarea <= 100)
+)
 # summary(model_base)
 ```
 
@@ -142,7 +154,9 @@ As shown in Table \ref{tbl-model_base_summary}, the coefficient of the household
 
 ```{r model_base_summary}
 outreg <- huxreg(
-  `Log-Linear Model` = model_base,
+  `Base` = model_base,
+  `No Age` = model_no_age,
+  `Land Area <= 100` = model_landare_lt_100,
   coefs = c(
     "Intercept" = "(Intercept)",
     "Number of male adults" = "adultm",
@@ -153,7 +167,7 @@ outreg <- huxreg(
     "Distance to health centre (km)" = "healthkm",
     "Distance to school (km)" = "schoolkm"
     ),
-  error_format = "({std.error}) [p = {p.value}]",
+  error_format = "({std.error})",
   error_pos = "below",
   align = "c",
   statistics = c(N = "nobs", R2 = "r.squared"),
@@ -177,7 +191,7 @@ Recalling the model functional form:
 $$
 \begin{aligned}
 \label{eq:functional_form}
-\log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u
+\log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u\\
 & \text{Where } \text{Z} \text{ represents the vector of control variables and C is the vector of their coefficients.} 
 \end{aligned}
 $$
@@ -254,40 +268,15 @@ Since the critical value for the F-distribution with 2 restrictions and 567 degr
 
 ::: {.callout-note title="Answer — Question (4)"}
 <!-- Write your interpretation here -->
+The correlation between household's education and age is $-0.31$ and should be included as control in the functional form to increase precision for the following reasons.
+
+- Since age affects education and consumption and not the education affects age because by definition it is not possible, age is a *good control* to include. Adding it should increase the precision of the estimators.
+- Omitting age would downward bias the estimated effect of education on consumption. Given the correlation of $-0.31$ and an effect of age on consumption of $0.006$, omitting age would downward bias our estimate by $corr(education, age) \times \beta_{age} = 0.31 \cdot 0.006 = 0.00186$.
 
 :::
+
 ```{r}
 correlation <- cor(db$headage, db$headeduc, use = "complete.obs")
-correlation
-
-# estimate linear model without age of household head
-model_no_age <- lm(
-  log(constot) ~ adultm + adultf + headeduc +
-  landarea + healthkm + schoolkm,
-  data = db
-)
-
-# summarize with huxtable
-huxreg(
-  `Model with Age` = model_base,
-  `Model without Age` = model_no_age,
-  coefs = c(
-    "Intercept" = "(Intercept)",
-    "Number of male adults" = "adultm",
-    "Number of female adults" = "adultf",
-    "Age of household head (years)" = "headage",
-    "Education of household head (years)" = "headeduc",
-    "Land owned (ha)" = "landarea",
-    "Distance to health centre (km)" = "healthkm",
-    "Distance to school (km)" = "schoolkm"
-  ),
-  error_format = "({std.error})",
-  error_pos = "below",
-  align = "c",
-  statistics = c(N = "nobs", R2 = "r.squared"),
-  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
-  note = "Significance: {stars}"
-)
 ```
 
 ---
@@ -325,43 +314,29 @@ Estimating the t-statistic using $t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}
 
 ::: {.callout-note title="Answer — Question (6)"}
 <!-- Write your interpretation here -->
+Looking at the distribution of the landarea variable in Figure \ref{fig-distribution_land}, we can see that there are a few households with land area greater than 100 ha that create a long right tail in the distribution. Most of the hoseholds ($87.5\%$) have a land area equal to zero so the distribution is heavily skewed. In theory removing outliers should increase the estimate of the land area coefficient the regression line will have a stepper slope.
+
+As shown in Table \ref{tbl-model_base_summary}, the coefficient of land area in the model with all households is $0.004$ with a standard error of $0.001$, while the coefficient of land area in the model excluding households with more than 100 ha is $0.010$ with a standard error of $0.004$ no longer significant at the 5% significance level but at 10% significance level. The rest of the coefficients remain unchanged indicating the base model is robust to the exclusion of outliers.
 
 :::
 
 ```{r distribution_chart}
+#| label: fig-distribution_land
+#| fig-cap: "Distribution of Land Area (ha)"
+
 ggplot(db, aes(landarea)) + ylab("Kernel Density") + xlab("Land Owned (ha)") + ggtitle("Distribution of landarea") + geom_density(alpha = 0.5) + geom_vline(xintercept = 100, linetype = "dashed") + ylim(0, NA) + theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "none")
 
-model_landare_lt_100 <- lm(
-  log(constot) ~ adultm + adultf + headage + headeduc +
-  landarea + healthkm + schoolkm,
-  data = db %>% filter(landarea <= 100)
-)
+# # make a chart: x-axis landarea, y-axis log(constot), color by landarea > 100
+# ggplot(db, aes(x = landarea, y = log(constot))) +
+#   geom_point(alpha = 0.5) +
+#   geom_smooth(aes(color = "All data"), method = "lm", se = FALSE) +
+#   geom_smooth(data = db %>% filter(landarea <= 100), aes(color = "Land area <= 100 ha"), method = "lm", se = FALSE) +
+#   scale_color_manual(values = c("All data" = "red", "Land area <= 100 ha" = "blue"), name = "Regression Line") +
+#   xlab("Land Owned (ha)") + ylab("Log of Consumption") + ggtitle("Relationship between Land Area and Consumption") +
+#   theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "inside", legend.justification = "right") + xlim(0, 300) 
 
-outreg <- huxreg(
-  `Base model` = model_base,
-  `Land Area <= 100` = model_landare_lt_100,
-  coefs = c(
-    "Intercept" = "(Intercept)",
-    "Number of male adults" = "adultm",
-    "Number of female adults" = "adultf",
-    "Age of household head (years)" = "headage",
-    "Education of household head (years)" = "headeduc",
-    "Land owned (ha)" = "landarea",
-    "Distance to health centre (km)" = "healthkm",
-    "Distance to school (km)" = "schoolkm"
-  ),
-  error_format = "({std.error})",
-  error_pos = "below",
-  align = "c",
-  statistics = c(N = "nobs", R2 = "r.squared"),
-  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
-  note = "Significance: {stars}"
-)
-
-outreg <- set_label(outreg, "tbl-model_leq_100")
-outreg <- set_caption(outreg, "Log-Linear model summary. Dependent variable: log(total household consumption).")
-outreg <- set_all_padding(outreg, 1.5)
-outreg
+# # count the percentage of households with landarea = 0
+# db %>% filter(landarea == 0) %>% summarise(percentage = n() / nrow(db) * 100)
 ```
 ---
 
@@ -371,5 +346,6 @@ outreg
 
 ::: {.callout-note title="Answer — Question (7)"}
 <!-- Write your interpretation here -->
+An additional variable that could be included in the regression is *presence of chronic deseases* in the hosehold head. Since deseases can affect the access to education and the ability to work affecting income and consumption, we would expect a negative effect of this variable on household consumption. It is also a good control because it affects education and consumption.If this variable is omitted from the regression, we would expect the coefficient of the education variable to be biased upwards, as households without chronic diseases may have higher levels of education and thus higher consumption.
 
 :::
