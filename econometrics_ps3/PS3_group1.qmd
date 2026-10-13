@@ -192,7 +192,7 @@ $$
 \begin{aligned}
 \label{eq:functional_form}
 \log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u\\
-& \text{Where } \text{Z} \text{ represents the vector of control variables and C is the vector of their coefficients.} 
+& \text{Where } \text{Z} \text{ represents the vector of control variables}\\& \text{and } C \text{ is the vector of their coefficients.} 
 \end{aligned}
 $$
 
