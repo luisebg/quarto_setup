@@ -16,6 +16,7 @@ format:
     number-sections: true
     colorlinks: true
     fig-cap-location: top
+    keep-tex: true
 execute:
   echo: false
   warning: false
@@ -178,7 +179,7 @@ $$
 \label{eq:functional_form}
 \log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u
 & \text{Where } \text{Z} \text{ represents the vector of control variables and C is the vector of their coefficients.} 
-\end{align}
+\end{aligned}
 $$
 
 Using Equation \ref{eq:functional_form} the null and alternative hypotheses are as follows:
@@ -254,6 +255,7 @@ Since the critical value for the F-distribution with 2 restrictions and 567 degr
 ::: {.callout-note title="Answer — Question (4)"}
 <!-- Write your interpretation here -->
 
+:::
 ```{r}
 correlation <- cor(db$headage, db$headeduc, use = "complete.obs")
 correlation
@@ -287,8 +289,6 @@ huxreg(
   note = "Significance: {stars}"
 )
 ```
-
-:::
 
 ---
 
