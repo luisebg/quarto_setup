@@ -12,7 +12,7 @@ format:
     code-fold: show
     code-tools: true
   pdf:
-    toc: true
+    toc: false
     number-sections: true
     colorlinks: true
     fig-cap-location: top
@@ -23,78 +23,15 @@ execute:
   message: false
 ---
 
-## Overview & Group Work Division
+# Exercise
+## A
+1. Formulate a critique related to the econometric strategy used in the paper. Think about which of the Gauss-Markov assumptions might be violated in the regressions and what that tells you about the interpretation of the results. Limit your critique to one page.
 
-- **Exercise 1 (Theoretical / Reading Critique):**
-- **Computer Exercise (Empirical Analysis in R):**
----
+2. The 4 different estimations in this paper seem to lead to quite different results. If you wanted to conclude anything related to the determinants of World Cup soccer success, would you rely on any of these estimations? If so, on which one?
 
-# Exercise 1: Theoretical & Reading Questions
+## B
+1. True or False: Missing observations can lead to both biased estimates and imprecise estimates. T/F? Explain.
 
-::: {.callout-important title="Classmates' Assignment"}
-This section contains Exercise 1 (Part A and Part B). Space has been allocated below for your classmates to fill in their solutions and write-ups.
-:::
-
-## Part A: Article Critique
-
-> **Reading:** *“Legal determinants of World Cup Success”* (by Mark West).
-
-### Question 1: Econometric Strategy & Gauss-Markov Critique
-*Formulate a critique related to the econometric strategy used in the paper. Think about which of the Gauss-Markov assumptions might be violated in the regressions and what that tells you about the interpretation of the results. Limit your critique to one page.*
-
-::: {.callout-note title="Answer — Exercise 1.A.1"}
-<!-- Classmates: Insert critique here (max 1 page) -->
-
-**Violated Gauss-Markov Assumptions & Implications:**
-
-- **Zero Conditional Mean Assumption $E(u|X) = 0$ (Omitted Variable Bias):** 
-  
-- **Homoskedasticity / Uncorrelated Errors:** 
-
-- **Interpretation of Coefficients:** 
-
-:::
-
-\newpage
-
-### Question 2: Reliability of Estimations
-*The 4 different estimations in this paper seem to lead to quite different results. If you wanted to conclude anything related to the determinants of World Cup soccer success, would you rely on any of these estimations? If so, on which one?*
-
-::: {.callout-note title="Answer — Exercise 1.A.2"}
-<!-- Classmates: Insert answer here -->
-
-**Assessment:**
-
-:::
-
----
-
-## Part B: True or False
-
-*Missing observations can lead to both biased estimates and imprecise estimates. T/F? Explain.*
-
-::: {.callout-note title="Answer — Exercise 1.B"}
-<!-- Classmates: Insert T/F answer and explanation here -->
-
-**Statement:** **[True / False]**
-
-**Explanation:**
-
-- **Biased Estimates:** 
-
-- **Imprecise Estimates:** 
-
-:::
-
----
-
-# Computer Exercise: Empirical Analysis in R
-
-::: {.callout-tip title="Your Assignment"}
-This section contains the 7 empirical questions using the dataset `nichh.dta`. Code chunks are prepared below for execution in VS Code / R.
-:::
-
-## Data Setup & Model Estimation
 ```{r, imports}
 library(modelsummary)
 library(knitr)
@@ -136,22 +73,131 @@ model_landare_lt_100 <- lm(
 # summary(model_base)
 ```
 
-> **Dataset:** `nichh.dta` (subset of 1998 Nicaragua LSMS dataset, 582 households).
->
-> **Task:** Estimate a log-linear model that allows understanding the *ceteris paribus* relationships between total household consumption (in logs) and household head’s age, head’s education, male and female labor endowments, land endowments, and distances to the health clinic and school.
+# Computer Exercise
+Note for the computed models, refer to the appendix section Table \ref{tbl-model_base_summary}.
 
----
+1. *What is the minimum significance level at which one can reject the hypothesis that the education level of the household head does not affect total household consumption?*
 
-## Question (1): Education Significance
+  * As shown in Table \ref{tbl-model_base_summary}, the coefficient of the household head's education is statistically significant at the 1% significant level, with a p-value of $<2e-16$ (almost zero). This means the minimum significance level at which we can reject the null hypothesis that the education level of the household head does not affect total household consumption is $<2e-16$.
 
-*What is the minimum significance level at which one can reject the hypothesis that the education level of the household head does not affect total household consumption?*
+2. *Do your results allow you to conclude the returns to male adults in the household are larger than the returns to female adults? State the null hypothesis and the alternative hypothesis you are testing, and the significance level you are considering. Do the test and discuss. Does your answer differ depending on which significance level you consider?*
 
-::: {.callout-note title="Answer — Question (1)"}
-<!-- Write your interpretation here -->
+  * Recalling the model functional form:
+$$
+\begin{aligned}
+\log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u\\\\
+& \text{Where } \text{Z} \text{ represents the vector of control variables}\\& \text{and } C \text{ is the vector of their coefficients.} 
+\end{aligned}
+$$ {#eq-functional_form}
 
-As shown in Table \ref{tbl-model_base_summary}, the coefficient of the household head's education is statistically significant at the 1% significant level, with a p-value of $<2e-16$ (almost zero). This means the minimum significance level at which we can reject the null hypothesis that the education level of the household head does not affect total household consumption is $<2e-16$.
-:::
+  * Using Equation @eq-functional_form, the null and alternative hypotheses are as follows:
 
+$$
+\begin{aligned}
+H_0: & \beta_1 \leq \beta_2 \\
+H_1: & \beta_1 > \beta_2
+\end{aligned}
+$$
+
+```{r male_vs_female_test}
+summary_base <- summary(model_base)
+diff = model_base$coefficients["adultm"] - model_base$coefficients["adultf"]
+se_diff = sqrt(summary_base$coefficients[2, 2]^2 + summary_base$coefficients[3, 2]^2 - 2 * vcov(model_base)["adultm", "adultf"])
+
+t_statistic = diff / se_diff
+
+# compute the p-value
+p_value = 1 - pt(t_statistic, df = model_base$df.residual)
+```
+
+  * Running a one sided t-test to verify that $\beta_1 - \beta_2 > 0$, the results show a t-statistic of $-2.090923$ which $t$ is less than any critical value for the significance levels of 1%, 5%, or 10%. In fact, for one sided tests any t-statistic less than zero will fail to reject the null hypothesis because its p-value will be greater than the significance level. Therefore, we can not conclude that returns to male adults in the household are larger than the returns to female adults regardless of the significance level considered.
+
+3. *Test whether the 2 distance variables are jointly significant. Calculate the test by hand (using R). What can you conclude about the role of isolation on household welfare?*
+
+  * The null and alternative hypotheses are as follows:
+$$
+\begin{aligned}
+H_0: & \beta_{healthkm} = 0 \text{ and } \beta_{schoolkm} = 0 \\
+H_1: & \beta_{healthkm} \neq 0 \text{ or } \beta_{schoolkm} \neq 0
+\end{aligned}
+$$
+
+```{r}
+r_model <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea,
+  data = db
+)
+u_model <- model_base
+
+# save the residual sum of squares for both models
+rss_r <- sum(r_model$residuals^2)
+rss_u <- sum(u_model$residuals^2)
+# calculate the F-statistic
+F_stat <- ((rss_r - rss_u) / 2) / (rss_u / (df.residual(u_model)))
+
+# get the critical value for the F-distribution with 2 and n-k-1 degrees of freedom
+critical_value <- qf(0.90, 2, df.residual(u_model))
+```
+
+  * Let's estimate the restricted and unrestricted models and calculate the F-statistic by hand. Using the standard formula for the F-statistic:
+$$
+\begin{aligned}
+F &= \frac{(RSS_R - RSS_U) / q}{RSS_U / (n - k - 1)}\\
+& = \frac{(192.4492-190.7043)/2}{190.7043/(575-7-1)} = 2.59
+\end{aligned}
+$$
+
+  * Since the critical value for the F-distribution with 2 restrictions and 567 degrees of freedom is 3.01, we fail to reject the null hypothesis of joint insignificance. However, we can reject the null hypothesis at a 10% significance level, as the critical value for that level is 2.31. This suggest distance to health clinic and school have a weak but significant effect on household welfare, and that the two distance variables are jointly significant at a 10% significance level.
+
+4. *Analyze the correlation between households’ education and age. What does this correlation imply for your estimates? If you are estimating this model to obtain an estimate of the returns to household’s heads education on household welfare, should you keep household age in the model?*
+
+  * The correlation between household's education and age is $-0.31$ and should be included as control in the functional form to increase precision for the following reasons.
+
+    - Since age affects education and consumption and education cannot affect age, age is a *good control* to include. Adding it should increase the precision of the estimators.
+    - Omitting age would downward bias the estimated effect of education on consumption. Given the correlation of $-0.31$ and an effect of age on consumption of $0.006$, omitting age would downward bias our estimate by $corr(education, age) \times \beta_{age} = 0.31 \cdot 0.006 = -0.00186$.
+
+```{r}
+correlation <- cor(db$headage, db$headeduc, use = "complete.obs")
+```
+
+5. *Test whether the coefficient of education is different from 0.06.*
+
+  * The null and alternative hypotheses are:
+$$
+\begin{aligned}
+H_0: & \beta_{headeduc} = 0.06 \\
+H_1: & \beta_{headeduc} \neq 0.06
+\end{aligned}
+$$
+
+```{r, coeff_test}
+t_statistic <- abs(coef(model_base)["headeduc"] - 0.06) / summary(model_base)$coefficients["headeduc", "Std. Error"]
+# compute the p-value for a two-sided test
+p_value <- 2 * (1 - pt(t_statistic, df = model_base$df.residual))
+```
+  * Estimating the t-statistic using $t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}$, we obtain a t-statistic of 1.171443, which is less than the critical value of 1.96 for a two-sided test at the 5% significance level. Therefore, we fail to reject the null hypothesis that the coefficient of education is equal to 0.06. In other words, we do not have enough evidence to conclude that the coefficient of education is different from 0.06 at the 5% significance level.
+
+6. *Look at the distribution of the landarea variable. Then re-estimate the model excluding households with more than 100 ha. Analyze the change of the coefficient of the land area variable compared to the previous regression. Explain.*
+
+  * Looking at the distribution of the landarea variable in Figure \ref{fig-distribution_land}, we can see that there are a few households with land area greater than 100 ha that create a long right tail in the distribution. Most of the households ($87.5\%$) have a land area equal to zero so the distribution is heavily skewed. In theory removing outliers should increase the estimate of the land area coefficient the regression line will have a steeper slope.
+
+  * As shown in Table \ref{tbl-model_base_summary}, the coefficient of land area in the model with all households is $0.004$ with a standard error of $0.001$, while the coefficient of land area in the model excluding households with more than 100 ha is $0.010$ with a standard error of $0.004$ no longer significant at the 1% significance level but at 5% significance level. The rest of the coefficients remain unchanged indicating the base model is robust to the exclusion of outliers.
+
+
+```{r distribution_chart}
+#| label: fig-distribution_land
+#| fig-cap: "Distribution of Land Area (ha)"
+
+ggplot(db, aes(landarea)) + ylab("Kernel Density") + xlab("Land Owned (ha)") + ggtitle("Distribution of landarea") + geom_density(alpha = 0.5) + geom_vline(xintercept = 100, linetype = "dashed") + ylim(0, NA) + theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "none")
+```
+
+7. *Give an example of an additional variable you might want to include in the regression, but for which you don’t have data, and indicate the expected effect of that variable, as well as any changes you would anticipate to occur in the point estimates of the other variables.*
+
+  * An additional variable that could be included in the regression is *presence of chronic diseases* in the household head. Since diseases can affect the access to education and the ability to work affecting income and consumption, we would expect a negative effect of this variable on household consumption. It is also a good control because it affects education and consumption.If this variable is omitted from the regression, we would expect the coefficient of the education variable to be biased upwards, as households without chronic diseases may have higher levels of education and thus higher consumption.
+  * Another variable that could be included is *household access to credit* because it can affect the ability to invest in education and health, which in turn can affect consumption. The effect of access to credit on education is positive and on consumption is also positive because it can help to smooth consumption over time. Therefore adding this variable would likely decrease the coefficient of education because the estimated bias is positive.
+
+# Appendix
 ```{r model_base_summary}
 outreg <- huxreg(
   `Base` = model_base,
@@ -179,173 +225,3 @@ outreg <- set_caption(outreg, "Log-Linear model summary. Dependent variable: log
 outreg <- set_all_padding(outreg, 1.5)
 outreg
 ```
-
----
-
-## Question (2): Male vs. Female Labor Returns
-
-*Do your results allow you to conclude the returns to male adults in the household are larger than the returns to female adults? State the null hypothesis and the alternative hypothesis you are testing, and the significance level you are considering. Do the test and discuss. Does your answer differ depending on which significance level you consider?*
-
-::: {.callout-note title="Answer — Question (2)"}
-Recalling the model functional form:
-$$
-\begin{aligned}
-\label{eq:functional_form}
-\log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u\\
-& \text{Where } \text{Z} \text{ represents the vector of control variables}\\& \text{and } C \text{ is the vector of their coefficients.} 
-\end{aligned}
-$$
-
-Using Equation \ref{eq:functional_form} the null and alternative hypotheses are as follows:
-
-$$
-\begin{aligned}
-H_0: & \beta_1 \leq \beta_2 \\
-H_1: & \beta_1 > \beta_2
-\end{aligned}
-$$
-
-```{r male_vs_female_test}
-summary_base <- summary(model_base)
-diff = model_base$coefficients["adultm"] - model_base$coefficients["adultf"]
-se_diff = sqrt(summary_base$coefficients[2, 2]^2 + summary_base$coefficients[3, 2]^2 - 2 * vcov(model_base)["adultm", "adultf"])
-
-t_statistic = diff / se_diff
-t_statistic
-```
-
-Running a one sided t-test to verify that $\beta_1 - \beta_2 > 0$, the results show a t-statistic of $-2.090923$ which $t$ is less than any critical value for the significance levels of 1%, 5%, or 10%. In fact, for one sided tests any t-statistic less than zero will fail to reject the null hypothesis because its p-value will be greater than the significance level. Therefore, we can not conclude that returns to male adults in the household are larger than the returns to female adults regardless of the significance level considered.
-
-:::
-
----
-
-## Question (3): Joint Significance of Distance Variables
-
-*Test whether the 2 distance variables are jointly significant. Calculate the test by hand (using R). What can you conclude about the role of isolation on household welfare?*
-
-::: {.callout-note title="Answer — Question (3)"}
-<!-- Write your interpretation here -->
-Let's estimate the restricted and unrestricted models and calculate the F-statistic by hand:
-
-```{r}
-r_model <- lm(
-  log(constot) ~ adultm + adultf + headage + headeduc +
-  landarea,
-  data = db
-)
-u_model <- model_base
-
-# save the residual sum of squares for both models
-rss_r <- sum(r_model$residuals^2)
-rss_u <- sum(u_model$residuals^2)
-# calculate the F-statistic
-F_stat <- ((rss_r - rss_u) / 2) / (rss_u / (df.residual(u_model)))
-F_stat
-
-# get the critical value for the F-distribution with 2 and n-k-1 degrees of freedom
-critical_value <- qf(0.90, 2, df.residual(u_model))
-critical_value
-```
-
-Using the standard formula for the F-statistic:
-$$
-\begin{aligned}
-F &= \frac{(RSS_R - RSS_U) / q}{RSS_U / (n - k - 1)}\\
-& = \frac{(192.4492-190.7043)/2}{190.7043/(575-7-1)} = 2.59
-\end{aligned}
-$$
-
-Since the critical value for the F-distribution with 2 restrictions and 567 degrees of freedom is 3.01, we fail to reject the null hypothesis that the two distance variables are jointly insignificant. However, we can reject the null hypothesis at a 10% significance level, as the critical value for that level is 2.31. This suggest that isolation (measured by distance to health clinic and school) has a weak but significant effect on household welfare, and that the two distance variables are jointly significant at a 10% significance level.
-
-:::
-
----
-
-## Question (4): Correlation Between Education and Age
-
-*Analyze the correlation between households’ education and age. What does this correlation imply for your estimates? If you are estimating this model to obtain an estimate of the returns to household’s heads education on household welfare, should you keep household age in the model?*
-
-::: {.callout-note title="Answer — Question (4)"}
-<!-- Write your interpretation here -->
-The correlation between household's education and age is $-0.31$ and should be included as control in the functional form to increase precision for the following reasons.
-
-- Since age affects education and consumption and not the education affects age because by definition it is not possible, age is a *good control* to include. Adding it should increase the precision of the estimators.
-- Omitting age would downward bias the estimated effect of education on consumption. Given the correlation of $-0.31$ and an effect of age on consumption of $0.006$, omitting age would downward bias our estimate by $corr(education, age) \times \beta_{age} = 0.31 \cdot 0.006 = 0.00186$.
-
-:::
-
-```{r}
-correlation <- cor(db$headage, db$headeduc, use = "complete.obs")
-```
-
----
-
-## Question (5): Testing Coefficient equal to 0.06
-
-*Test whether the coefficient of education is different from 0.06.*
-
-::: {.callout-note title="Answer — Question (5)"}
-<!-- Write your interpretation here -->
-
-The null and alternative hypotheses are:
-$$
-\begin{aligned}
-H_0: & \beta_{headeduc} = 0.06 \\
-H_1: & \beta_{headeduc} \neq 0.06
-\end{aligned}
-$$
-```{r coefficient_test}
-# let's calculate the t-statistic manually
-abs(coef(summary_base)["headeduc", "Estimate"] - 0.06) / coef(summary_base)["headeduc", "Std. Error"]
-
-coef(summary_base)["headeduc", "Estimate"] + 1.96*coef(summary_base)["headeduc", "Std. Error"]
-coef(summary_base)["headeduc", "Estimate"] - 1.96*coef(summary_base)["headeduc", "Std. Error"]
-```
-
-Estimating the t-statistic using $t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}$, we obtain a t-statistic of 1.171443, which is less than the critical value of 1.96 for a two-sided test at the 5% significance level. Therefore, we fail to reject the null hypothesis that the coefficient of education is equal to 0.06. In other words, we do not have enough evidence to conclude that the coefficient of education is different from 0.06 at the 5% significance level.
-:::
-
----
-
-## Question (6): Outliers in Land Area Variable
-
-*Look at the distribution of the landarea variable. Then re-estimate the model excluding households with more than 100 ha. Analyze the change of the coefficient of the land area variable compared to the previous regression. Explain.*
-
-::: {.callout-note title="Answer — Question (6)"}
-<!-- Write your interpretation here -->
-Looking at the distribution of the landarea variable in Figure \ref{fig-distribution_land}, we can see that there are a few households with land area greater than 100 ha that create a long right tail in the distribution. Most of the hoseholds ($87.5\%$) have a land area equal to zero so the distribution is heavily skewed. In theory removing outliers should increase the estimate of the land area coefficient the regression line will have a stepper slope.
-
-As shown in Table \ref{tbl-model_base_summary}, the coefficient of land area in the model with all households is $0.004$ with a standard error of $0.001$, while the coefficient of land area in the model excluding households with more than 100 ha is $0.010$ with a standard error of $0.004$ no longer significant at the 5% significance level but at 10% significance level. The rest of the coefficients remain unchanged indicating the base model is robust to the exclusion of outliers.
-
-:::
-
-```{r distribution_chart}
-#| label: fig-distribution_land
-#| fig-cap: "Distribution of Land Area (ha)"
-
-ggplot(db, aes(landarea)) + ylab("Kernel Density") + xlab("Land Owned (ha)") + ggtitle("Distribution of landarea") + geom_density(alpha = 0.5) + geom_vline(xintercept = 100, linetype = "dashed") + ylim(0, NA) + theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "none")
-
-# # make a chart: x-axis landarea, y-axis log(constot), color by landarea > 100
-# ggplot(db, aes(x = landarea, y = log(constot))) +
-#   geom_point(alpha = 0.5) +
-#   geom_smooth(aes(color = "All data"), method = "lm", se = FALSE) +
-#   geom_smooth(data = db %>% filter(landarea <= 100), aes(color = "Land area <= 100 ha"), method = "lm", se = FALSE) +
-#   scale_color_manual(values = c("All data" = "red", "Land area <= 100 ha" = "blue"), name = "Regression Line") +
-#   xlab("Land Owned (ha)") + ylab("Log of Consumption") + ggtitle("Relationship between Land Area and Consumption") +
-#   theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "inside", legend.justification = "right") + xlim(0, 300) 
-
-# # count the percentage of households with landarea = 0
-# db %>% filter(landarea == 0) %>% summarise(percentage = n() / nrow(db) * 100)
-```
----
-
-## Question (7): Omitted Variable Thought Experiment
-
-*Give an example of an additional variable you might want to include in the regression, but for which you don’t have data, and indicate the expected effect of that variable, as well as any changes you would anticipate to occur in the point estimates of the other variables.*
-
-::: {.callout-note title="Answer — Question (7)"}
-<!-- Write your interpretation here -->
-An additional variable that could be included in the regression is *presence of chronic deseases* in the hosehold head. Since deseases can affect the access to education and the ability to work affecting income and consumption, we would expect a negative effect of this variable on household consumption. It is also a good control because it affects education and consumption.If this variable is omitted from the regression, we would expect the coefficient of the education variable to be biased upwards, as households without chronic diseases may have higher levels of education and thus higher consumption.
-
-:::

@@ -129,22 +129,6 @@
 \usepackage{hyperref}
 \KOMAoption{captions}{tableheading,figureheading}
 \makeatletter
-\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
-\@ifpackageloaded{fontawesome5}{}{\usepackage{fontawesome5}}
-\definecolor{quarto-callout-color}{HTML}{909090}
-\definecolor{quarto-callout-note-color}{HTML}{0758E5}
-\definecolor{quarto-callout-important-color}{HTML}{CC1914}
-\definecolor{quarto-callout-warning-color}{HTML}{EB9113}
-\definecolor{quarto-callout-tip-color}{HTML}{00A047}
-\definecolor{quarto-callout-caution-color}{HTML}{FC5300}
-\definecolor{quarto-callout-color-frame}{HTML}{acacac}
-\definecolor{quarto-callout-note-color-frame}{HTML}{4582ec}
-\definecolor{quarto-callout-important-color-frame}{HTML}{d9534f}
-\definecolor{quarto-callout-warning-color-frame}{HTML}{f0ad4e}
-\definecolor{quarto-callout-tip-color-frame}{HTML}{02b875}
-\definecolor{quarto-callout-caution-color-frame}{HTML}{fd7e14}
-\makeatother
-\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
 \ifdefined\contentsname
@@ -218,150 +202,289 @@ González}
 \begin{document}
 \maketitle
 
-\renewcommand*\contentsname{Table of contents}
-{
-\setcounter{tocdepth}{3}
-\tableofcontents
+
+\section{Exercise}\label{exercise}
+
+\subsection{A}\label{a}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Formulate a critique related to the econometric strategy used in the
+  paper. Think about which of the Gauss-Markov assumptions might be
+  violated in the regressions and what that tells you about the
+  interpretation of the results. Limit your critique to one page.
+\item
+  The 4 different estimations in this paper seem to lead to quite
+  different results. If you wanted to conclude anything related to the
+  determinants of World Cup soccer success, would you rely on any of
+  these estimations? If so, on which one?
+\end{enumerate}
+
+\subsection{B}\label{b}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  True or False: Missing observations can lead to both biased estimates
+  and imprecise estimates. T/F? Explain.
+\end{enumerate}
+
+\section{Computer Exercise}\label{computer-exercise}
+
+Note for the computed models, refer to the appendix section Table
+\ref{tbl-model_base_summary}.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{What is the minimum significance level at which one can reject
+  the hypothesis that the education level of the household head does not
+  affect total household consumption?}
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  As shown in Table \ref{tbl-model_base_summary}, the coefficient of the
+  household head's education is statistically significant at the 1\%
+  significant level, with a p-value of \(<2e-16\) (almost zero). This
+  means the minimum significance level at which we can reject the null
+  hypothesis that the education level of the household head does not
+  affect total household consumption is \(<2e-16\).
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \emph{Do your results allow you to conclude the returns to male adults
+  in the household are larger than the returns to female adults? State
+  the null hypothesis and the alternative hypothesis you are testing,
+  and the significance level you are considering. Do the test and
+  discuss. Does your answer differ depending on which significance level
+  you consider?}
+\end{enumerate}
+
+\begin{itemize}
+\item
+  Recalling the model functional form:
+  \begin{equation}\protect\phantomsection\label{eq-functional_form}{
+  \begin{aligned}
+  \log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u\\\\
+  & \text{Where } \text{Z} \text{ represents the vector of control variables}\\& \text{and } C \text{ is the vector of their coefficients.} 
+  \end{aligned}
+  }\end{equation}
+\item
+  Using Equation Equation~\ref{eq-functional_form}, the null and
+  alternative hypotheses are as follows:
+\end{itemize}
+
+\[
+\begin{aligned}
+H_0: & \beta_1 \leq \beta_2 \\
+H_1: & \beta_1 > \beta_2
+\end{aligned}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Running a one sided t-test to verify that \(\beta_1 - \beta_2 > 0\),
+  the results show a t-statistic of \(-2.090923\) which \(t\) is less
+  than any critical value for the significance levels of 1\%, 5\%, or
+  10\%. In fact, for one sided tests any t-statistic less than zero will
+  fail to reject the null hypothesis because its p-value will be greater
+  than the significance level. Therefore, we can not conclude that
+  returns to male adults in the household are larger than the returns to
+  female adults regardless of the significance level considered.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  \emph{Test whether the 2 distance variables are jointly significant.
+  Calculate the test by hand (using R). What can you conclude about the
+  role of isolation on household welfare?}
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  The null and alternative hypotheses are as follows: \[
+  \begin{aligned}
+  H_0: & \beta_{healthkm} = 0 \text{ and } \beta_{schoolkm} = 0 \\
+  H_1: & \beta_{healthkm} \neq 0 \text{ or } \beta_{schoolkm} \neq 0
+  \end{aligned}
+  \]
+\end{itemize}
+
+\begin{itemize}
+\item
+  Let's estimate the restricted and unrestricted models and calculate
+  the F-statistic by hand. Using the standard formula for the
+  F-statistic: \[
+  \begin{aligned}
+  F &= \frac{(RSS_R - RSS_U) / q}{RSS_U / (n - k - 1)}\\
+  & = \frac{(192.4492-190.7043)/2}{190.7043/(575-7-1)} = 2.59
+  \end{aligned}
+  \]
+\item
+  Since the critical value for the F-distribution with 2 restrictions
+  and 567 degrees of freedom is 3.01, we fail to reject the null
+  hypothesis of joint insignificance. However, we can reject the null
+  hypothesis at a 10\% significance level, as the critical value for
+  that level is 2.31. This suggest distance to health clinic and school
+  have a weak but significant effect on household welfare, and that the
+  two distance variables are jointly significant at a 10\% significance
+  level.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  \emph{Analyze the correlation between households' education and age.
+  What does this correlation imply for your estimates? If you are
+  estimating this model to obtain an estimate of the returns to
+  household's heads education on household welfare, should you keep
+  household age in the model?}
+\end{enumerate}
+
+\begin{itemize}
+\item
+  The correlation between household's education and age is \(-0.31\) and
+  should be included as control in the functional form to increase
+  precision for the following reasons.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Since age affects education and consumption and education cannot
+    affect age, age is a \emph{good control} to include. Adding it
+    should increase the precision of the estimators.
+  \item
+    Omitting age would downward bias the estimated effect of education
+    on consumption. Given the correlation of \(-0.31\) and an effect of
+    age on consumption of \(0.006\), omitting age would downward bias
+    our estimate by
+    \(corr(education, age) \times \beta_{age} = 0.31 \cdot 0.006 = -0.00186\).
+  \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  \emph{Test whether the coefficient of education is different from
+  0.06.}
+\end{enumerate}
+
+\begin{itemize}
+\item
+  The null and alternative hypotheses are: \[
+  \begin{aligned}
+  H_0: & \beta_{headeduc} = 0.06 \\
+  H_1: & \beta_{headeduc} \neq 0.06
+  \end{aligned}
+  \]
+\item
+  Estimating the t-statistic using
+  \(t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}\), we obtain a
+  t-statistic of 1.171443, which is less than the critical value of 1.96
+  for a two-sided test at the 5\% significance level. Therefore, we fail
+  to reject the null hypothesis that the coefficient of education is
+  equal to 0.06. In other words, we do not have enough evidence to
+  conclude that the coefficient of education is different from 0.06 at
+  the 5\% significance level.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  \emph{Look at the distribution of the landarea variable. Then
+  re-estimate the model excluding households with more than 100 ha.
+  Analyze the change of the coefficient of the land area variable
+  compared to the previous regression. Explain.}
+\end{enumerate}
+
+\begin{itemize}
+\item
+  Looking at the distribution of the landarea variable in Figure
+  \ref{fig-distribution_land}, we can see that there are a few
+  households with land area greater than 100 ha that create a long right
+  tail in the distribution. Most of the households (\(87.5\%\)) have a
+  land area equal to zero so the distribution is heavily skewed. In
+  theory removing outliers should increase the estimate of the land area
+  coefficient the regression line will have a steeper slope.
+\item
+  As shown in Table \ref{tbl-model_base_summary}, the coefficient of
+  land area in the model with all households is \(0.004\) with a
+  standard error of \(0.001\), while the coefficient of land area in the
+  model excluding households with more than 100 ha is \(0.010\) with a
+  standard error of \(0.004\) no longer significant at the 1\%
+  significance level but at 5\% significance level. The rest of the
+  coefficients remain unchanged indicating the base model is robust to
+  the exclusion of outliers.
+\end{itemize}
+
+\begin{figure}
+
+\caption{\label{fig-distribution_land}Distribution of Land Area (ha)}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{PS3_group1_files/figure-pdf/fig-distribution_land-1.pdf}}
+
 }
 
-\subsection{Overview \& Group Work
-Division}\label{overview-group-work-division}
+\end{figure}%
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  \emph{Give an example of an additional variable you might want to
+  include in the regression, but for which you don't have data, and
+  indicate the expected effect of that variable, as well as any changes
+  you would anticipate to occur in the point estimates of the other
+  variables.}
+\end{enumerate}
 
 \begin{itemize}
+\tightlist
 \item
-  \textbf{Exercise 1 (Theoretical / Reading Critique):}
-\item ~
-  \subsection{\texorpdfstring{\textbf{Computer Exercise (Empirical
-  Analysis in
-  R):}}{Computer Exercise (Empirical Analysis in R):}}\label{computer-exercise-empirical-analysis-in-r}
+  An additional variable that could be included in the regression is
+  \emph{presence of chronic diseases} in the household head. Since
+  diseases can affect the access to education and the ability to work
+  affecting income and consumption, we would expect a negative effect of
+  this variable on household consumption. It is also a good control
+  because it affects education and consumption.If this variable is
+  omitted from the regression, we would expect the coefficient of the
+  education variable to be biased upwards, as households without chronic
+  diseases may have higher levels of education and thus higher
+  consumption.
+\item
+  Another variable that could be included is \emph{household access to
+  credit} because it can affect the ability to invest in education and
+  health, which in turn can affect consumption. The effect of access to
+  credit on education is positive and on consumption is also positive
+  because it can help to smooth consumption over time. Therefore adding
+  this variable would likely decrease the coefficient of education
+  because the estimated bias is positive.
 \end{itemize}
 
-\section{Exercise 1: Theoretical \& Reading
-Questions}\label{exercise-1-theoretical-reading-questions}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-important-color!10!white, colframe=quarto-callout-important-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-important-color}{\faExclamation}\hspace{0.5em}{Classmates' Assignment}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-This section contains Exercise 1 (Part A and Part B). Space has been
-allocated below for your classmates to fill in their solutions and
-write-ups.
-
-\end{tcolorbox}
-
-\subsection{Part A: Article Critique}\label{part-a-article-critique}
-
-\begin{quote}
-\textbf{Reading:} \emph{``Legal determinants of World Cup Success''} (by
-Mark West).
-\end{quote}
-
-\subsubsection{Question 1: Econometric Strategy \& Gauss-Markov
-Critique}\label{question-1-econometric-strategy-gauss-markov-critique}
-
-\emph{Formulate a critique related to the econometric strategy used in
-the paper. Think about which of the Gauss-Markov assumptions might be
-violated in the regressions and what that tells you about the
-interpretation of the results. Limit your critique to one page.}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Exercise 1.A.1}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-\textbf{Violated Gauss-Markov Assumptions \& Implications:}
-
-\begin{itemize}
-\item
-  \textbf{Zero Conditional Mean Assumption \(E(u|X) = 0\) (Omitted
-  Variable Bias):}
-\item
-  \textbf{Homoskedasticity / Uncorrelated Errors:}
-\item
-  \textbf{Interpretation of Coefficients:}
-\end{itemize}
-
-\end{tcolorbox}
-
-\newpage
-
-\subsubsection{Question 2: Reliability of
-Estimations}\label{question-2-reliability-of-estimations}
-
-\emph{The 4 different estimations in this paper seem to lead to quite
-different results. If you wanted to conclude anything related to the
-determinants of World Cup soccer success, would you rely on any of these
-estimations? If so, on which one?}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Exercise 1.A.2}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-\textbf{Assessment:}
-
-\end{tcolorbox}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Part B: True or False}\label{part-b-true-or-false}
-
-\emph{Missing observations can lead to both biased estimates and
-imprecise estimates. T/F? Explain.}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Exercise 1.B}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-\textbf{Statement:} \textbf{{[}True / False{]}}
-
-\textbf{Explanation:}
-
-\begin{itemize}
-\item
-  \textbf{Biased Estimates:}
-\item
-  \textbf{Imprecise Estimates:}
-\end{itemize}
-
-\end{tcolorbox}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\section{Computer Exercise: Empirical Analysis in
-R}\label{computer-exercise-empirical-analysis-in-r-1}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-tip-color!10!white, colframe=quarto-callout-tip-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Your Assignment}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-This section contains the 7 empirical questions using the dataset
-\texttt{nichh.dta}. Code chunks are prepared below for execution in VS
-Code / R.
-
-\end{tcolorbox}
-
-\subsection{Data Setup \& Model
-Estimation}\label{data-setup-model-estimation}
-
-\begin{quote}
-\textbf{Dataset:} \texttt{nichh.dta} (subset of 1998 Nicaragua LSMS
-dataset, 582 households).
-
-\textbf{Task:} Estimate a log-linear model that allows understanding the
-\emph{ceteris paribus} relationships between total household consumption
-(in logs) and household head's age, head's education, male and female
-labor endowments, land endowments, and distances to the health clinic
-and school.
-\end{quote}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Question (1): Education
-Significance}\label{question-1-education-significance}
-
-\emph{What is the minimum significance level at which one can reject the
-hypothesis that the education level of the household head does not
-affect total household consumption?}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Question (1)}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-As shown in Table \ref{tbl-model_base_summary}, the coefficient of the
-household head's education is statistically significant at the 1\%
-significant level, with a p-value of \(<2e-16\) (almost zero). This
-means the minimum significance level at which we can reject the null
-hypothesis that the education level of the household head does not
-affect total household consumption is \(<2e-16\).
-
-\end{tcolorbox}
+\section{Appendix}\label{appendix}
 
  
 \begin{table}[ht]
@@ -554,214 +677,6 @@ affect total household consumption is \(<2e-16\).
 
 \end{table}
  
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Question (2): Male vs.~Female Labor
-Returns}\label{question-2-male-vs.-female-labor-returns}
-
-\emph{Do your results allow you to conclude the returns to male adults
-in the household are larger than the returns to female adults? State the
-null hypothesis and the alternative hypothesis you are testing, and the
-significance level you are considering. Do the test and discuss. Does
-your answer differ depending on which significance level you consider?}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Question (2)}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-Recalling the model functional form: \[
-\begin{aligned}
-\label{eq:functional_form}
-\log(\text{ConsTotal}) & = \beta_0 + \beta_1 \text{Adult}_{Male} + \beta_2 \text{Adult}_{Female} + \text{C} \text{Z} + u\\
-& \text{Where } \text{Z} \text{ represents the vector of control variables}\\& \text{and } C \text{ is the vector of their coefficients.} 
-\end{aligned}
-\]
-
-Using Equation \ref{eq:functional_form} the null and alternative
-hypotheses are as follows:
-
-\[
-\begin{aligned}
-H_0: & \beta_1 \leq \beta_2 \\
-H_1: & \beta_1 > \beta_2
-\end{aligned}
-\]
-
-\begin{verbatim}
-   adultm 
--2.090923 
-\end{verbatim}
-
-Running a one sided t-test to verify that \(\beta_1 - \beta_2 > 0\), the
-results show a t-statistic of \(-2.090923\) which \(t\) is less than any
-critical value for the significance levels of 1\%, 5\%, or 10\%. In
-fact, for one sided tests any t-statistic less than zero will fail to
-reject the null hypothesis because its p-value will be greater than the
-significance level. Therefore, we can not conclude that returns to male
-adults in the household are larger than the returns to female adults
-regardless of the significance level considered.
-
-\end{tcolorbox}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Question (3): Joint Significance of Distance
-Variables}\label{question-3-joint-significance-of-distance-variables}
-
-\emph{Test whether the 2 distance variables are jointly significant.
-Calculate the test by hand (using R). What can you conclude about the
-role of isolation on household welfare?}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Question (3)}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-Let's estimate the restricted and unrestricted models and calculate the
-F-statistic by hand:
-
-\begin{verbatim}
-[1] 2.593946
-\end{verbatim}
-
-\begin{verbatim}
-[1] 2.311961
-\end{verbatim}
-
-Using the standard formula for the F-statistic: \[
-\begin{aligned}
-F &= \frac{(RSS_R - RSS_U) / q}{RSS_U / (n - k - 1)}\\
-& = \frac{(192.4492-190.7043)/2}{190.7043/(575-7-1)} = 2.59
-\end{aligned}
-\]
-
-Since the critical value for the F-distribution with 2 restrictions and
-567 degrees of freedom is 3.01, we fail to reject the null hypothesis
-that the two distance variables are jointly insignificant. However, we
-can reject the null hypothesis at a 10\% significance level, as the
-critical value for that level is 2.31. This suggest that isolation
-(measured by distance to health clinic and school) has a weak but
-significant effect on household welfare, and that the two distance
-variables are jointly significant at a 10\% significance level.
-
-\end{tcolorbox}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Question (4): Correlation Between Education and
-Age}\label{question-4-correlation-between-education-and-age}
-
-\emph{Analyze the correlation between households' education and age.
-What does this correlation imply for your estimates? If you are
-estimating this model to obtain an estimate of the returns to
-household's heads education on household welfare, should you keep
-household age in the model?}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Question (4)}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-The correlation between household's education and age is \(-0.31\) and
-should be included as control in the functional form to increase
-precision for the following reasons.
-
-\begin{itemize}
-\tightlist
-\item
-  Since age affects education and consumption and not the education
-  affects age because by definition it is not possible, age is a
-  \emph{good control} to include. Adding it should increase the
-  precision of the estimators.
-\item
-  Omitting age would downward bias the estimated effect of education on
-  consumption. Given the correlation of \(-0.31\) and an effect of age
-  on consumption of \(0.006\), omitting age would downward bias our
-  estimate by
-  \(corr(education, age) \times \beta_{age} = 0.31 \cdot 0.006 = 0.00186\).
-\end{itemize}
-
-\end{tcolorbox}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Question (5): Testing Coefficient equal to
-0.06}\label{question-5-testing-coefficient-equal-to-0.06}
-
-\emph{Test whether the coefficient of education is different from 0.06.}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Question (5)}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-The null and alternative hypotheses are: \[
-\begin{aligned}
-H_0: & \beta_{headeduc} = 0.06 \\
-H_1: & \beta_{headeduc} \neq 0.06
-\end{aligned}
-\]
-
-Estimating the t-statistic using \(t = \frac{\hat{\beta} - 0.06}{SE(\hat{\beta})}\), we obtain a t-statistic of 1.171443, which is less than the critical value of 1.96 for a two-sided test at the 5\% significance level. Therefore, we fail to reject the null hypothesis that the coefficient of education is equal to 0.06. In other words, we do not have enough evidence to conclude that the coefficient of education is different from 0.06 at the 5\% significance level.
-
-\end{tcolorbox}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Question (6): Outliers in Land Area
-Variable}\label{question-6-outliers-in-land-area-variable}
-
-\emph{Look at the distribution of the landarea variable. Then
-re-estimate the model excluding households with more than 100 ha.
-Analyze the change of the coefficient of the land area variable compared
-to the previous regression. Explain.}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Question (6)}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-Looking at the distribution of the landarea variable in Figure
-\ref{fig-distribution_land}, we can see that there are a few households
-with land area greater than 100 ha that create a long right tail in the
-distribution. Most of the hoseholds (\(87.5\%\)) have a land area equal
-to zero so the distribution is heavily skewed. In theory removing
-outliers should increase the estimate of the land area coefficient the
-regression line will have a stepper slope.
-
-As shown in Table \ref{tbl-model_base_summary}, the coefficient of land
-area in the model with all households is \(0.004\) with a standard error
-of \(0.001\), while the coefficient of land area in the model excluding
-households with more than 100 ha is \(0.010\) with a standard error of
-\(0.004\) no longer significant at the 5\% significance level but at
-10\% significance level. The rest of the coefficients remain unchanged
-indicating the base model is robust to the exclusion of outliers.
-
-\end{tcolorbox}
-
-\begin{figure}
-
-\caption{\label{fig-distribution_land}Distribution of Land Area (ha)}
-
-\centering{
-
-\pandocbounded{\includegraphics[keepaspectratio]{PS3_group1_files/figure-pdf/fig-distribution_land-1.pdf}}
-
-}
-
-\end{figure}%
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Question (7): Omitted Variable Thought
-Experiment}\label{question-7-omitted-variable-thought-experiment}
-
-\emph{Give an example of an additional variable you might want to
-include in the regression, but for which you don't have data, and
-indicate the expected effect of that variable, as well as any changes
-you would anticipate to occur in the point estimates of the other
-variables.}
-
-\begin{tcolorbox}[enhanced jigsaw, arc=.35mm, bottomrule=.15mm, bottomtitle=1mm, breakable, colback=white, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, coltitle=black, left=2mm, leftrule=.75mm, opacityback=0, opacitybacktitle=0.6, rightrule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Answer --- Question (7)}, titlerule=0mm, toprule=.15mm, toptitle=1mm]
-
-An additional variable that could be included in the regression is
-\emph{presence of chronic deseases} in the hosehold head. Since deseases
-can affect the access to education and the ability to work affecting
-income and consumption, we would expect a negative effect of this
-variable on household consumption. It is also a good control because it
-affects education and consumption.If this variable is omitted from the
-regression, we would expect the coefficient of the education variable to
-be biased upwards, as households without chronic diseases may have
-higher levels of education and thus higher consumption.
-
-\end{tcolorbox}
 
 
 

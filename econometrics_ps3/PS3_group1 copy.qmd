@@ -1,0 +1,86 @@
+---
+title: "Econ"
+subtitle: "Submission Deadline: Thursday, October 15th, 2026 at 1:00 PM | Instructor: Liam Wren-Lewis, TA: Elisa Alonso Herrero"
+author: "Antonina Wawrzak, David Pérez Cano, Luis Enrique Beltrán González"
+date: today
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+    fig-cap-location: top
+    keep-tex: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r, imports}
+library(modelsummary)
+library(knitr)
+library(rio)
+library(tidyverse)
+library(lmtest)
+library(here)
+library(DT)
+library(haven)
+library(huxtable)
+library(sandwich)
+library(dplyr)
+library(broom)
+library(gridExtra)
+library(ggridges)
+library(ggplot2)
+
+db <- read_dta(here::here("econometrics_ps3/nichh.dta"))
+```
+
+```{r, model_base}
+model_base <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+
+model_no_age <- lm(
+  log(constot) ~ adultm + adultf + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db
+)
+
+model_landare_lt_100 <- lm(
+  log(constot) ~ adultm + adultf + headage + headeduc +
+  landarea + healthkm + schoolkm,
+  data = db %>% filter(landarea <= 100)
+)
+# summary(model_base)
+```
+
+```{r model_base_summary}
+outreg <- huxreg(
+  `Base` = model_base,
+  `No Age` = model_no_age,
+  `Land Area <= 100` = model_landare_lt_100,
+  coefs = c(
+    "Intercept" = "(Intercept)",
+    "Number of male adults" = "adultm",
+    "Number of female adults" = "adultf",
+    "Age of household head (years)" = "headage",
+    "Education of household head (years)" = "headeduc",
+    "Land owned (ha)" = "landarea",
+    "Distance to health centre (km)" = "healthkm",
+    "Distance to school (km)" = "schoolkm"
+    ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+outreg <- set_label(outreg, "tbl-model_base_summary")
+outreg <- set_caption(outreg, "Log-Linear model summary. Dependent variable: log(total household consumption).")
+outreg <- set_all_padding(outreg, 1.5)
+outreg
+```
