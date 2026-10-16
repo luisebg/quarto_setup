@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Beltrán González Luis Enrique">
+<meta name="dcterms.date" content="2026-10-16">
+
+<title>Measurement: Homework 2</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="hw2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="hw2_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="hw2_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="hw2_files/libs/quarto-html/popper.min.js"></script>
+<script src="hw2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="hw2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="hw2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="hw2_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="hw2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="hw2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="hw2_files/libs/bootstrap/bootstrap-9061e803815d1eb434dbf891d1a45570.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="hw2_files/libs/huxtable-6.0.2/huxtable.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="hw2.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Measurement: Homework 2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Beltrán González Luis Enrique </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<style type="text/css">
+p {
+  text-align: justify !important
+}
+</style>
+</div>
+<section id="child-mortality-in-côte-divoire-6-points" class="level1">
+<h1>1 Child Mortality in Côte d’Ivoire (6 points)</h1>
+<section id="sampling-1-points" class="level2">
+<h2 class="anchored" data-anchor-id="sampling-1-points">1. Sampling (1 points)</h2>
+<p><strong>(a) How should you transform pweight to obtain a weight that allows you to estimate statistics on the population of women in Cote d’Ivoire? Explain your computations.</strong></p>
+<p>I can use the pweight column to balance the class distribution of the sample to match the population distribution. The <code>pweight</code> column contains sample weights that modify the contribution of each observation to the overall statistics. It works as a frequency multiplier, where each observation is counted as if it were <code>pweight</code> number of observations. In practice, R can use the pweight column to compute weighted statistics, such as means and proportions by using the <code>weights</code> argument in functions like <code>lm()</code> or <code>survey::svydesign()</code>. Internally, weighted functions such as weighted means and lm will multiply each observation by its corresponding weight. For example a weighted mean will be computed using equation <a href="#eq-weighted_mean" class="quarto-xref">Equation&nbsp;1</a>, and weighted linear regression will minimize the weighted sum of squared residuals, as shown in equation <a href="#eq-weighted_lm" class="quarto-xref">Equation&nbsp;2</a>.</p>
+<p><span id="eq-weighted_mean"><span class="math display">\[
+\bar{x}_w = \frac{\sum_{i=1}^{n} w_i x_i}{\sum_{i=1}^{n} w_i}
+\tag{1}\]</span></span></p>
+<p><span id="eq-weighted_lm"><span class="math display">\[
+\sum_{i=1}^{n} w_i (y_i - \hat{y}_i)^2
+\tag{2}\]</span></span></p>
+</section>
+<section id="measurement-of-under-5-mortality-rate-5-points" class="level2">
+<h2 class="anchored" data-anchor-id="measurement-of-under-5-mortality-rate-5-points">2. Measurement of under 5 mortality rate (5 points)</h2>
+<p><strong>(a) What method can be deemed preferable and why? Give the pros and cons of both methods.</strong></p>
+<p>The preferable method is method 2 (M2) because method 1 (M1) underestimates the mortality rate by not capturing the deaths that occur after the survey period. <a href="#fig-mortality" class="quarto-xref">Figure&nbsp;1</a> shows graphycally the surveyed groups: the x-axis represents the age of the child at the time of the survey, and the y-axis represents the age of the child at the time of death. The red arrow at 45 degrees indicates the frontier of possible outcomes, since by definition noone can die after their current age, the survey caputures outcomes below the frontier. Notice M1 captures area B and drops area C underestimating the true mortality rate. M2 captures area C which represents the true mortality rate. For example a surveyed mother has a child one year before the survey and the child dies the year after the survey (area C in <a href="#fig-mortality" class="quarto-xref">Figure&nbsp;1</a>), M1 will not capture his death because by definition nothing can die after its current age.</p>
+<p>M1</p>
+<ul>
+<li>Pros: it is easy to compute, captures the most recent deaths (recency).</li>
+<li>Cons: underestimates the mortality rate, downward biased, does not capture deaths after the survey period.</li>
+</ul>
+<p>M2</p>
+<ul>
+<li>Pros: provides a robust estimate of the true mortality rate.</li>
+<li>Cons: it requires a longer period of time to capture deaths, less recent than M1.</li>
+</ul>
+<div id="fig-mortality" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-mortality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Mortality estimator analysis
+</figcaption>
+<div aria-describedby="fig-mortality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/mortality_chart.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+</figure>
+</div>
+<p><strong>(b) Child mortality rates in Côte d’Ivoire.</strong></p>
+<p><strong>i. Compute mortality rates with both methods for boys and girls separately (don’t forget the weights).</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;" id="tbl-child_mortality">
+<caption style="caption-side: top; text-align: center;">Child mortality rates in Côte d'Ivoire, by sex and method.</caption><colgroup><col><col><col><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">M1 (Boys)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">M2 (Boys)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Diff (Boys)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">M1 (Girls)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">M2 (Girls)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Diff (Girls)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Diff M2 G-B</th></tr>
+</thead>
+<tbody>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Mortality rate</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.117 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.135 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.017</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.084 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.115 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.031 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">-0.020 *</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.007)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.008)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.007)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.008)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.010)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.011)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">N</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">1431</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">1332</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">1428</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">1291</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">R2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.000</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.000</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.000</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.000</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+</tbody>
+<tfoot class="huxtable-notes">
+<tr><td class="huxtable-cell huxtable-note" colspan="8">Significance: *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</td></tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p><strong>ii. Compare and comment.</strong></p>
+<p>Table <span class="math inline">\(\ref{tbl-child_mortality}\)</span> shows the estimated child mortality rates in Côte d’Ivoire for boys and girls using both methods and their differences. The results confirm our theory of M1 underestimating the true mortality rate. We can clearly see the method estimates differences are positive indicating that M1 systematically underestimates the true mortality rate estimated by M2. Using the best method (M2), the average mortality rate for boys is 13.5% and for girls is 11.9%. The difference between girls and boys is -2 percentage points and statitically significant at the 90% confidence level, indicating that boys have a higher mortality rate than girls.</p>
+</section>
+</section>
+<section id="health-status-nutritional-status-and-wealth-in-côte-divoire-7-points" class="level1">
+<h1>2 Health status, nutritional status and wealth in Côte d’Ivoire (7 points)</h1>
+<p><em>Stunted children are defined as children showing a height stature that is lower than the median of the reference population by 2 standard deviations measured on the same reference population. That is children such as the z-score is lower than -2 (</em><span class="math inline">\(z \le -2\)</span>), where the z-score is given by the following formula:</p>
+<p><span class="math display">\[Z = \frac{\text{height} - \text{WHOMedian}(\text{sex}, \text{age})}{\text{WHOstdev}(\text{sex}, \text{age})}\]</span></p>
+<section id="weight-unit-correction" class="level2">
+<h2 class="anchored" data-anchor-id="weight-unit-correction">1. Weight Unit Correction</h2>
+<p><em>In 2008, the weight could be measured in either kilograms or hectograms. However, the unit was not systematically reported. It was therefore assumed that all the weights were reported in kilograms.</em></p>
+<p><strong>(a) Derive an expression for the sample mean weight in this context, and show that, if we knew just one parameter, we could obtain a non-biased estimate of the mean weight despite the hectogram issue. (.5 point)</strong></p>
+<p>Let’s denote the estimated mean weight as <span class="math inline">\(W_{\text{obs}}\)</span>, the true mean weight as <span class="math inline">\(W_{\text{true}}\)</span>, and the proportion of weights measured in hectograms as <span class="math inline">\(p_h\)</span>. The observed mean weight can be expressed as the sum of the mean weights measured in kg and in hectograms multiplied by their corresponding probabilities:</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[W_{\text{obs}}] &amp;= (1 - p_h) \cdot W_{\text{true}} + p_h \cdot W_{\text{true}}\cdot 10\\
+  &amp;= W_{\text{true}} \cdot (1 - p_h + 10 p_h)\\
+  &amp;= W_{\text{true}} \cdot (1 + 9 p_h)
+\end{aligned}
+\]</span></p>
+<p>Thus, having an estimate of <span class="math inline">\(p_h\)</span> would allow us to correct the observed mean weight. Notice that if <span class="math inline">\(p_h = 0\)</span>, then <span class="math inline">\(E[W_{\text{obs}}] = W_{\text{true}}\)</span>, and if <span class="math inline">\(p_h = 1\)</span>, then <span class="math inline">\(E[W_{\text{obs}}] = 10 W_{\text{true}}\)</span>.</p>
+<p><strong>(b) Come up with an empirical criterion to identify hectogram mistakes, and a graphical way to show the 2008 weight distribution, before and after correcting for mistakes, compared with the 1988 and 1993 weight distributions. (1 point)</strong></p>
+<p>By looking at the original distribution the weight measurements in 2008 show a wider distribution than the 1988 and 1993 distributions. The 2008 distribution shows a principal component at around 12kg but also shows multiple peaks at weight &gt; 25kg while the 1988 and 1993 distributions show a principal component at around 12kg with minimal outliers e.g.&nbsp;a few values below 1kg. See Figure <span class="math inline">\(\ref{fig-distributions}\)</span> LHS.</p>
+<p>After updating the 2008 weight distribution by dividing all weights &gt; 25kg by 10, the distribution shows no peaks after 25kg. See Figure <span class="math inline">\(\ref{fig-distributions}\)</span> RHS.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-distributions" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Distribution of Weight (kg) Before and After Correction
+</figcaption>
+<div aria-describedby="fig-distributions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hw2_files/figure-html/fig-distributions-1.png" class="img-fluid figure-img" width="672">
+</div>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="z-score-computation" class="level2">
+<h2 class="anchored" data-anchor-id="z-score-computation">2. Z-Score Computation</h2>
+<p><strong>Using the variables medheight and stdheight, compute each child’s z-score. (.5 point)</strong> Estimated z-scores are computed using the mentioned formula. The resulting distribution of z-scores for 2-4 years old children by year and region is shown in Figure <span class="math inline">\(\ref{fig-distributions_stunted}\)</span></p>
+</section>
+<section id="height-stature-over-time-and-across-regions-3-points" class="level2">
+<h2 class="anchored" data-anchor-id="height-stature-over-time-and-across-regions-3-points">3. Height Stature over time and across regions (3 points)</h2>
+<p><strong>(a) Estimate the stunting rate for 2-4 years old children over time in the North, in the South, and at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;" id="tbl-stunted_w_outliers">
+<caption style="caption-side: top; text-align: center;">National, North, and South stunting rates for 2-4 years old children including outliers.</caption><colgroup><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">National</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">North</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">South</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Diff (North-South)</th></tr>
+</thead>
+<tbody>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1988</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.263 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.307 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.247 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.060 **</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.020)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.013)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.025)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1993</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.439 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.435 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.440 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">-0.005</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.009)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.017)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.010)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.020)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 2008</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.471 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.522 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.455 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.066 ***</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.010)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.019)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.023)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">N</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">7734</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">2096</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">5638</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">R2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.422</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.443</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.417</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+</tbody>
+<tfoot class="huxtable-notes">
+<tr><td class="huxtable-cell huxtable-note" colspan="5">Significance: *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</td></tr>
+</tfoot>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;" id="tbl-stunted_n_outliers">
+<caption style="caption-side: top; text-align: center;">National, North, and South stunting rates for 2-4 years old children excluding outliers.</caption><colgroup><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">National</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">North</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">South</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Diff (North-South)</th></tr>
+</thead>
+<tbody>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1988</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.260 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.308 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.242 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.066 ***</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.020)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.013)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.025)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1993</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.432 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.423 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.434 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">-0.011</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.009)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.017)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.010)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.020)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 2008</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.406 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.454 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.392 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.062 **</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.022)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.012)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.025)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">N</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">7111</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">1898</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">5213</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">R2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.392</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.406</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.389</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+</tbody>
+<tfoot class="huxtable-notes">
+<tr><td class="huxtable-cell huxtable-note" colspan="5">Significance: *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</td></tr>
+</tfoot>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;">
+<colgroup><col><col><col><col><col><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;      font-weight: normal;"></th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">National</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">North</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">South</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">Diff (North-South)</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">National</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">North</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">South</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;      font-weight: normal;">Diff (North-South)</th></tr>
+</thead>
+<tbody>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Year 1988</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.263 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.307 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.247 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.060 **</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.260 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.308 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.242 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">0.066 ***</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.020)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.013)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.025)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.020)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.013)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.025)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Year 1993</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.439 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.435 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.440 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.005</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.432 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.423 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.434 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">-0.011</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.009)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.017)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.010)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.020)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.009)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.017)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.010)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">(0.020)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">Year 2008</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.471 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.522 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.455 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.066 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.406 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.454 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.392 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;">0.062 **</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.010)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.019)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.023)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.011)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.022)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.012)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;">(0.025)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;      font-weight: normal;">N</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">7734</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">2096</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">5638</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;"></td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">7111</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">1898</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;">5213</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;"></td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;      font-weight: normal;">R2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">0.422</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">0.443</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">0.417</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;"></td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">0.392</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">0.406</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;">0.389</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;"></td></tr>
+</tbody>
+<tfoot class="huxtable-notes">
+<tr><td class="huxtable-cell huxtable-note" colspan="9">Significance: *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</td></tr>
+</tfoot>
+</table>
+</div>
+</div>
+<!-- ```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| label: fig-distributions_stunted
+#| fig-cap: "Distribution of z-scores for 2-4 years old children by year and region"
+#| fig-subcap: "X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2."
+
+ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(north))) +
+  geom_density_ridges(alpha=0.3) +
+  geom_vline(xintercept = -2, linetype = "dashed") +
+  scale_fill_discrete(labels = c("South", "North")) +
+  theme_ridges() + 
+  labs(fill = NULL) +
+  theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
+``` -->
+<div class="cell">
+<div id="fig-distributions_stunted" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-distributions_stunted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Distribution of z-scores for 2-4 years old children by year and region
+</figcaption>
+<div aria-describedby="fig-distributions_stunted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="fig-distributions_stunted" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-fig" id="fig-distributions_stunted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2.
+</figcaption>
+<div aria-describedby="fig-distributions_stunted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="hw2_files/figure-html/fig-distributions_stunted-1.png" class="img-fluid figure-img" data-ref-parent="fig-distributions_stunted" width="672">
+</div>
+</figure>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>(b) Estimate the stunting rate for 2-4 years old children over time for boys and for girls at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;" id="tbl-stunted_w_sex_outliers">
+<caption style="caption-side: top; text-align: center;">National stunting rates for 2-4 years old boys and girls including outliers.</caption><colgroup><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Male</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Female</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Diff (Male-Female)</th></tr>
+</thead>
+<tbody>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1988</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.271 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.254 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.017</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.015)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.016)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.022)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1993</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.464 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.413 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.051 ***</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.012)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.012)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.017)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 2008</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.479 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.461 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.018</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.013)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.014)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.019)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">N</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">3963</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">3771</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">R2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.438</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.405</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+</tbody>
+<tfoot class="huxtable-notes">
+<tr><td class="huxtable-cell huxtable-note" colspan="4">Significance: *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</td></tr>
+</tfoot>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="huxtable" data-quarto-disable-processing="true" style="margin-left: auto; margin-right: auto;   break-inside: avoid; page-break-inside: avoid;" id="tbl-stunted_n_sex_outliers">
+<caption style="caption-side: top; text-align: center;">National stunting rates for 2-4 years old boys and girls excluding outliers.</caption><colgroup><col><col><col><col></colgroup><thead>
+<tr>
+<th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Male</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Female</th><th class="huxtable-cell huxtable-header" style="text-align: center;  border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Diff (Male-Female)</th></tr>
+</thead>
+<tbody>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1988</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.268 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.252 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.017</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.015)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.016)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.022)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 1993</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.456 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.407 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.049 ***</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.012)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.012)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.017)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">Year 2008</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.416 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.397 ***</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.019</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;"></th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.015)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.015)</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">(0.021)</td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">N</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">3627</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">3484</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+<tr>
+<th class="huxtable-cell huxtable-header" style="border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;  font-weight: normal;">R2</th><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.409</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;">0.375</td><td class="huxtable-cell" style="text-align: right;  border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 1.5pt 1.5pt 1.5pt 1.5pt;"></td></tr>
+</tbody>
+<tfoot class="huxtable-notes">
+<tr><td class="huxtable-cell huxtable-note" colspan="4">Significance: *** p &lt; 0.01; ** p &lt; 0.05; * p &lt; 0.1</td></tr>
+</tfoot>
+</table>
+</div>
+</div>
+</section>
+<section id="height-stature-and-poverty-2-points" class="level2">
+<h2 class="anchored" data-anchor-id="height-stature-and-poverty-2-points">4. Height Stature and poverty (2 points)</h2>
+<p><strong>Here, one would like to study how the gradient of the number of stunted children aged 2-4 years, and of household consumption per capita, as well as the relationship between the two, have changed over time.</strong> <strong>Find a graphical or regression framework to represent this (many options are possible). Comment on your results and their limits.</strong></p>
+<p>[Your answer here]</p>
+</section>
+</section>
+<section id="a-meaningful-table-6-pts" class="level1">
+<h1>3 A meaningful table (6 pts)</h1>
+<p><strong>Construct a small statistical table showing a meaningful and policy relevant social fact about migration in the world. You may focus, or not, on a given region or country of origin, or on a particular subgroup of the population (children, etc.) A combination of originality, policy relevance and statistical accuracy will be very much appreciated. The table should fit in the top half of a page. It should have the attributes of a proper research-paper table: title, notes, etc. Table notes should indicate the source of data, the coverage (countries and population), the definition and units of variables and any other kind of information that is needed to read and understand the table. The bottom half of the page should be dedicated to a brief text, commenting upon the social fact that the table reveals.</strong>[cite: 31]</p>
+<p>[Your table and text here]</p>
+</section>
+<section id="appendix-r-script" class="level1">
+<h1>Appendix: R Script</h1>
+<p><em>Please do not show your R script before every question, but put your entire R script at the end of the homework.</em></p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

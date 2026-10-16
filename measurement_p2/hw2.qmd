@@ -13,6 +13,9 @@ format:
       - bottom=10mm
       - left=15mm
       - right=15mm
+project:
+  preview:
+    port: 8080
 ---
 
 ```{css, echo=FALSE}
@@ -224,13 +227,13 @@ E[W_{\text{obs}}] &= (1 - p_h) \cdot W_{\text{true}} + p_h \cdot W_{\text{true}}
 \end{aligned}
 $$
 
-Thus, having an estimate of $p_h$ would allow us to correct the observed mean weight. Notice that if $p_h = 0$, then $E[W_{\text{obs}}] = W_{\text{true}}$, and if $p_h = 1$, then $E[W_{\text{obs}}] = 10 W_{\text{true}}$. 
+Thus, having an estimate of $p_h$ would allow us to correct the observed mean weight. Notice that if $p_h = 0$, then $E[W_{\text{obs}}] = W_{\text{true}}$, and if $p_h = 1$, then $E[W_{\text{obs}}] = 10 W_{\text{true}}$.
 
 **(b) Come up with an empirical criterion to identify hectogram mistakes, and a graphical way to show the 2008 weight distribution, before and after correcting for mistakes, compared with the 1988 and 1993 weight distributions. (1 point)**
 
-By looking at the original distribution the weight measurements in 2008 show a wider distribution than the 1988 and 1993 distributions. The 2008 distribution shows a principal component at around 12kg but also shows multiple peaks at weight > 25kg while the 1988 and 1993 distributions show a principal component at around 12kg with minimal outliers e.g. a few values below 1kg. See Figure \ref{fig-distributions} LHS.
+By looking at the original distribution the weight measurements in 2008 show a wider distribution than the 1988 and 1993 distributions. The 2008 distribution shows a principal component at around 12kg but also shows multiple peaks at weight \> 25kg while the 1988 and 1993 distributions show a principal component at around 12kg with minimal outliers e.g. a few values below 1kg. See Figure \ref{fig-distributions} LHS.
 
-After updating the 2008 weight distribution by dividing all weights > 25kg by 10, the distribution shows no peaks after 25kg. See Figure \ref{fig-distributions} RHS.
+After updating the 2008 weight distribution by dividing all weights \> 25kg by 10, the distribution shows no peaks after 25kg. See Figure \ref{fig-distributions} RHS.
 
 ```{r fixing_distributions, echo=FALSE, message=FALSE, warning=FALSE}
 #| label: fig-distributions
@@ -255,8 +258,8 @@ grid.arrange(plot_1, plot_2, ncol=2)
 ```
 
 ## 2. Z-Score Computation
-**Using the variables medheight and stdheight, compute each child's z-score. (.5 point)**
-Estimated z-scores are computed using the mentioned formula. The resulting distribution of z-scores for 2-4 years old children by year and region is shown in Figure \ref{fig-distributions_stunted}
+
+**Using the variables medheight and stdheight, compute each child's z-score. (.5 point)** Estimated z-scores are computed using the mentioned formula. The resulting distribution of z-scores for 2-4 years old children by year and region is shown in Figure \ref{fig-distributions_stunted}
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 civ_nutri <- civ_nutri %>% mutate(z_score = (height - medheight) / stdheight) %>% mutate(stunted = ifelse(z_score < -2, 1, 0))
@@ -266,6 +269,12 @@ civ_2_4years <- civ_nutri %>% filter(age >= 2*12 & age < 4*12)
 ## 3. Height Stature over time and across regions (3 points)
 
 **(a) Estimate the stunting rate for 2-4 years old children over time in the North, in the South, and at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**
+
+As shown in Table \ref{tbl-stunted_north_south}, the national stunting rate for 2-4 years old children is 26.3% in 1988, 43.9% in 1993, and 47.1% in 2008. This increasing trend shows an overall increment of 20.8 percentage points in the stunting rate over the 20-year period.
+
+The north and south regions an increasing trend overtime, but the north region shows a higher stunting rate than the south region in 1988 and 2008. Particularly, in 1988 the difference between north and south is 6 percentage points, and in 2008 the difference is 6.6 percentage points. In 1993 the difference is not statistically significant different frm zero, indicating that the north and south regions had similar stunting rates in 1993. Many theories can explain the differences between north and south e.g. differences in measurement, differences in the population, or the effect of socioeconomic factors such as poverty-alleviating programs, and access to health care.
+
+The results excluding outliers show a similar trend in 1988 and 1993, however, in 2008 the stuting is lower in national level and in the south than in 1993. This change in the pattern suggest that the measurement correction done in question 1.b had an impact on the results and drafted conclusions. Regional differences between north and south persist, there are still significant differences of 6.6 and 6.2 percentage points in 1988 and 2008 between the north and south regions despite the change in the stunting rate over time pattern.
 
 ```{r overtime_a_w_outliers, echo=FALSE, message=FALSE, warning=FALSE}
 model_stunted_national <- lm(stunted ~ factor(year)-1, data = civ_2_4years, weights = pweight)
@@ -292,37 +301,9 @@ rownames(ct_diff_only) <- c("factor(year)1988", "factor(year)1993", "factor(year
 
 # 5. Restore the coeftest class
 class(ct_diff_only) <- "coeftest"
-
-# put everything in a huxtable
-outreg_stunted_w_outliers <- huxreg(
-  `National` = model_stunted_national,
-  `North` = model_stunted_north,
-  `South` = model_stunted_south,
-  `Diff (North-South)` = ct_diff_only,
-  coefs = c(
-    "Year 1988" = "factor(year)1988",
-    "Year 1993" = "factor(year)1993",
-    "Year 2008" = "factor(year)2008"
-  ),
-  error_format = "({std.error})",
-  error_pos = "below",
-  align = "c",
-  statistics = c(
-    N = "nobs",
-    R2 = "r.squared"
-  ),
-  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
-  note = "Significance: {stars}"
-)
-
-outreg_stunted_w_outliers <- set_all_padding(outreg_stunted_w_outliers, 1.5)
-outreg_stunted_w_outliers <- set_label(outreg_stunted_w_outliers, "tbl-stunted_w_outliers")
-outreg_stunted_w_outliers <- set_caption(outreg_stunted_w_outliers, "National, North, and South stunting rates for 2-4 years old children including outliers.")
-outreg_stunted_w_outliers
 ```
 
 ```{r, overtime_a_n_outliers, echo=FALSE, message=FALSE, warning=FALSE}
-# Remove outliers (z-score < -6 or z-score > 6)
 civ_2_4years_no_outliers <- civ_2_4years %>% filter(z_score >= -6 & z_score <= 6)
 
 # Re-estimate the models without outliers
@@ -337,26 +318,29 @@ model_diff_ns_no_outliers <- lm(
 )
 
 # 2. Extract the coefficient matrix
-ct_diff_ns <- coeftest(model_diff_ns_no_outliers)
+ct_diff_ns_no_outliers <- coeftest(model_diff_ns_no_outliers)
 
 # 3. Isolate ONLY the interaction rows (the North-South differences)
 # These will be the coefficients named "factor(year)1988:north", etc.
-diff_rows <- grep(":north", rownames(ct_diff_ns))
-ct_diff_only <- ct_diff_ns[diff_rows, , drop = FALSE]
+diff_rows_no_outliers <- grep(":north", rownames(ct_diff_ns_no_outliers))
+ct_diff_only_no_outliers <- ct_diff_ns_no_outliers[diff_rows_no_outliers, , drop = FALSE]
 
 # 4. Disguise the row names so huxtable aligns them with the other models
-rownames(ct_diff_only) <- c("factor(year)1988", "factor(year)1993", "factor(year)2008")
+rownames(ct_diff_only_no_outliers) <- c("factor(year)1988", "factor(year)1993", "factor(year)2008")
 
 # 5. Restore the coeftest class
-class(ct_diff_only) <- "coeftest"
+class(ct_diff_only_no_outliers) <- "coeftest"
 
-# put everything in a huxtable
-outreg_stunted_n_outliers <- huxreg(
-  `National` = model_stunted_national_no_outliers,
-  `North` = model_stunted_north_no_outliers,
-  `South` = model_stunted_south_no_outliers,
-  `Diff (North-South)` = ct_diff_only,
-  coefs = c(
+reg <- huxreg(
+  `National`             = model_stunted_national,
+  `North`                = model_stunted_north,
+  `South`                = model_stunted_south,
+  `Diff\n(North-South)`  = ct_diff_only,
+  `National `            = model_stunted_national_no_outliers,
+  `North `               = model_stunted_north_no_outliers,
+  `South `               = model_stunted_south_no_outliers,
+  `Diff\n(North-South) `  = ct_diff_only_no_outliers,
+   coefs = c(
     "Year 1988" = "factor(year)1988",
     "Year 1993" = "factor(year)1993",
     "Year 2008" = "factor(year)2008"
@@ -372,14 +356,27 @@ outreg_stunted_n_outliers <- huxreg(
   note = "Significance: {stars}"
 )
 
-outreg_stunted_n_outliers <- set_label(outreg_stunted_n_outliers, "tbl-stunted_n_outliers")
-outreg_stunted_n_outliers <- set_caption(outreg_stunted_n_outliers, "National, North, and South stunting rates for 2-4 years old children excluding outliers.")
-outreg_stunted_n_outliers <- set_all_padding(outreg_stunted_n_outliers, 1.5)
-outreg_stunted_n_outliers
+# 2. Insert the Yes/No row
+# We insert after row 7 (1 header row + 6 coefficient/error rows)
+reg <- insert_row(reg, 
+  c("Outliers", "Yes", "Yes", "Yes", "Yes", "No", "No", "No", "No"), 
+  after = 7
+)
+
+# 3. Format the new Yes/No row (center the Yes/No text)
+reg <- set_align(reg, row = 8, col = 2:9, value = "center")
+
+# 4. Apply your LaTeX stability settings (wrap header & set width)
+reg <- set_wrap(reg, row = 1, col = everywhere, value = TRUE)
+reg <- set_width(reg, 1)
+reg <- set_label(reg, "tbl-stunted_north_south")
+reg <- set_caption(reg, "National, North, and South stunting rates for 2-4 years old children excluding outliers.")
+reg <- set_all_padding(reg, 1.5)
+reg
 ```
 
-<!-- ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#| label: fig-distributions_stunted
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| label: fig-distributions_stunted_north_south
 #| fig-cap: "Distribution of z-scores for 2-4 years old children by year and region"
 #| fig-subcap: "X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2."
 
@@ -390,10 +387,10 @@ ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(north))) +
   theme_ridges() + 
   labs(fill = NULL) +
   theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
-``` -->
+``` 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#| label: fig-distributions_stunted
+#| label: fig-distributions_stunted_male_female
 #| fig-cap: "Distribution of z-scores for 2-4 years old children by year and region"
 #| fig-subcap: "X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2."
 
@@ -405,7 +402,10 @@ ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(sexe))) +
   labs(fill = NULL) +
   theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
 ```
+
 **(b) Estimate the stunting rate for 2-4 years old children over time for boys and for girls at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**
+
+As shown in Table \ref{tbl-stunted_sexe}, 
 
 ```{r overtime_s_w_outliers, echo=FALSE, message=FALSE, warning=FALSE}
 model_stunted_sexe_1 <- lm(stunted ~ factor(year)-1, data = civ_2_4years %>% filter(sexe == 1), weights = pweight)
@@ -426,56 +426,35 @@ rownames(ct_diff_only) <- c("factor(year)1988", "factor(year)1993", "factor(year
 # 5. Restore the coeftest class
 class(ct_diff_only) <- "coeftest"
 
-outreg_stunted_w_outliers_sex <- huxreg(
-  `Male` = model_stunted_sexe_1,
-  `Female` = model_stunted_sexe_0,
-  `Diff (Male-Female)` = ct_diff_only,
-  coefs = c(
-    "Year 1988" = "factor(year)1988",
-    "Year 1993" = "factor(year)1993",
-    "Year 2008" = "factor(year)2008"
-  ),
-  error_format = "({std.error})",
-  error_pos = "below",
-  align = "c",
-  statistics = c(
-    N = "nobs",
-    R2 = "r.squared"
-  ),
-  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
-  note = "Significance: {stars}"
-)
-
-outreg_stunted_w_outliers_sex <- set_all_padding(outreg_stunted_w_outliers_sex, 1.5)
-outreg_stunted_w_outliers_sex <- set_label(outreg_stunted_w_outliers_sex, "tbl-stunted_w_sex_outliers")
-outreg_stunted_w_outliers_sex <- set_caption(outreg_stunted_w_outliers_sex, "National stunting rates for 2-4 years old boys and girls including outliers.")
-outreg_stunted_w_outliers_sex
-```
-
-```{r overtime_s_n_outliers, echo=FALSE, message=FALSE, warning=FALSE}
-model_stunted_sexe_1 <- lm(stunted ~ factor(year)-1, data = civ_2_4years_no_outliers %>% filter(sexe == 1), weights = pweight)
-model_stunted_sexe_0 <- lm(stunted ~ factor(year)-1, data = civ_2_4years_no_outliers %>% filter(sexe == 0), weights = pweight)
+# Models without outliers
+model_stunted_sexe_1_no_outliers <- lm(stunted ~ factor(year)-1, data = civ_2_4years_no_outliers %>% filter(sexe == 1), weights = pweight)
+model_stunted_sexe_0_no_outliers <- lm(stunted ~ factor(year)-1, data = civ_2_4years_no_outliers %>% filter(sexe == 0), weights = pweight)
 
 # 1. Run the interacted model to get the differences by year
-model_diff_ns <- lm(stunted ~ factor(year) + factor(year):sexe - 1, data = civ_2_4years_no_outliers, weights = pweight)
+model_diff_ns_no_outliers <- lm(stunted ~ factor(year) + factor(year):sexe - 1, data = civ_2_4years_no_outliers, weights = pweight)
 
 # 2. Extract the coefficient matrix
-ct_diff_ns <- coeftest(model_diff_ns)
+ct_diff_ns_no_outliers <- coeftest(model_diff_ns_no_outliers)
 
-diff_rows <- grep(":sexe", rownames(ct_diff_ns))
-ct_diff_only <- ct_diff_ns[diff_rows, , drop = FALSE]
+diff_rows_no_outliers <- grep(":sexe", rownames(ct_diff_ns_no_outliers))
+ct_diff_only_no_outliers <- ct_diff_ns_no_outliers[diff_rows_no_outliers, , drop = FALSE]
 
 # 4. Disguise the row names so huxtable aligns them with the other models
-rownames(ct_diff_only) <- c("factor(year)1988", "factor(year)1993", "factor(year)2008")
+rownames(ct_diff_only_no_outliers) <- c("factor(year)1988", "factor(year)1993", "factor(year)2008")
 
 # 5. Restore the coeftest class
-class(ct_diff_only) <- "coeftest"
+class(ct_diff_only_no_outliers) <- "coeftest"
 
-outreg_stunted_n_outliers_sex <- huxreg(
-  `Male` = model_stunted_sexe_1,
-  `Female` = model_stunted_sexe_0,
-  `Diff (Male-Female)` = ct_diff_only,
-  coefs = c(
+reg <- huxreg(
+  `National`             = model_stunted_national,
+  `Male`                = model_stunted_sexe_1,
+  `Female`                = model_stunted_sexe_0,
+  `Diff\n(Male-Female)`  = ct_diff_only,
+  `National `            = model_stunted_national_no_outliers,
+  `Male `               = model_stunted_sexe_1_no_outliers,
+  `Female `               = model_stunted_sexe_0_no_outliers,
+  `Diff\n(Male-Female) `  = ct_diff_only_no_outliers,
+   coefs = c(
     "Year 1988" = "factor(year)1988",
     "Year 1993" = "factor(year)1993",
     "Year 2008" = "factor(year)2008"
@@ -490,10 +469,26 @@ outreg_stunted_n_outliers_sex <- huxreg(
   stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
   note = "Significance: {stars}"
 )
-outreg_stunted_n_outliers_sex <- set_all_padding(outreg_stunted_n_outliers_sex, 1.5)
-outreg_stunted_n_outliers_sex <- set_label(outreg_stunted_n_outliers_sex, "tbl-stunted_n_sex_outliers")
-outreg_stunted_n_outliers_sex <- set_caption(outreg_stunted_n_outliers_sex, "National stunting rates for 2-4 years old boys and girls excluding outliers.")
-outreg_stunted_n_outliers_sex
+
+# 2. Insert the Yes/No row
+# We insert after row 7 (1 header row + 6 coefficient/error rows)
+reg <- insert_row(reg, 
+  c("Outliers", "Yes", "Yes", "Yes", "Yes", "No", "No", "No", "No"), 
+  after = 7
+)
+
+# 3. Format the new Yes/No row (center the Yes/No text)
+reg <- set_align(reg, row = 8, col = 2:9, value = "center")
+
+# 4. Apply your LaTeX stability settings (wrap header & set width)
+# Format the table
+reg <- set_align(reg, row = 8, col = 2:9, value = "center")
+reg <- set_wrap(reg, row = 1, col = everywhere, value = TRUE)
+reg <- set_width(reg, 1)
+reg <- set_label(reg, "tbl-stunted_sexe")
+reg <- set_caption(reg, "National, Male, and Female stunting rates for 2-4 years old children.") 
+reg <- set_all_padding(reg, 1.5)
+reg
 ```
 
 ## 4. Height Stature and poverty (2 points)
