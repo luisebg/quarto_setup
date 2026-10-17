@@ -976,7 +976,7 @@ regression line in 1993 is steeper, indicating that the socioeconomic
 gradient of stunting was more pronounced in 1993 than in 1988 and 2008.
 
 Analytically, the results can be confirmed through the linear regression
-model in @eq:over\_time\_model. Where
+model in Equation~\ref{eq-over_time_model}. Where
 \(log(\tilde{\text{Conspc88}_i}))\) is the log of household consumption
 per capita centered around its mean, \(\beta_0\) is the stunting rate
 for the mean child household consumption, and \(\beta_1\) is the effect
@@ -986,15 +986,46 @@ rate in 1993 and 2008 relative to 1988, while \(\beta_4\) and
 \(\beta_5\) capture the change in the effect of log household
 consumption on the probability of being stunted in 1993 and 2008
 relative to 1988. \(Z_i\) is a vector of control variables including
-sex, age, and education. The results for all population and for each
-tercile are summarized in Table \ref{tbl-stunting_by_income}.
+sex, age, and education of the household head. The results for all
+population and for each tercile are summarized in Table
+\ref{tbl-stunting_by_income}.
 
-\[
+\begin{equation}\protect\phantomsection\label{eq-over_time_model}{
 \begin{aligned}
-Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i + \beta_3 Y08_i + (\beta_4 Y93_i \times log(\tilde{\text{Conspc88}_i})) + \beta_5 (Y08_i \times log(\tilde{\text{Conspc88}_i})) + Z_i + \epsilon_i\\\\
+Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i + \beta_3 Y08_i + \\
+& (\beta_4 Y93_i \times log(\tilde{\text{Conspc88}_i})) + \beta_5 (Y08_i \times log(\tilde{\text{Conspc88}_i})) + Z_i + \epsilon_i\\\\
 & \text{where } \tilde{\text{Conspc88}_i} = log(\text{Conspc88}_i) - \overline{log(\text{Conspc88})}
 \end{aligned}
-\] \{\#eq:over\_time\_model\}
+}\end{equation}
+
+According to Table \ref{tbl-stunting_by_income}, the overall stunting
+rate for the average child in 1988 is 37\%, an increment of 1\% in
+consumption per capita is associated with a 0.07 percentage point
+decrease in the probability of being stunted. In following periods, the
+stunting rate was 13 and 15 percentage points higher in 1993 and 2008
+respectively. While the effect of consumption per capita on the
+probability of being stunted was not significantly different in 1988, in
+2008 a 1\% increase in consumption per capita was associated with a 0.04
+percentage point more in the probability of being stunted relative to
+1988.
+
+The consumption terciles show a distinct pattern over time than the
+general population. In 1988, the stunting rate for low consumption
+children was 42\% while the high consumption was 33\%, a difference of 9
+percentage points. In 1993, the stunting rate for medium and high
+consumption households was 15 and 21 percentage points higher than in
+1988 for medium and high consumption households respectively, while the
+stunting rate for low consumption households was not significantly
+different from 1988. The change in the effect of consumption per capita
+on the probability of being stunted relative to 1988 was significantly
+different from zero for the high consumption tercile, indicating that
+the socioeconomic gradient of stunting was more pronounced in 1993 than
+in 1988 for high consumption households. In 1993, a 1\% increase in
+consumption per capita was associated with a 0.12 percentage point
+decrease in the probability of being stunted relative to 1988 for high
+consumption households. In 2008 this difference was 0.08 percentage
+points for high consumption households and significant at the 10\% level
+only.
 
 \begin{figure}
 
@@ -1040,30 +1071,30 @@ Includes linear regression lines with 95\% confidence intervals.}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Average Stunting Rate (1988) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.264 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.371 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.251 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.235 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.421 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.393 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.333 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.010) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.054) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.015) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.023) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.021) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.063) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.036) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.039) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Log Consumption (Centered) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.089 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.035 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.153 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.054 ** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.074 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.026 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.136 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.009 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1071,19 +1102,19 @@ Includes linear regression lines with 95\% confidence intervals.}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.014) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.082) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.083) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.101) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.026) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.027) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Year 1993 Shift \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.136 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.028 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.158 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.208 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.138 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.031 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.156 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.218 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1100,10 +1131,10 @@ Includes linear regression lines with 95\% confidence intervals.}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Year 2008 Shift \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.138 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.058 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.149 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.229 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.150 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.061 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.158 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.257 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1111,8 +1142,8 @@ Includes linear regression lines with 95\% confidence intervals.}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.013) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.061) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.022) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.062) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.023) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.038) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
@@ -1121,9 +1152,9 @@ Includes linear regression lines with 95\% confidence intervals.}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Cons. Effect Diff (1993) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.023 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.132 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.046 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.120 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.124 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.047 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.121 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1132,7 +1163,7 @@ Includes linear regression lines with 95\% confidence intervals.}
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.018) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.092) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.127) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.126) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.041) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
@@ -1140,10 +1171,10 @@ Includes linear regression lines with 95\% confidence intervals.}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Cons. Effect Diff (2008) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.049 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.039 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.034 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.068 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.047 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.032 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.020 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.081 * \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1152,8 +1183,28 @@ Includes linear regression lines with 95\% confidence intervals.}
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.018) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.088) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.142) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.141) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.045) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Controls \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Outliers Excluded \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
@@ -1170,10 +1221,10 @@ Includes linear regression lines with 95\% confidence intervals.}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} R2 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.038 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.007 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.024 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.042 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.043 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.009 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.032 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.053 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
@@ -1200,7 +1251,7 @@ Table notes should indicate the source of data, the coverage (countries
 and population), the definition and units of variables and any other
 kind of information that is needed to read and understand the table. The
 bottom half of the page should be dedicated to a brief text, commenting
-upon the social fact that the table reveals.}{[}cite: 31{]}
+upon the social fact that the table reveals.}
 
 {[}Your table and text here{]}
 
