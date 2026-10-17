@@ -429,6 +429,37 @@ observed mean weight. Notice that if \(p_h = 0\), then
 \(E[W_{\text{obs}}] = W_{\text{true}}\), and if \(p_h = 1\), then
 \(E[W_{\text{obs}}] = 10 W_{\text{true}}\).
 
+For applying the correction, it is necessary to have a good estimate of
+\(p_h\). In this case, it can be approximated by the proportion of
+weights above 25kg in 2008 which is 30.4\% of the observations. Using
+this, we can correct the mean weight estimate by dividing the observed
+mean weight by \((1 + 9 p_h)\). See \ref{tbl-corrected_weight_mean}
+where the 2008 mean weight is corrected. After correction, the mean
+weight in 2008 is \(11.48\)kg, which is consistent with previous years.
+
+{
+
+\begin{longtable}[]{@{}rrrr@{}}
+
+\caption{\label{tbl-corrected_weight_mean}Summary of Weight Estimates
+With Hectogram Correction}
+
+\tabularnewline
+
+\toprule\noalign{}
+Year & Obs & Mean Weight & Mean Weight Corrected \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1988 & 6475 & 12.46 & 12.46 \\
+1993 & 7109 & 11.94 & 11.94 \\
+2008 & 7333 & 42.87 & 11.48 \\
+
+\end{longtable}
+
+}
+
 \textbf{(b) Come up with an empirical criterion to identify hectogram
 mistakes, and a graphical way to show the 2008 weight distribution,
 before and after correcting for mistakes, compared with the 1988 and
@@ -465,7 +496,27 @@ After Correction}
 child's z-score. (.5 point)} Estimated z-scores are computed using the
 mentioned formula. The resulting distribution of z-scores for 2-4 years
 old children by year and region is shown in Figure
-\ref{fig-distributions_stunted}
+\ref{fig-distributions_stunted}.
+
+\begin{figure}
+
+\caption{\label{fig-distributions_stunted}Distribution of z-scores by
+year}
+
+\centering{
+
+\subcaption{\label{fig-distributions_stunted}X-axis is limited to -6 to
+6, and the dashed line indicates the stunting threshold of -2.}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{hw2_files/figure-pdf/fig-distributions_stunted-1.pdf}}
+
+}
+
+}
+
+\end{figure}%
 
 \subsection{3. Height Stature over time and across regions (3
 points)}\label{height-stature-over-time-and-across-regions-3-points}
@@ -476,9 +527,10 @@ are outliers, and show results both including and excluding outliers.
 Comment your results, making all relevant comparisons.}
 
 As shown in Table \ref{tbl-stunted_north_south}, the national stunting
-rate for 2-4 years old children is 26.3\% in 1988, 43.9\% in 1993, and
-47.1\% in 2008. This increasing trend shows an overall increment of 20.8
-percentage points in the stunting rate over the 20-year period.
+rate for 2-4 years old children with outliers is 26.3\% in 1988, 43.9\%
+in 1993, and 47.1\% in 2008. This increasing trend shows an overall
+increment of 20.8 percentage points in the stunting rate over the
+20-year period.
 
 The north and south regions an increasing trend overtime, but the north
 region shows a higher stunting rate than the south region in 1988 and
@@ -528,42 +580,14 @@ the stunting rate over time pattern.
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 1988\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.263 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.307 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.247 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.060 **\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.260 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.308 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.242 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.066 ***\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
-
-
-\hhline{}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright \huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.020)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.013)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.025)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.020)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.013)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.025)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
-
-
-\hhline{}
-\arrayrulecolor{black}
-
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 1993\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.439 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.435 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.440 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft -0.005\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.432 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.423 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.434 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft -0.011\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.241 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.282 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.226 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.056 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.239 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.284 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.222 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.061 ***\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -571,11 +595,11 @@ the stunting rate over time pattern.
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright \huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.009)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.017)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.016)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.020)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.009)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.017)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.016)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.020)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
@@ -583,29 +607,57 @@ the stunting rate over time pattern.
 \hhline{}
 \arrayrulecolor{black}
 
-\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 2008\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.471 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.522 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.455 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.066 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.406 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.454 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.392 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.062 **\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 1993\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.420 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.409 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.423 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft -0.014\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.412 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.397 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.416 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft -0.020\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright \huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.007)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.014)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.008)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.017)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.007)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.014)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.008)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.017)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 2008\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.464 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.498 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.453 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.045 **\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.410 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.436 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.402 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.035 *\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright \huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.008)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.015)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.009)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.018)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.008)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.016)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.019)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.023)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.022)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.025)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.019)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
@@ -626,13 +678,13 @@ the stunting rate over time pattern.
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright N\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 7734\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 2096\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 5638\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 11755\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 3194\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 8561\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 7111\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 1898\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 5213\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 10897\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 2930\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 7967\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
@@ -640,13 +692,13 @@ the stunting rate over time pattern.
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright R2\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.422\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.443\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.417\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.410\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.421\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.407\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.392\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.406\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.389\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.381\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.384\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.381\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
@@ -708,7 +760,20 @@ time for boys and for girls at the national level. Decide what are
 outliers, and show results both including and excluding outliers.
 Comment your results, making all relevant comparisons.}
 
-As shown in Table \ref{tbl-stunted_sexe},
+As shown in Table \ref{tbl-stunted_sexe}, the stunting rate for boys and
+girls is increasing over time for the model with outliers (LHS four
+models). Starting from 1988, boys and girls had a stunting rate of 27\%
+and 25\% with no significant difference. In 1993, boys and girls had a
+stunting rate of 46\% and 41\% with a significant difference of 5
+percentage points indicating boys had a higher stunting rate. In 2008,
+boys and girls had a stunting rate of 48\% and 46\% respectively with no
+significant difference.
+
+The stunting rates pattern without outliers (RHS four columns) flips in
+2008. In this period, removing the outliers lowered the stunting rates
+from 47\% with outliers to 40\% without outliers. Differences between
+boys and girls differences are significant in 1993 only while there is
+no significant difference in 1988 and 2008.
 
  
 \begin{table}[ht]
@@ -738,84 +803,84 @@ As shown in Table \ref{tbl-stunted_sexe},
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 1988\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.263 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.271 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.254 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.017\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.260 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.268 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.252 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.017\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.241 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.246 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.236 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.011\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.239 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.245 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.233 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.011\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright \huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.015)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.016)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.022)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.015)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.016)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.022)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.009)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.013)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.018)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.009)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.013)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.018)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 1993\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.439 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.464 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.413 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.051 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.432 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.456 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.407 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.049 ***\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.420 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.434 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.405 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.029 **\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.412 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.425 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.398 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.028 **\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright \huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.009)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.017)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.009)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.017)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.007)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.014)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.007)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.014)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright Year 2008\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.471 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.479 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.461 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.018\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.406 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.416 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.397 ***\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.019\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.464 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.473 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.453 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.020\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.410 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.420 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.398 ***\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.022\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright \huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.008)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.010)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.013)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.014)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.019)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.015)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.015)\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.021)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.008)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.011)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.012)\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft (0.016)\huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
@@ -836,13 +901,13 @@ As shown in Table \ref{tbl-stunted_sexe},
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright N\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 7734\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 3963\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 3771\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 11755\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 6072\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 5683\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 7111\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 3627\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 3484\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 10897\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 5610\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 5287\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 
@@ -850,13 +915,13 @@ As shown in Table \ref{tbl-stunted_sexe},
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedright R2\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.422\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.438\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.405\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.410\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.421\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.398\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.381\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.392\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.409\huxbpad{1.5pt}}} &
-\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.375\huxbpad{1.5pt}}} &
+\multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft 0.369\huxbpad{1.5pt}}} &
 \multicolumn{1}{p{0.111111111111111\textwidth}!{\huxvb{0, 0, 0}{0}}}{\hspace{1.5pt}\parbox[b]{0.111111111111111\textwidth-1.5pt-1.5pt}{\huxtpad{1.5pt + 1em}\raggedleft \huxbpad{1.5pt}}} \tabularnewline[-0.5pt]
 
 

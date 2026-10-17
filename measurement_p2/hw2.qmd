@@ -13,9 +13,10 @@ format:
       - bottom=10mm
       - left=15mm
       - right=15mm
-project:
-  preview:
-    port: 8080
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
 
 ```{css, echo=FALSE}
@@ -229,6 +230,43 @@ $$
 
 Thus, having an estimate of $p_h$ would allow us to correct the observed mean weight. Notice that if $p_h = 0$, then $E[W_{\text{obs}}] = W_{\text{true}}$, and if $p_h = 1$, then $E[W_{\text{obs}}] = 10 W_{\text{true}}$.
 
+For applying the correction, it is necessary to have a good estimate of $p_h$. In this case, it can be approximated by the proportion of weights above 25kg in 2008 which is 30.4\% of the observations. Using this, we can correct the mean weight estimate by dividing the observed mean weight by $(1 + 9 p_h)$. See \ref{tbl-corrected_weight_mean} where the 2008 mean weight is corrected. After correction, the mean weight in 2008 is $11.48$kg, which is consistent with previous years.
+```{r}
+#| label: tbl-corrected_weight_mean
+
+# estimate weight mean by year
+weight_mean_by_year <- civ_nutri %>%
+  group_by(year) %>%
+  # weighted.mean() does not remove missing survey weights. In 1988,
+  # missing pweight values therefore make the result NA.
+  summarise(
+    observations = sum(!is.na(weightkg) & !is.na(pweight)),
+    mean_weight = weighted.mean(
+      weightkg[!is.na(weightkg) & !is.na(pweight)],
+      pweight[!is.na(weightkg) & !is.na(pweight)]
+    ),
+    .groups = "drop"
+  )
+
+# now use the estimator from above that corrects for the hectogram issue in 2008
+p_h <- 0.304 # assume 10% of weights are in hectograms
+weight_mean_by_year <- weight_mean_by_year %>%
+  mutate(mean_weight_corrected = ifelse(year == 2008, mean_weight / (1 + 9 * p_h), mean_weight))
+
+# what percentage of observations in 2008 are above 25kg?
+p_above_25 <- civ_nutri %>%
+  filter(year == 2008) %>%
+  summarise(percentage = mean(weightkg > 25, na.rm = TRUE) * 100)
+
+# output the results in a nice table
+kable(
+  weight_mean_by_year,
+  digits = 2,
+  col.names = c("Year", "Obs", "Mean Weight", "Mean Weight Corrected"),
+  caption = "Summary of Weight Estimates With Hectogram Correction"
+)
+```
+
 **(b) Come up with an empirical criterion to identify hectogram mistakes, and a graphical way to show the 2008 weight distribution, before and after correcting for mistakes, compared with the 1988 and 1993 weight distributions. (1 point)**
 
 By looking at the original distribution the weight measurements in 2008 show a wider distribution than the 1988 and 1993 distributions. The 2008 distribution shows a principal component at around 12kg but also shows multiple peaks at weight \> 25kg while the 1988 and 1993 distributions show a principal component at around 12kg with minimal outliers e.g. a few values below 1kg. See Figure \ref{fig-distributions} LHS.
@@ -259,22 +297,38 @@ grid.arrange(plot_1, plot_2, ncol=2)
 
 ## 2. Z-Score Computation
 
-**Using the variables medheight and stdheight, compute each child's z-score. (.5 point)** Estimated z-scores are computed using the mentioned formula. The resulting distribution of z-scores for 2-4 years old children by year and region is shown in Figure \ref{fig-distributions_stunted}
+**Using the variables medheight and stdheight, compute each child's z-score. (.5 point)** Estimated z-scores are computed using the mentioned formula. The resulting distribution of z-scores for 2-4 years old children by year and region is shown in Figure \ref{fig-distributions_stunted}.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 civ_nutri <- civ_nutri %>% mutate(z_score = (height - medheight) / stdheight) %>% mutate(stunted = ifelse(z_score < -2, 1, 0))
-civ_2_4years <- civ_nutri %>% filter(age >= 2*12 & age < 4*12)
+civ_2_4years <- civ_nutri %>% filter(age >= 2*12 & age < 5*12)
 ```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| label: fig-distributions_stunted
+#| fig-cap: "Distribution of z-scores by year"
+#| fig-subcap: "X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2."
+
+ggplot(civ_nutri, aes(x = z_score, y = factor(year))) +
+  geom_density_ridges(alpha=0.3) +
+  geom_vline(xintercept = -2, linetype = "dashed") +
+  scale_fill_discrete() +
+  theme_ridges() + 
+  labs(fill = NULL) +
+  theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for All Age Children by Year Including Outliers")
+``` 
 
 ## 3. Height Stature over time and across regions (3 points)
 
 **(a) Estimate the stunting rate for 2-4 years old children over time in the North, in the South, and at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**
 
-As shown in Table \ref{tbl-stunted_north_south}, the national stunting rate for 2-4 years old children is 26.3% in 1988, 43.9% in 1993, and 47.1% in 2008. This increasing trend shows an overall increment of 20.8 percentage points in the stunting rate over the 20-year period.
+As shown in Table \ref{tbl-stunted_north_south}, the national stunting rate for 2-4 years old children with outliers is 24.1% in 1988, 42% in 1993, and 46.4% in 2008. This increasing trend shows an overall increment of 22.3 percentage points in the stunting rate over the 20-year period.
 
-The north and south regions an increasing trend overtime, but the north region shows a higher stunting rate than the south region in 1988 and 2008. Particularly, in 1988 the difference between north and south is 6 percentage points, and in 2008 the difference is 6.6 percentage points. In 1993 the difference is not statistically significant different frm zero, indicating that the north and south regions had similar stunting rates in 1993. Many theories can explain the differences between north and south e.g. differences in measurement, differences in the population, or the effect of socioeconomic factors such as poverty-alleviating programs, and access to health care.
+The north and south regions an increasing trend overtime, but the north region shows a higher stunting rate than the south region in 1988 and 2008. Particularly, in 1988 the difference between north and south is 5.6 percentage points at the 1\% significance level, and in 2008 the difference is 4.5 percentage points at the 5\% significance level. In 1993 the difference is not statistically significant different frm zero, indicating that the north and south regions had similar stunting rates in 1993. Many theories can explain the differences between north and south e.g. differences in measurement, differences in the population, or the effect of socioeconomic factors such as poverty-alleviating programs, and access to health care.
 
-The results excluding outliers show a similar trend in 1988 and 1993, however, in 2008 the stuting is lower in national level and in the south than in 1993. This change in the pattern suggest that the measurement correction done in question 1.b had an impact on the results and drafted conclusions. Regional differences between north and south persist, there are still significant differences of 6.6 and 6.2 percentage points in 1988 and 2008 between the north and south regions despite the change in the stunting rate over time pattern.
+The results excluding outliers show a similar trend in 1988 and 1993, however, in 2008 the stuting is not as different from 1933 except in the north region where there is a difference of 4 percentage points. This change in the pattern suggest that the outliers correction had an impact on the results and drafted conclusions. Regional differences between north and south persist, there are still a significant difference of 6.1 and 3.5 percentage points in 1988 and 2008 at the 1\% and 10\% significance levels respectively between the north and south regions despite the change in the stunting rate over time pattern.
+
+The patterns validate the observations made in Figure \ref{fig-distributions_stunted_north_south} where the distribution of z-scores less than -2 is higher in the north region than in the south region in 1988 and 2008, while in 1993 the distributions are similar.
 
 ```{r overtime_a_w_outliers, echo=FALSE, message=FALSE, warning=FALSE}
 model_stunted_national <- lm(stunted ~ factor(year)-1, data = civ_2_4years, weights = pweight)
@@ -389,23 +443,14 @@ ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(north))) +
   theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
 ``` 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#| label: fig-distributions_stunted_male_female
-#| fig-cap: "Distribution of z-scores for 2-4 years old children by year and region"
-#| fig-subcap: "X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2."
-
-ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(sexe))) +
-  geom_density_ridges(alpha=0.3) +
-  geom_vline(xintercept = -2, linetype = "dashed") +
-  scale_fill_discrete(labels = c("Female", "Male")) +
-  theme_ridges() + 
-  labs(fill = NULL) +
-  theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
-```
 
 **(b) Estimate the stunting rate for 2-4 years old children over time for boys and for girls at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**
 
-As shown in Table \ref{tbl-stunted_sexe}, 
+As shown in Table \ref{tbl-stunted_sexe}, the stunting rate for boys and girls is increasing over time for the model with outliers (LHS four models). Starting from 1988, boys and girls had a stunting rate of 24.6\% and 23.6\% with no significant difference. In 1993, boys and girls had a stunting rate of 43\% and 40\% with a significant difference of 3 percentage points indicating boys had a higher stunting rate. In 2008, boys and girls had a stunting rate of 47\% and 45\% respectively with no significant difference.
+
+The stunting rates pattern without outliers (RHS four columns) changes in 2008. In this period, removing the outliers lowered the national stunting rates from 47\% with outliers to 41\% without outliers. Differences between boys and girls are significant at 5\% significance level in 1993, while there is no significant difference in 1988 and 2008.
+
+Observations are confirmed by Figure \ref{fig-distributions_stunted_male_female} where the distribution of z-scores less than -2 is higher for boys than girls in 1993, while in 1988 and 2008 the distributions are similar.
 
 ```{r overtime_s_w_outliers, echo=FALSE, message=FALSE, warning=FALSE}
 model_stunted_sexe_1 <- lm(stunted ~ factor(year)-1, data = civ_2_4years %>% filter(sexe == 1), weights = pweight)
@@ -491,11 +536,155 @@ reg <- set_all_padding(reg, 1.5)
 reg
 ```
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#| label: fig-distributions_stunted_male_female
+#| fig-cap: "Distribution of z-scores for 2-4 years old children by year and region"
+#| fig-subcap: "X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2."
+
+ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(sexe))) +
+  geom_density_ridges(alpha=0.3) +
+  geom_vline(xintercept = -2, linetype = "dashed") +
+  scale_fill_discrete(labels = c("Female", "Male")) +
+  theme_ridges() + 
+  labs(fill = NULL) +
+  theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
+```
+
 ## 4. Height Stature and poverty (2 points)
 
 **Here, one would like to study how the gradient of the number of stunted children aged 2-4 years, and of household consumption per capita, as well as the relationship between the two, have changed over time.** **Find a graphical or regression framework to represent this (many options are possible). Comment on your results and their limits.**
 
-\[Your answer here\]
+Figure \ref{fig-over_time} represents the relationship between the log of household consumption per capita and the probability of being stunted for 2-4 years old children by year. The figure was created by binning the log of household consumption per capita into ventiles and calculating the weighted stunting rate for each ventile. Then a linear regression line was fitted to the binned data for each year. 
+
+Interpreting the results in Figure \ref{fig-over_time}, there is a clear trend increasing the stunting rate across years explained by the vertical shift of the regression lines. The slope of each regression line is negative, indicating that higher household consumption per capita is associated with a lower probability of being stunted. While the regression lines in 1988 and 2008 have similar slopes, the regression line in 1993 is steeper, indicating that the socioeconomic gradient of stunting was more pronounced in 1993 than in 1988 and 2008.
+
+Analytically, the results can be confirmed through the linear regression model in @eq:over_time_model. Where $log(\tilde{\text{Conspc88}_i}))$ is the log of household consumption per capita centered around its mean, $\beta_0$ is the stunting rate for the mean child household consumption, and $\beta_1$ is the effect of log household consumption on the probability of being stunted in 1988. $\beta_2$ and $\beta_3$ capture the change in the stunting rate in 1993 and 2008 relative to 1988, while $\beta_4$ and $\beta_5$ capture the change in the effect of log household consumption on the probability of being stunted in 1993 and 2008 relative to 1988. $Z_i$ is a vector of control variables including sex, age, and education. The results for all population and for each tercile are summarized in Table \ref{tbl-stunting_by_income}.
+
+
+$$
+\begin{aligned}
+Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i + \beta_3 Y08_i + (\beta_4 Y93_i \times log(\tilde{\text{Conspc88}_i})) + \beta_5 (Y08_i \times log(\tilde{\text{Conspc88}_i})) + Z_i + \epsilon_i\\\\
+& \text{where } \tilde{\text{Conspc88}_i} = log(\text{Conspc88}_i) - \overline{log(\text{Conspc88})}
+\end{aligned}
+$$ {#eq:over_time_model}
+
+```{r}
+#| label: fig-over_time
+#| fig-cap: "Log household consumption ventiles vs stunting rate for 2-4 years old children by year"
+#| fig-subcap: "Outliers are removed from the analysis. Includes linear regression lines with 95% confidence intervals."
+
+civ_2_4years <- civ_2_4years %>% filter(z_score >= -6 & z_score <= 6)
+
+# 1. Create the binned dataset
+binned_data <- civ_2_4years %>%
+  # Create a log consumption variable if you haven't already
+  mutate(log_cons = log(conspc88)) %>%
+  # Group by year to ensure we calculate quantiles within each year's distribution
+  group_by(year) %>%
+  # Chop the log(consumption) data into 20 equal-sized buckets (ventiles)
+  mutate(cons_bin = ntile(log_cons, 20)) %>%
+  # Group by both year and the new bins to calculate the bucket averages
+  group_by(year, cons_bin) %>%
+  summarise(
+    # Calculate the weighted mean for the x-axis and y-axis
+    mean_log_cons = weighted.mean(log_cons, w = pweight, na.rm = TRUE),
+    stunting_rate = weighted.mean(stunted, w = pweight, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Plot the binned data
+ggplot(binned_data, aes(x = mean_log_cons, y = stunting_rate, color = factor(year))) +
+  # Add the binned averages as dots
+  geom_point(size = 3, alpha = 0.8) +
+  # Overlay the linear regression lines with 95% confidence intervals
+  geom_smooth(method = "lm", se = TRUE, level = 0.95, size = 1.2, alpha = 0.2) +
+  # Formatting to make it look academic
+  theme_minimal() +
+  labs(
+    x = "Log Household Consumption per Capita",
+    y = "Stunting Rate (Probability of being Stunted)",
+    color = "Survey Year",
+    title = "Socioeconomic Gradient of Stunting Over Time"
+  ) +
+  scale_y_continuous(labels = scales::percent_format())
+```
+
+```{r}
+# 1. Center the log consumption variable and create income tertiles
+civ_2_4years <- civ_2_4years %>%
+  mutate(
+    # Center against the national mean
+    log_cons_centered = log(conspc88) - mean(log(conspc88), na.rm = TRUE),
+    # Divide into 3 equal-sized groups: 1 = Low, 2 = Medium, 3 = High
+    income_tertile = ntile(log(conspc88), 3) 
+  )
+
+# 2. Estimate the general national model
+model_general <- lm(
+  stunted ~ log_cons_centered * factor(year), 
+  data = civ_2_4years, 
+  weights = pweight
+)
+
+# 3. Estimate the stratified models for each income tertile
+model_low <- lm(
+  stunted ~ log_cons_centered * factor(year), 
+  data = civ_2_4years %>% filter(income_tertile == 1), 
+  weights = pweight
+)
+
+model_med <- lm(
+  stunted ~ log_cons_centered * factor(year), 
+  data = civ_2_4years %>% filter(income_tertile == 2), 
+  weights = pweight
+)
+
+model_high <- lm(
+  stunted ~ log_cons_centered * factor(year), 
+  data = civ_2_4years %>% filter(income_tertile == 3), 
+  weights = pweight
+)
+
+# 4. Compile the output into a single huxtable
+outreg_quantiles <- huxreg(
+  `General (All)` = model_general,
+  `Low Income (T1)` = model_low,
+  `Medium Income (T2)` = model_med,
+  `High Income (T3)` = model_high,
+  coefs = c(
+    "Average Stunting Rate (1988)" = "(Intercept)",
+    "Log Consumption (Centered)" = "log_cons_centered",
+    "Year 1993 Shift" = "factor(year)1993",
+    "Year 2008 Shift" = "factor(year)2008",
+    "Cons. Effect Diff (1993)" = "log_cons_centered:factor(year)1993",
+    "Cons. Effect Diff (2008)" = "log_cons_centered:factor(year)2008"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+
+# Apply formatting
+outreg_quantiles <- set_all_padding(outreg_quantiles, 1.5)
+outreg_quantiles <- set_label(outreg_quantiles, "tbl-stunting_by_income")
+outreg_quantiles <- set_caption(outreg_quantiles, "Heterogeneous Effects of Consumption on Stunting Rates by Income Tertile")
+
+outreg_quantiles
+```
+
+<!-- 
+```{r}
+ggplot(civ_nutri, aes(log(conspc88), fill = factor(year), colour = factor(year))) + ylab("Kernel Density") + xlab("Weight (kg)") + ggtitle("Before Correction") +
+  geom_density(alpha = 0.3) +
+  labs(fill = "Year", colour = "Year")+ ylim(0, NA) + theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "inside", legend.position.inside = c(0.8, 0.8))
+
+# plot consumption per capita vs z-score color stunted
+ggplot(civ_2_4years %>% filter(year == 2008), aes(z_score, log(conspc88))) + geom_point(alpha = 0.3) + geom_smooth(method = "lm", se = TRUE) + ggtitle("Z-Score vs Log(Consumption per Capita)") + xlim(-6, 6) + scale_colour_discrete(name = "Stunted", labels = c("No", "Yes")) + theme_minimal() + theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5), legend.position = "inside", legend.position.inside = c(0.8, 0.8))
+``` -->
 
 # 3 A meaningful table (6 pts)
 
