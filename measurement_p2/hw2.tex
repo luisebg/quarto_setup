@@ -190,7 +190,7 @@
 
 \title{Measurement: Homework 2}
 \author{Beltrán González Luis Enrique}
-\date{2026-10-16}
+\date{2026-10-17}
 \begin{document}
 \maketitle
 
@@ -527,30 +527,37 @@ are outliers, and show results both including and excluding outliers.
 Comment your results, making all relevant comparisons.}
 
 As shown in Table \ref{tbl-stunted_north_south}, the national stunting
-rate for 2-4 years old children with outliers is 26.3\% in 1988, 43.9\%
-in 1993, and 47.1\% in 2008. This increasing trend shows an overall
-increment of 20.8 percentage points in the stunting rate over the
+rate for 2-4 years old children with outliers is 24.1\% in 1988, 42\% in
+1993, and 46.4\% in 2008. This increasing trend shows an overall
+increment of 22.3 percentage points in the stunting rate over the
 20-year period.
 
 The north and south regions an increasing trend overtime, but the north
 region shows a higher stunting rate than the south region in 1988 and
-2008. Particularly, in 1988 the difference between north and south is 6
-percentage points, and in 2008 the difference is 6.6 percentage points.
-In 1993 the difference is not statistically significant different frm
-zero, indicating that the north and south regions had similar stunting
-rates in 1993. Many theories can explain the differences between north
-and south e.g.~differences in measurement, differences in the
-population, or the effect of socioeconomic factors such as
-poverty-alleviating programs, and access to health care.
+2008. Particularly, in 1988 the difference between north and south is
+5.6 percentage points at the 1\% significance level, and in 2008 the
+difference is 4.5 percentage points at the 5\% significance level. In
+1993 the difference is not statistically significant different frm zero,
+indicating that the north and south regions had similar stunting rates
+in 1993. Many theories can explain the differences between north and
+south e.g.~differences in measurement, differences in the population, or
+the effect of socioeconomic factors such as poverty-alleviating
+programs, and access to health care.
 
 The results excluding outliers show a similar trend in 1988 and 1993,
-however, in 2008 the stuting is lower in national level and in the south
-than in 1993. This change in the pattern suggest that the measurement
-correction done in question 1.b had an impact on the results and drafted
-conclusions. Regional differences between north and south persist, there
-are still significant differences of 6.6 and 6.2 percentage points in
-1988 and 2008 between the north and south regions despite the change in
-the stunting rate over time pattern.
+however, in 2008 the stuting is not as different from 1933 except in the
+north region where there is a difference of 4 percentage points. This
+change in the pattern suggest that the outliers correction had an impact
+on the results and drafted conclusions. Regional differences between
+north and south persist, there are still a significant difference of 6.1
+and 3.5 percentage points in 1988 and 2008 at the 1\% and 10\%
+significance levels respectively between the north and south regions
+despite the change in the stunting rate over time pattern.
+
+The patterns validate the observations made in Figure
+\ref{fig-distributions_stunted_north_south} where the distribution of
+z-scores less than -2 is higher in the north region than in the south
+region in 1988 and 2008, while in 1993 the distributions are similar.
 
  
 \begin{table}[ht]
@@ -734,27 +741,6 @@ of -2.}
 
 \end{figure}%
 
-\begin{figure}
-
-\caption{\label{fig-distributions_stunted_male_female}Distribution of
-z-scores for 2-4 years old children by year and region}
-
-\centering{
-
-\subcaption{\label{fig-distributions_stunted_male_female}X-axis is
-limited to -6 to 6, and the dashed line indicates the stunting threshold
-of -2.}
-
-\centering{
-
-\pandocbounded{\includegraphics[keepaspectratio]{hw2_files/figure-pdf/fig-distributions_stunted_male_female-1.pdf}}
-
-}
-
-}
-
-\end{figure}%
-
 \textbf{(b) Estimate the stunting rate for 2-4 years old children over
 time for boys and for girls at the national level. Decide what are
 outliers, and show results both including and excluding outliers.
@@ -762,18 +748,24 @@ Comment your results, making all relevant comparisons.}
 
 As shown in Table \ref{tbl-stunted_sexe}, the stunting rate for boys and
 girls is increasing over time for the model with outliers (LHS four
-models). Starting from 1988, boys and girls had a stunting rate of 27\%
-and 25\% with no significant difference. In 1993, boys and girls had a
-stunting rate of 46\% and 41\% with a significant difference of 5
-percentage points indicating boys had a higher stunting rate. In 2008,
-boys and girls had a stunting rate of 48\% and 46\% respectively with no
-significant difference.
+models). Starting from 1988, boys and girls had a stunting rate of
+24.6\% and 23.6\% with no significant difference. In 1993, boys and
+girls had a stunting rate of 43\% and 40\% with a significant difference
+of 3 percentage points indicating boys had a higher stunting rate. In
+2008, boys and girls had a stunting rate of 47\% and 45\% respectively
+with no significant difference.
 
-The stunting rates pattern without outliers (RHS four columns) flips in
-2008. In this period, removing the outliers lowered the stunting rates
-from 47\% with outliers to 40\% without outliers. Differences between
-boys and girls differences are significant in 1993 only while there is
-no significant difference in 1988 and 2008.
+The stunting rates pattern without outliers (RHS four columns) changes
+in 2008. In this period, removing the outliers lowered the national
+stunting rates from 47\% with outliers to 41\% without outliers.
+Differences between boys and girls are significant at 5\% significance
+level in 1993, while there is no significant difference in 1988 and
+2008.
+
+Observations are confirmed by Figure
+\ref{fig-distributions_stunted_male_female} where the distribution of
+z-scores less than -2 is higher for boys than girls in 1993, while in
+1988 and 2008 the distributions are similar.
 
  
 \begin{table}[ht]
@@ -936,6 +928,27 @@ no significant difference in 1988 and 2008.
 \end{table}
  
 
+\begin{figure}
+
+\caption{\label{fig-distributions_stunted_male_female}Distribution of
+z-scores for 2-4 years old children by year and region}
+
+\centering{
+
+\subcaption{\label{fig-distributions_stunted_male_female}X-axis is
+limited to -6 to 6, and the dashed line indicates the stunting threshold
+of -2.}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{hw2_files/figure-pdf/fig-distributions_stunted_male_female-1.pdf}}
+
+}
+
+}
+
+\end{figure}%
+
 \subsection{4. Height Stature and poverty (2
 points)}\label{height-stature-and-poverty-2-points}
 
@@ -946,7 +959,233 @@ time.} \textbf{Find a graphical or regression framework to represent
 this (many options are possible). Comment on your results and their
 limits.}
 
-{[}Your answer here{]}
+Figure \ref{fig-over_time} represents the relationship between the log
+of household consumption per capita and the probability of being stunted
+for 2-4 years old children by year. The figure was created by binning
+the log of household consumption per capita into ventiles and
+calculating the weighted stunting rate for each ventile. Then a linear
+regression line was fitted to the binned data for each year.
+
+Interpreting the results in Figure \ref{fig-over_time}, there is a clear
+trend increasing the stunting rate across years explained by the
+vertical shift of the regression lines. The slope of each regression
+line is negative, indicating that higher household consumption per
+capita is associated with a lower probability of being stunted. While
+the regression lines in 1988 and 2008 have similar slopes, the
+regression line in 1993 is steeper, indicating that the socioeconomic
+gradient of stunting was more pronounced in 1993 than in 1988 and 2008.
+
+Analytically, the results can be confirmed through the linear regression
+model in @eq:over\_time\_model. Where
+\(log(\tilde{\text{Conspc88}_i}))\) is the log of household consumption
+per capita centered around its mean, \(\beta_0\) is the stunting rate
+for the mean child household consumption, and \(\beta_1\) is the effect
+of log household consumption on the probability of being stunted in
+1988. \(\beta_2\) and \(\beta_3\) capture the change in the stunting
+rate in 1993 and 2008 relative to 1988, while \(\beta_4\) and
+\(\beta_5\) capture the change in the effect of log household
+consumption on the probability of being stunted in 1993 and 2008
+relative to 1988. \(Z_i\) is a vector of control variables including
+sex, age, and education. The results for all population and for each
+tercile are summarized in Table \ref{tbl-stunting_by_income}.
+
+\[
+\begin{aligned}
+Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i + \beta_3 Y08_i + (\beta_4 Y93_i \times log(\tilde{\text{Conspc88}_i})) + \beta_5 (Y08_i \times log(\tilde{\text{Conspc88}_i})) + Z_i + \epsilon_i\\\\
+& \text{where } \tilde{\text{Conspc88}_i} = log(\text{Conspc88}_i) - \overline{log(\text{Conspc88})}
+\end{aligned}
+\] \{\#eq:over\_time\_model\}
+
+\begin{figure}
+
+\caption{\label{fig-over_time}Log household consumption ventiles vs
+stunting rate for 2-4 years old children by year}
+
+\centering{
+
+\subcaption{\label{fig-over_time}Outliers are removed from the analysis.
+Includes linear regression lines with 95\% confidence intervals.}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{hw2_files/figure-pdf/fig-over_time-1.pdf}}
+
+}
+
+}
+
+\end{figure}%
+
+ 
+\begin{table}[ht]
+\begin{centerbox}
+\begin{threeparttable}
+\captionsetup{justification=centering,singlelinecheck=off}
+\caption{Heterogeneous Effects of Consumption on Stunting Rates by Income Tertile}
+ \label{tbl-stunting_by_income}\setlength{\tabcolsep}{0pt}
+\begin{tabular}{l l l l l}
+
+
+\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} General (All) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} Low Income (T1) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} Medium Income (T2) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} High Income (T3) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Average Stunting Rate (1988) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.264 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.371 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.251 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.235 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.010) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.054) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.015) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.023) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Log Consumption (Centered) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.089 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.035 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.153 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.054 ** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.014) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.082) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.101) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.026) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Year 1993 Shift \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.136 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.028 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.158 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.208 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.012) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.062) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.019) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.034) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Year 2008 Shift \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.138 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.058 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.149 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.229 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.013) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.061) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.022) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.038) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Cons. Effect Diff (1993) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.023 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.132 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.046 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.120 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.018) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.092) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.127) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.041) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Cons. Effect Diff (2008) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.049 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.039 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.034 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.068 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.018) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.088) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.142) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.045) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} N \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 10897 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 3634 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 3631 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 3632 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} R2 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.038 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.007 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.024 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.042 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
+\arrayrulecolor{black}
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\item[] Significance: *** p $<$ 0.01; ** p $<$ 0.05; * p $<$ 0.1
+\end{tablenotes}
+\end{threeparttable}\par\end{centerbox}
+
+\end{table}
+ 
 
 \section{3 A meaningful table (6 pts)}\label{a-meaningful-table-6-pts}
 
