@@ -190,7 +190,7 @@
 
 \title{Measurement: Homework 2}
 \author{Beltrán González Luis Enrique}
-\date{2026-10-17}
+\date{2026-10-19}
 \begin{document}
 \maketitle
 
@@ -235,12 +235,12 @@ and cons of both methods.}
 
 The preferable method is method 2 (M2) because method 1 (M1)
 underestimates the mortality rate by not capturing the deaths that occur
-after the survey period. Figure~\ref{fig-mortality} shows graphycally
+after the survey period. Figure~\ref{fig-mortality} shows graphically
 the surveyed groups: the x-axis represents the age of the child at the
 time of the survey, and the y-axis represents the age of the child at
 the time of death. The red arrow at 45 degrees indicates the frontier of
-possible outcomes, since by definition noone can die after their current
-age, the survey caputures outcomes below the frontier. Notice M1
+possible outcomes, since by definition no one can die after their
+current age, the survey captures outcomes below the frontier. Notice M1
 captures area B and drops area C underestimating the true mortality
 rate. M2 captures area C which represents the true mortality rate. For
 example a surveyed mother has a child one year before the survey and the
@@ -384,7 +384,7 @@ are positive indicating that M1 systematically underestimates the true
 mortality rate estimated by M2. Using the best method (M2), the average
 mortality rate for boys is 13.5\% and for girls is 11.9\%. The
 difference between girls and boys is -2 percentage points and
-statitically significant at the 90\% confidence level, indicating that
+statistically significant at the 90\% confidence level, indicating that
 boys have a higher mortality rate than girls.
 
 \section{2 Health status, nutritional status and wealth in Côte d'Ivoire
@@ -433,9 +433,10 @@ For applying the correction, it is necessary to have a good estimate of
 \(p_h\). In this case, it can be approximated by the proportion of
 weights above 25kg in 2008 which is 30.4\% of the observations. Using
 this, we can correct the mean weight estimate by dividing the observed
-mean weight by \((1 + 9 p_h)\). See \ref{tbl-corrected_weight_mean}
-where the 2008 mean weight is corrected. After correction, the mean
-weight in 2008 is \(11.48\)kg, which is consistent with previous years.
+mean weight by \((1 + 9 p_h)\). See Table
+\ref{tbl-corrected_weight_mean} where the 2008 mean weight is corrected.
+After correction, the mean weight in 2008 is \(11.48\)kg, which is
+consistent with previous years.
 
 {
 
@@ -532,25 +533,25 @@ rate for 2-4 years old children with outliers is 24.1\% in 1988, 42\% in
 increment of 22.3 percentage points in the stunting rate over the
 20-year period.
 
-The north and south regions an increasing trend overtime, but the north
-region shows a higher stunting rate than the south region in 1988 and
-2008. Particularly, in 1988 the difference between north and south is
-5.6 percentage points at the 1\% significance level, and in 2008 the
+The north and south regions show an increasing trend over time, but the
+north region shows a higher stunting rate than the south region in 1988
+and 2008. Particularly, in 1988 the difference between north and south
+is 5.6 percentage points at the 1\% significance level, and in 2008 the
 difference is 4.5 percentage points at the 5\% significance level. In
-1993 the difference is not statistically significant different frm zero,
-indicating that the north and south regions had similar stunting rates
-in 1993. Many theories can explain the differences between north and
-south e.g.~differences in measurement, differences in the population, or
-the effect of socioeconomic factors such as poverty-alleviating
-programs, and access to health care.
+1993 the difference is not statistically significant different from
+zero, indicating that the north and south regions had similar stunting
+rates in 1993. Many theories can explain the differences between north
+and south e.g.~differences in measurement, differences in the
+population, or the effect of socioeconomic factors such as
+poverty-alleviating programs, and access to health care.
 
 The results excluding outliers show a similar trend in 1988 and 1993,
-however, in 2008 the stuting is not as different from 1933 except in the
-north region where there is a difference of 4 percentage points. This
-change in the pattern suggest that the outliers correction had an impact
-on the results and drafted conclusions. Regional differences between
-north and south persist, there are still a significant difference of 6.1
-and 3.5 percentage points in 1988 and 2008 at the 1\% and 10\%
+however, in 2008 the stunting is not as different from 1993 except in
+the north region where there is a difference of 4 percentage points.
+This change in the pattern suggest that the outliers correction had an
+impact on the results and drafted conclusions. Regional differences
+between north and south persist, there is still a significant difference
+of 6.1 and 3.5 percentage points in 1988 and 2008 at the 1\% and 10\%
 significance levels respectively between the north and south regions
 despite the change in the stunting rate over time pattern.
 
@@ -976,7 +977,7 @@ regression line in 1993 is steeper, indicating that the socioeconomic
 gradient of stunting was more pronounced in 1993 than in 1988 and 2008.
 
 Analytically, the results can be confirmed through the linear regression
-model in @eq:over\_time\_model. Where
+model in Equation~\ref{eq-over_time_model}. Where
 \(log(\tilde{\text{Conspc88}_i}))\) is the log of household consumption
 per capita centered around its mean, \(\beta_0\) is the stunting rate
 for the mean child household consumption, and \(\beta_1\) is the effect
@@ -986,15 +987,55 @@ rate in 1993 and 2008 relative to 1988, while \(\beta_4\) and
 \(\beta_5\) capture the change in the effect of log household
 consumption on the probability of being stunted in 1993 and 2008
 relative to 1988. \(Z_i\) is a vector of control variables including
-sex, age, and education. The results for all population and for each
-tercile are summarized in Table \ref{tbl-stunting_by_income}.
+sex, age, and education of the household head. The results for all
+population and for each tercile are summarized in Table
+\ref{tbl-stunting_by_income}.
 
-\[
+\begin{equation}\protect\phantomsection\label{eq-over_time_model}{
 \begin{aligned}
-Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i + \beta_3 Y08_i + (\beta_4 Y93_i \times log(\tilde{\text{Conspc88}_i})) + \beta_5 (Y08_i \times log(\tilde{\text{Conspc88}_i})) + Z_i + \epsilon_i\\\\
+Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i + \beta_3 Y08_i + \\
+& (\beta_4 Y93_i \times log(\tilde{\text{Conspc88}_i})) + \beta_5 (Y08_i \times log(\tilde{\text{Conspc88}_i})) + Z_i + \epsilon_i\\\\
 & \text{where } \tilde{\text{Conspc88}_i} = log(\text{Conspc88}_i) - \overline{log(\text{Conspc88})}
 \end{aligned}
-\] \{\#eq:over\_time\_model\}
+}\end{equation}
+
+According to Table \ref{tbl-stunting_by_income}, the overall stunting
+rate for the average child in 1988 is 37\%, an increment of 1\% in
+consumption per capita is associated with a 0.07 percentage point
+decrease in the probability of being stunted. In following periods, the
+stunting rate was 13 and 15 percentage points higher in 1993 and 2008
+respectively. While the effect of consumption per capita on the
+probability of being stunted was not significantly different in 1988, in
+2008 a 1\% increase in consumption per capita was associated with a 0.04
+percentage point more in the probability of being stunted relative to
+1988.
+
+The consumption terciles show a distinct pattern over time than the
+general population. In 1988, the stunting rate for low consumption
+children was 42\% while the high consumption was 33\%, a difference of 9
+percentage points. In 1993, the stunting rate for medium and high
+consumption households was 15 and 21 percentage points higher than in
+1988 for medium and high consumption households respectively, while the
+stunting rate for low consumption households was not significantly
+different from 1988. The change in the effect of consumption per capita
+on the probability of being stunted relative to 1988 was significantly
+different from zero for the high consumption tercile, indicating that
+the socioeconomic gradient of stunting was more pronounced in 1993 than
+in 1988 for high consumption households. In 1993, a 1\% increase in
+consumption per capita was associated with a 0.12 percentage point
+decrease in the probability of being stunted relative to 1988 for high
+consumption households. In 2008 this difference was 0.08 percentage
+points for high consumption households and significant at the 10\% level
+only.
+
+Overall, the results indicate that baseline stunting rates have
+increased over time, while the protective effect of household
+consumption has fluctuated. The socioeconomic gradient of stunting was
+notably steeper in 1993 compared to both 1988 and 2008. Furthermore, the
+stratified model demonstrates that the relationship between consumption
+and stunting is not uniform across the consumption distribution, with
+high consumption households experiencing a more pronounced effect of
+consumption on stunting in 1993 than in 1988 and 2008.
 
 \begin{figure}
 
@@ -1021,7 +1062,7 @@ Includes linear regression lines with 95\% confidence intervals.}
 \begin{centerbox}
 \begin{threeparttable}
 \captionsetup{justification=centering,singlelinecheck=off}
-\caption{Heterogeneous Effects of Consumption on Stunting Rates by Income Tertile}
+\caption{Heterogeneous Effects of Consumption on Stunting Rates by Consumption Tertile}
  \label{tbl-stunting_by_income}\setlength{\tabcolsep}{0pt}
 \begin{tabular}{l l l l l}
 
@@ -1031,39 +1072,39 @@ Includes linear regression lines with 95\% confidence intervals.}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} General (All) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} Low Income (T1) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} Medium Income (T2) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} High Income (T3) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} Low Cons (T1) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} Medium Cons (T2) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{c!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\centering \hspace{1.5pt} High Cons (T3) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Average Stunting Rate (1988) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.264 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.371 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.251 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.235 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.421 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.393 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.333 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.010) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.054) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.015) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.023) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.021) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.063) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.036) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.039) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Log Consumption (Centered) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.089 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.035 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.153 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.054 ** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.074 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.026 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.136 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.009 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1071,19 +1112,19 @@ Includes linear regression lines with 95\% confidence intervals.}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.014) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.082) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.083) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.101) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.026) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.027) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Year 1993 Shift \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.136 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.028 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.158 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.208 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.138 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.031 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.156 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.218 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1100,10 +1141,10 @@ Includes linear regression lines with 95\% confidence intervals.}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Year 2008 Shift \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.138 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.058 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.149 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.229 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.150 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.061 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.158 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.257 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1111,8 +1152,8 @@ Includes linear regression lines with 95\% confidence intervals.}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.013) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.061) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.022) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.062) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.023) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.038) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
@@ -1121,9 +1162,9 @@ Includes linear regression lines with 95\% confidence intervals.}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Cons. Effect Diff (1993) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.023 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.132 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.046 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.120 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.124 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.047 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.121 *** \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1132,7 +1173,7 @@ Includes linear regression lines with 95\% confidence intervals.}
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.018) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.092) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.127) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.126) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.041) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
@@ -1140,10 +1181,10 @@ Includes linear regression lines with 95\% confidence intervals.}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Cons. Effect Diff (2008) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.049 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.039 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.034 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.068 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.047 *** \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.032 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.020 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} -0.081 * \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{}
@@ -1152,8 +1193,28 @@ Includes linear regression lines with 95\% confidence intervals.}
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt}  \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.018) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.088) \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.142) \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.141) \hspace{1.5pt}\huxbpad{1.5pt}} &
 \multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} (0.045) \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Controls \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+
+
+\hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
+\arrayrulecolor{black}
+
+\multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} Outliers Excluded \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} Yes \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{255, 255, 255}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}->{\huxb{0, 0, 0}{0.4}}-}
@@ -1170,10 +1231,10 @@ Includes linear regression lines with 95\% confidence intervals.}
 \arrayrulecolor{black}
 
 \multicolumn{1}{!{\huxvb{0, 0, 0}{0}}l!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedright \hspace{1.5pt} R2 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.038 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.007 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.024 \hspace{1.5pt}\huxbpad{1.5pt}} &
-\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.042 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.043 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.009 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.032 \hspace{1.5pt}\huxbpad{1.5pt}} &
+\multicolumn{1}{r!{\huxvb{0, 0, 0}{0}}}{\huxtpad{1.5pt + 1em}\raggedleft \hspace{1.5pt} 0.053 \hspace{1.5pt}\huxbpad{1.5pt}} \tabularnewline[-0.5pt]
 
 
 \hhline{>{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}->{\huxb{0, 0, 0}{0.8}}-}
@@ -1202,12 +1263,87 @@ kind of information that is needed to read and understand the table. The
 bottom half of the page should be dedicated to a brief text, commenting
 upon the social fact that the table reveals.}
 
-{[}Your table and text here{]}
+In classical economics, the Tiebout model predicts that in the absence
+of friction, individuals will ``vote with their feet'' and relocate to
+countries offering the optimal bundle of public services, economic
+opportunities, and living conditions. In reality, cross-border mobility
+is heavily constrained by structural frictions, including relocation
+costs, social capital networks, and national border regimes. In this
+policy note, I evaluate the average share of foreign populations
+(non-citizens) across OECD countries from 2013 to 2023, comparing
+national baselines to understand how legal frameworks and integration
+policies shape global demographic stocks.
 
-\section{Appendix: R Script}\label{appendix-r-script}
+Figure \ref{fig-migration} illustrates the OECD average share of foreign
+population from 2013 to 2023, defined as usual residents residing in a
+host country for at least twelve months without holding citizenship.
+Following standard OECD and UN definitions, this metric captures
+long-term foreign residents---including those on work visas, student
+visas, and permanent residency permits, while strictly excluding
+short-term tourists and temporary visitors. Across the OECD sample, this
+non-citizen share grew from 5.5\% in 2013 to 7.2\% in 2023, reflecting
+an increment in long-term international mobility despite persistent
+institutional barriers.
 
-\emph{Please do not show your R script before every question, but put
-your entire R script at the end of the homework.}
+Figure \ref{fig-migration} further demonstrates substantial
+cross-country variance around this global baseline, which can be
+evaluated across three distinct policy models: 1.
+\textbf{Countries above the mean}: Germany maintains an high foreign
+population share of 15.8\% as of 2023. Historically, Germany has
+absorbed large-scale labor and humanitarian inflows, including post-WWII
+reconstruction labor, the 2015 Syrian refugee crisis, and displacement
+from the 2022 war in Ukraine. This high stock is sustained by active
+policy engineering, such as recent legislative reforms designed to lower
+administrative friction for skilled foreign workers. 2.
+\textbf{Countries below the mean}: Poland exhibits a deeply suppressed
+foreign population share of just 1.1\% in 2023. Unlike Western Europe,
+Poland maintained extreme demographic homogeneity throughout the
+post-WWII era and underwent a difficult post-communist economic
+transition that historically made it an exporter, rather than a
+destination, for labor. Furthermore, Polish immigration policy has
+traditionally favored temporary or seasonal labor migration from
+neighboring states over long-term structural integration. 3.
+\textbf{Countries near the mean}: The United States (8.4\%) and France
+(7.1\%) hover near the OECD baseline. Both nations maintain
+long-standing immigration traditions and strong international appeal for
+students and workers. However, their foreign national stocks remain
+moderate primarily due to robust naturalization pathways. As long-term
+residents acquire citizenship, they exit the ``foreign population''
+metric, keeping non-citizen stocks stable despite continuous inbound
+migration.
+
+Evaluating these structural differences is vital for economic policy.
+Nations with high foreign population stocks must focus on removing labor
+market hurdles and enhancing civic integration, whereas countries with
+suppressed foreign shares must streamline administrative visa processes
+to remain competitive in attracting global talent.
+
+\begin{figure}
+
+\caption{\label{fig-migration}Stock of foreign population (non-citizens)
+over time}
+
+\centering{
+
+\subcaption{\label{fig-migration}The dashed line represents the OECD
+stock of foreign population (non-citizens), while the solid lines are
+selected countries.}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{hw2_files/figure-pdf/fig-migration-1.pdf}}
+
+}
+
+}
+
+\end{figure}%
+
+\section{Appendix}\label{appendix}
+
+\subsection{Figures and Tables}\label{figures-and-tables}
+
+\subsection{R Script}\label{r-script}
 
 
 

@@ -71,7 +71,7 @@ $$ {#eq-weighted_lm}
 
 **(a) What method can be deemed preferable and why? Give the pros and cons of both methods.**
 
-The preferable method is method 2 (M2) because method 1 (M1) underestimates the mortality rate by not capturing the deaths that occur after the survey period. @fig-mortality shows graphycally the surveyed groups: the x-axis represents the age of the child at the time of the survey, and the y-axis represents the age of the child at the time of death. The red arrow at 45 degrees indicates the frontier of possible outcomes, since by definition noone can die after their current age, the survey caputures outcomes below the frontier. Notice M1 captures area B and drops area C underestimating the true mortality rate. M2 captures area C which represents the true mortality rate. For example a surveyed mother has a child one year before the survey and the child dies the year after the survey (area C in @fig-mortality), M1 will not capture his death because by definition nothing can die after its current age.
+The preferable method is method 2 (M2) because method 1 (M1) underestimates the mortality rate by not capturing the deaths that occur after the survey period. @fig-mortality shows graphically the surveyed groups: the x-axis represents the age of the child at the time of the survey, and the y-axis represents the age of the child at the time of death. The red arrow at 45 degrees indicates the frontier of possible outcomes, since by definition no one can die after their current age, the survey captures outcomes below the frontier. Notice M1 captures area B and drops area C underestimating the true mortality rate. M2 captures area C which represents the true mortality rate. For example a surveyed mother has a child one year before the survey and the child dies the year after the survey (area C in @fig-mortality), M1 will not capture his death because by definition nothing can die after its current age.
 
 M1
 
@@ -204,7 +204,7 @@ outreg
 
 **ii. Compare and comment.**
 
-Table \ref{tbl-child_mortality} shows the estimated child mortality rates in Côte d'Ivoire for boys and girls using both methods and their differences. The results confirm our theory of M1 underestimating the true mortality rate. We can clearly see the method estimates differences are positive indicating that M1 systematically underestimates the true mortality rate estimated by M2. Using the best method (M2), the average mortality rate for boys is 13.5% and for girls is 11.9%. The difference between girls and boys is -2 percentage points and statitically significant at the 90% confidence level, indicating that boys have a higher mortality rate than girls.
+Table \ref{tbl-child_mortality} shows the estimated child mortality rates in Côte d'Ivoire for boys and girls using both methods and their differences. The results confirm our theory of M1 underestimating the true mortality rate. We can clearly see the method estimates differences are positive indicating that M1 systematically underestimates the true mortality rate estimated by M2. Using the best method (M2), the average mortality rate for boys is 13.5% and for girls is 11.9%. The difference between girls and boys is -2 percentage points and statistically significant at the 90% confidence level, indicating that boys have a higher mortality rate than girls.
 
 # 2 Health status, nutritional status and wealth in Côte d'Ivoire (7 points)
 
@@ -230,7 +230,8 @@ $$
 
 Thus, having an estimate of $p_h$ would allow us to correct the observed mean weight. Notice that if $p_h = 0$, then $E[W_{\text{obs}}] = W_{\text{true}}$, and if $p_h = 1$, then $E[W_{\text{obs}}] = 10 W_{\text{true}}$.
 
-For applying the correction, it is necessary to have a good estimate of $p_h$. In this case, it can be approximated by the proportion of weights above 25kg in 2008 which is 30.4\% of the observations. Using this, we can correct the mean weight estimate by dividing the observed mean weight by $(1 + 9 p_h)$. See \ref{tbl-corrected_weight_mean} where the 2008 mean weight is corrected. After correction, the mean weight in 2008 is $11.48$kg, which is consistent with previous years.
+For applying the correction, it is necessary to have a good estimate of $p_h$. In this case, it can be approximated by the proportion of weights above 25kg in 2008 which is 30.4% of the observations. Using this, we can correct the mean weight estimate by dividing the observed mean weight by $(1 + 9 p_h)$. See Table \ref{tbl-corrected_weight_mean} where the 2008 mean weight is corrected. After correction, the mean weight in 2008 is $11.48$kg, which is consistent with previous years.
+
 ```{r}
 #| label: tbl-corrected_weight_mean
 
@@ -316,7 +317,7 @@ ggplot(civ_nutri, aes(x = z_score, y = factor(year))) +
   theme_ridges() + 
   labs(fill = NULL) +
   theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for All Age Children by Year Including Outliers")
-``` 
+```
 
 ## 3. Height Stature over time and across regions (3 points)
 
@@ -324,9 +325,9 @@ ggplot(civ_nutri, aes(x = z_score, y = factor(year))) +
 
 As shown in Table \ref{tbl-stunted_north_south}, the national stunting rate for 2-4 years old children with outliers is 24.1% in 1988, 42% in 1993, and 46.4% in 2008. This increasing trend shows an overall increment of 22.3 percentage points in the stunting rate over the 20-year period.
 
-The north and south regions an increasing trend overtime, but the north region shows a higher stunting rate than the south region in 1988 and 2008. Particularly, in 1988 the difference between north and south is 5.6 percentage points at the 1\% significance level, and in 2008 the difference is 4.5 percentage points at the 5\% significance level. In 1993 the difference is not statistically significant different frm zero, indicating that the north and south regions had similar stunting rates in 1993. Many theories can explain the differences between north and south e.g. differences in measurement, differences in the population, or the effect of socioeconomic factors such as poverty-alleviating programs, and access to health care.
+The north and south regions show an increasing trend over time, but the north region shows a higher stunting rate than the south region in 1988 and 2008. Particularly, in 1988 the difference between north and south is 5.6 percentage points at the 1% significance level, and in 2008 the difference is 4.5 percentage points at the 5% significance level. In 1993 the difference is not statistically significant different from zero, indicating that the north and south regions had similar stunting rates in 1993. Many theories can explain the differences between north and south e.g. differences in measurement, differences in the population, or the effect of socioeconomic factors such as poverty-alleviating programs, and access to health care.
 
-The results excluding outliers show a similar trend in 1988 and 1993, however, in 2008 the stuting is not as different from 1933 except in the north region where there is a difference of 4 percentage points. This change in the pattern suggest that the outliers correction had an impact on the results and drafted conclusions. Regional differences between north and south persist, there are still a significant difference of 6.1 and 3.5 percentage points in 1988 and 2008 at the 1\% and 10\% significance levels respectively between the north and south regions despite the change in the stunting rate over time pattern.
+The results excluding outliers show a similar trend in 1988 and 1993, however, in 2008 the stunting is not as different from 1993 except in the north region where there is a difference of 4 percentage points. This change in the pattern suggest that the outliers correction had an impact on the results and drafted conclusions. Regional differences between north and south persist, there is still a significant difference of 6.1 and 3.5 percentage points in 1988 and 2008 at the 1% and 10% significance levels respectively between the north and south regions despite the change in the stunting rate over time pattern.
 
 The patterns validate the observations made in Figure \ref{fig-distributions_stunted_north_south} where the distribution of z-scores less than -2 is higher in the north region than in the south region in 1988 and 2008, while in 1993 the distributions are similar.
 
@@ -441,14 +442,13 @@ ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(north))) +
   theme_ridges() + 
   labs(fill = NULL) +
   theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
-``` 
-
+```
 
 **(b) Estimate the stunting rate for 2-4 years old children over time for boys and for girls at the national level. Decide what are outliers, and show results both including and excluding outliers. Comment your results, making all relevant comparisons.**
 
-As shown in Table \ref{tbl-stunted_sexe}, the stunting rate for boys and girls is increasing over time for the model with outliers (LHS four models). Starting from 1988, boys and girls had a stunting rate of 24.6\% and 23.6\% with no significant difference. In 1993, boys and girls had a stunting rate of 43\% and 40\% with a significant difference of 3 percentage points indicating boys had a higher stunting rate. In 2008, boys and girls had a stunting rate of 47\% and 45\% respectively with no significant difference.
+As shown in Table \ref{tbl-stunted_sexe}, the stunting rate for boys and girls is increasing over time for the model with outliers (LHS four models). Starting from 1988, boys and girls had a stunting rate of 24.6% and 23.6% with no significant difference. In 1993, boys and girls had a stunting rate of 43% and 40% with a significant difference of 3 percentage points indicating boys had a higher stunting rate. In 2008, boys and girls had a stunting rate of 47% and 45% respectively with no significant difference.
 
-The stunting rates pattern without outliers (RHS four columns) changes in 2008. In this period, removing the outliers lowered the national stunting rates from 47\% with outliers to 41\% without outliers. Differences between boys and girls are significant at 5\% significance level in 1993, while there is no significant difference in 1988 and 2008.
+The stunting rates pattern without outliers (RHS four columns) changes in 2008. In this period, removing the outliers lowered the national stunting rates from 47% with outliers to 41% without outliers. Differences between boys and girls are significant at 5% significance level in 1993, while there is no significant difference in 1988 and 2008.
 
 Observations are confirmed by Figure \ref{fig-distributions_stunted_male_female} where the distribution of z-scores less than -2 is higher for boys than girls in 1993, while in 1988 and 2008 the distributions are similar.
 
@@ -554,7 +554,7 @@ ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(sexe))) +
 
 **Here, one would like to study how the gradient of the number of stunted children aged 2-4 years, and of household consumption per capita, as well as the relationship between the two, have changed over time.** **Find a graphical or regression framework to represent this (many options are possible). Comment on your results and their limits.**
 
-Figure \ref{fig-over_time} represents the relationship between the log of household consumption per capita and the probability of being stunted for 2-4 years old children by year. The figure was created by binning the log of household consumption per capita into ventiles and calculating the weighted stunting rate for each ventile. Then a linear regression line was fitted to the binned data for each year. 
+Figure \ref{fig-over_time} represents the relationship between the log of household consumption per capita and the probability of being stunted for 2-4 years old children by year. The figure was created by binning the log of household consumption per capita into ventiles and calculating the weighted stunting rate for each ventile. Then a linear regression line was fitted to the binned data for each year.
 
 Interpreting the results in Figure \ref{fig-over_time}, there is a clear trend increasing the stunting rate across years explained by the vertical shift of the regression lines. The slope of each regression line is negative, indicating that higher household consumption per capita is associated with a lower probability of being stunted. While the regression lines in 1988 and 2008 have similar slopes, the regression line in 1993 is steeper, indicating that the socioeconomic gradient of stunting was more pronounced in 1993 than in 1988 and 2008.
 
@@ -568,11 +568,11 @@ Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i +
 \end{aligned}
 $$ {#eq-over_time_model}
 
-According to Table \ref{tbl-stunting_by_income}, the overall stunting rate for the average child in 1988 is 37\%, an increment of 1\% in consumption per capita is associated with a 0.07 percentage point decrease in the probability of being stunted. In following periods, the stunting rate was 13 and 15 percentage points higher in 1993 and 2008 respectively. While the effect of consumption per capita on the probability of being stunted was not significantly different in 1988, in 2008 a 1\% increase in consumption per capita was associated with a 0.04 percentage point more in the probability of being stunted relative to 1988.
+According to Table \ref{tbl-stunting_by_income}, the overall stunting rate for the average child in 1988 is 37%, an increment of 1% in consumption per capita is associated with a 0.07 percentage point decrease in the probability of being stunted. In following periods, the stunting rate was 13 and 15 percentage points higher in 1993 and 2008 respectively. While the effect of consumption per capita on the probability of being stunted was not significantly different in 1988, in 2008 a 1% increase in consumption per capita was associated with a 0.04 percentage point more in the probability of being stunted relative to 1988.
 
-The consumption terciles show a distinct pattern over time than the general population. In 1988, the stunting rate for low consumption children was 42% while the high consumption was 33%, a difference of 9 percentage points. In 1993, the stunting rate for medium and high consumption households was 15 and 21 percentage points higher than in 1988 for medium and high consumption households respectively, while the stunting rate for low consumption households was not significantly different from 1988. The change in the effect of consumption per capita on the probability of being stunted relative to 1988 was significantly different from zero for the high consumption tercile, indicating that the socioeconomic gradient of stunting was more pronounced in 1993 than in 1988 for high consumption households. In 1993, a 1\% increase in consumption per capita was associated with a 0.12 percentage point decrease in the probability of being stunted relative to 1988 for high consumption households. In 2008 this difference was 0.08 percentage points for high consumption households and significant at the 10\% level only.
+The consumption terciles show a distinct pattern over time than the general population. In 1988, the stunting rate for low consumption children was 42% while the high consumption was 33%, a difference of 9 percentage points. In 1993, the stunting rate for medium and high consumption households was 15 and 21 percentage points higher than in 1988 for medium and high consumption households respectively, while the stunting rate for low consumption households was not significantly different from 1988. The change in the effect of consumption per capita on the probability of being stunted relative to 1988 was significantly different from zero for the high consumption tercile, indicating that the socioeconomic gradient of stunting was more pronounced in 1993 than in 1988 for high consumption households. In 1993, a 1% increase in consumption per capita was associated with a 0.12 percentage point decrease in the probability of being stunted relative to 1988 for high consumption households. In 2008 this difference was 0.08 percentage points for high consumption households and significant at the 10% level only.
 
-Overall, the results indicate that the stunting rate has increased over time, and the effect of household consumption per capita on the probability of being stunted has changed over time, with a more pronounced socioeconomic gradient in 1993 than in 1988 and 2008. The results also suggest that the relationship between household consumption and stunting is not uniform across different consumption terciles, with high consumption households experiencing a more pronounced effect of consumption on stunting in 1993 than in 1988 and 2008.
+Overall, the results indicate that baseline stunting rates have increased over time, while the protective effect of household consumption has fluctuated. The socioeconomic gradient of stunting was notably steeper in 1993 compared to both 1988 and 2008. Furthermore, the stratified model demonstrates that the relationship between consumption and stunting is not uniform across the consumption distribution, with high consumption households experiencing a more pronounced effect of consumption on stunting in 1993 than in 1988 and 2008.
 
 ```{r}
 #| label: fig-over_time
@@ -697,8 +697,102 @@ outreg_quantiles
 
 **Construct a small statistical table showing a meaningful and policy relevant social fact about migration in the world. You may focus, or not, on a given region or country of origin, or on a particular subgroup of the population (children, etc.) A combination of originality, policy relevance and statistical accuracy will be very much appreciated. The table should fit in the top half of a page. It should have the attributes of a proper research-paper table: title, notes, etc. Table notes should indicate the source of data, the coverage (countries and population), the definition and units of variables and any other kind of information that is needed to read and understand the table. The bottom half of the page should be dedicated to a brief text, commenting upon the social fact that the table reveals.**
 
-\[Your table and text here\]
 
-# Appendix: R Script
+In classical economics, the Tiebout model predicts that in the absence of friction, individuals will "vote with their feet" and relocate to countries offering the optimal bundle of public services, economic opportunities, and living conditions. In reality, cross-border mobility is heavily constrained by structural frictions, including relocation costs, social capital networks, and national border regimes. In this policy note, I evaluate the average share of foreign populations (non-citizens) across OECD countries from 2013 to 2023, comparing national baselines to understand how legal frameworks and integration policies shape global demographic stocks.
 
-*Please do not show your R script before every question, but put your entire R script at the end of the homework.*
+Figure \ref{fig-migration} illustrates the OECD average share of foreign population from 2013 to 2023, defined as usual residents residing in a host country for at least twelve months without holding citizenship. Following standard OECD and UN definitions, this metric captures long-term foreign residents—including those on work visas, student visas, and permanent residency permits, while strictly excluding short-term tourists and temporary visitors. Across the OECD sample, this non-citizen share grew from 5.5\% in 2013 to 7.2\% in 2023, reflecting an increment in long-term international mobility despite persistent institutional barriers.
+
+Figure \ref{fig-migration} further demonstrates substantial cross-country variance around this global baseline, which can be evaluated across three distinct policy models:
+1. \textbf{Countries above the mean}: Germany maintains an high foreign population share of 15.8\% as of 2023. Historically, Germany has absorbed large-scale labor and humanitarian inflows, including post-WWII reconstruction labor, the 2015 Syrian refugee crisis, and displacement from the 2022 war in Ukraine. This high stock is sustained by active policy engineering, such as recent legislative reforms designed to lower administrative friction for skilled foreign workers.
+2. \textbf{Countries below the mean}: Poland exhibits a deeply suppressed foreign population share of just 1.1\% in 2023. Unlike Western Europe, Poland maintained extreme demographic homogeneity throughout the post-WWII era and underwent a difficult post-communist economic transition that historically made it an exporter, rather than a destination, for labor. Furthermore, Polish immigration policy has traditionally favored temporary or seasonal labor migration from neighboring states over long-term structural integration.
+3. \textbf{Countries near the mean}: The United States (8.4\%) and France (7.1\%) hover near the OECD baseline. Both nations maintain long-standing immigration traditions and strong international appeal for students and workers. However, their foreign national stocks remain moderate primarily due to robust naturalization pathways. As long-term residents acquire citizenship, they exit the "foreign population" metric, keeping non-citizen stocks stable despite continuous inbound migration.
+
+Evaluating these structural differences is vital for economic policy. Nations with high foreign population stocks must focus on removing labor market hurdles and enhancing civic integration, whereas countries with suppressed foreign shares must streamline administrative visa processes to remain competitive in attracting global talent.
+
+```{r, policy_table}
+#| label: fig-migration
+#| fig-cap: "Stock of foreign population (non-citizens) over time"
+#| fig-subcap: "The dashed line represents the OECD stock of foreign population (non-citizens), while the solid lines are selected countries."
+
+# read data/population.csv and data/migration.csv
+population <- read_csv(here::here("measurement_p2/data/population.csv"))
+migration <- read_csv(here::here("measurement_p2/data/stocks.csv"))
+
+# left join migration with population on country and year
+migration_pop <- migration %>%
+  left_join(population, by = c("entity", "year")) %>%
+  select(entity, year, population, obs_value) %>%
+  rename(
+    country = entity,
+    migration_flow = obs_value
+  ) %>%
+  mutate(migration_rate = migration_flow / population) %>% filter(year <= 2023 & year >= 2013)
+
+# # validate countries have population and migration data for all years
+# migration_pop %>%
+#   filter(year <= 2023 & year >= 2013) %>%
+#   group_by(country) %>%
+#   summarise(
+#     n_years = n_distinct(year),
+#     n_population = sum(!is.na(population)),
+#     n_migration = sum(!is.na(migration_flow))
+#   )
+
+# keep only countries with n_population = 11 and n_migration = 11
+migration_pop <- migration_pop %>%
+  filter(year <= 2023 & year >= 2013) %>%
+  group_by(country) %>%
+  filter(n_distinct(year) == 11 & sum(!is.na(population)) == 11 & sum(!is.na(migration_flow)) == 11) %>%
+  ungroup()
+
+# migration rates for the United States, Germany, France, and Poland
+selected_migration_rates <- migration_pop %>%
+  filter(country %in% c("United States", "Germany", "France", "Poland")) %>%
+  select(country, year, migration_rate)
+
+# estimate the world migration rate by year
+world_migration_rate <- migration_pop %>%
+  group_by(year) %>%
+  summarise(
+    world_migration_flow = sum(migration_flow, na.rm = TRUE),
+    world_population = sum(population, na.rm = TRUE)
+  ) %>%
+  mutate(world_migration_rate = world_migration_flow / world_population)
+
+ggplot(selected_migration_rates, aes(x = year)) +
+  geom_line(aes(y = migration_rate, color = country), size = 1, alpha = 0.5) +
+  geom_point(aes(y = migration_rate, color = country), shape = 18, alpha = 0.5) +
+  geom_line(
+    data = world_migration_rate,
+    aes(y = world_migration_rate, color = "World rate"),
+    size = 0.8, alpha = 0.7,linetype = "dashed"
+  ) +
+  scale_x_continuous(
+    breaks = seq(min(selected_migration_rates$year), max(selected_migration_rates$year), by = 1),
+    limits = c(2013, 2023)
+  ) + 
+  scale_color_manual(
+    values = c(
+      "United States" = "#1f77b4",
+      "France" = "#ff7f0e",
+      "Sweden" = "#2ca02c",
+      "Germany" = "#9467bd",
+      "Poland" = "#8c564b",
+      "World rate" = "red"
+    )
+  ) +
+  scale_y_continuous(
+    name = "Share of stock of foreign pop.",
+    limits = c(0, NA)) +
+  labs(
+    x = "Year",
+    color = "Country"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+# Appendix
+## Figures and Tables
+
+## R Script
