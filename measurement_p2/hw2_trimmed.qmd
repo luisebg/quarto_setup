@@ -1,7 +1,4 @@
 ---
-title: "Measurement: Homework 2"
-author: "Beltrán González Luis Enrique"
-date: "today"
 editor: source
 theme: cosmo
 fig-cap-location: top
@@ -11,8 +8,8 @@ format:
     geometry:
       - top=10mm
       - bottom=10mm
-      - left=15mm
-      - right=15mm
+      - left=10mm
+      - right=10mm
 execute:
   echo: false
   warning: false
@@ -272,14 +269,14 @@ plot_2 <-ggplot(civ_nutri, aes(weightkg_corrected, fill = factor(year), colour =
 grid.arrange(plot_1, plot_2, ncol=2)
 ```
 
-\textbf{2.2} Estimated z-scores are computed using the mentioned formula. The resulting distribution of z-scores for 2-4 years old children by year and region is shown in Figure \ref{fig-distributions_stunted}.
+\textbf{2.2} Estimated z-scores are computed using the mentioned formula i.e. (height - medheight) / stdheight in R.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 civ_nutri <- civ_nutri %>% mutate(z_score = (height - medheight) / stdheight) %>% mutate(stunted = ifelse(z_score < -2, 1, 0))
 civ_2_4years <- civ_nutri %>% filter(age >= 2*12 & age < 5*12)
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+<!-- ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #| label: fig-distributions_stunted
 #| fig-cap: "Distribution of z-scores by year"
 #| fig-subcap: "X-axis is limited to -6 to 6, and the dashed line indicates the stunting threshold of -2."
@@ -292,8 +289,7 @@ ggplot(civ_nutri, aes(x = z_score, y = factor(year))) +
   theme_ridges() + 
   labs(fill = NULL) +
   theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for All Age Children by Year Including Outliers")
-```
-
+``` -->
 \textbf{2.3.a} As shown in Table \ref{tbl-stunted_north_south}, the national stunting rate for 2-4 years old children with outliers is 24.1% in 1988, 42% in 1993, and 46.4% in 2008. This increasing trend shows an overall increment of 22.3 percentage points in the stunting rate over the 20-year period.
 
 The north and south regions show an increasing trend over time, but the north region shows a higher stunting rate than the south region in 1988 and 2008. Particularly, in 1988 the difference between north and south is 5.6 percentage points at the 1% significance level, and in 2008 the difference is 4.5 percentage points at the 5% significance level. In 1993 the difference is not statistically significant different from zero, indicating that the north and south regions had similar stunting rates in 1993. Many theories can explain the differences between north and south e.g. differences in measurement, differences in the population, or the effect of socioeconomic factors such as poverty-alleviating programs, and access to health care.
@@ -519,9 +515,7 @@ ggplot(civ_2_4years, aes(x = z_score, y = factor(year), fill = factor(sexe))) +
   theme(legend.position = c(0.98, 0.98), legend.justification = c(1, 1)) + xlim(-6, 6) + xlab("Z-Score") + ylab("Year") + ggtitle("Z-Scores for 2-4 Years Old Children by Year")
 ``` -->
 
-\textbf{2.4} Figure \ref{fig-over_time} represents the relationship between the log of household consumption per capita and the probability of being stunted for 2-4 years old children by year. The figure was created by binning the log of household consumption per capita into ventiles and calculating the weighted stunting rate for each ventile. Then a linear regression line was fitted to the binned data for each year.
-
-Interpreting the results in Figure \ref{fig-over_time}, there is a clear trend increasing the stunting rate across years explained by the vertical shift of the regression lines. The slope of each regression line is negative, indicating that higher household consumption per capita is associated with a lower probability of being stunted. While the regression lines in 1988 and 2008 have similar slopes, the regression line in 1993 is steeper, indicating that the socioeconomic gradient of stunting was more pronounced in 1993 than in 1988 and 2008.
+\textbf{2.4} Figure \ref{fig-over_time} shows the relationship between log household consumption per capita (binned into ventiles) and the probability of being stunted for 2-4 year-olds. The vertical shift of the fitted regression lines shows a clear trend of increasing stunting rates across years. The negative slopes indicate higher consumption lowers stunting probability. The 1993 regression line is notably steeper than in 1988 and 2008, indicating a more pronounced socioeconomic gradient that year.
 
 Analytically, the results can be confirmed through the linear regression model in @eq-over_time_model. Where $log(\tilde{\text{Conspc88}_i}))$ is the log of household consumption per capita centered around its mean, $\beta_0$ is the stunting rate for the mean child household consumption, and $\beta_1$ is the effect of log household consumption on the probability of being stunted in 1988. $\beta_2$ and $\beta_3$ capture the change in the stunting rate in 1993 and 2008 relative to 1988, while $\beta_4$ and $\beta_5$ capture the change in the effect of log household consumption on the probability of being stunted in 1993 and 2008 relative to 1988. $Z_i$ is a vector of control variables including sex, age, and education of the household head. The results for all population and for each tercile are summarized in Table \ref{tbl-stunting_by_income}.
 
@@ -533,16 +527,17 @@ Stunted_i & = \beta_0 + \beta_1 log(\tilde{\text{Conspc88}_i}) + \beta_2 Y93_i +
 \end{aligned}
 $$ {#eq-over_time_model}
 
-According to Table \ref{tbl-stunting_by_income}, the overall stunting rate for the average child in 1988 is 37%, an increment of 1% in consumption per capita is associated with a 0.07 percentage point decrease in the probability of being stunted. In following periods, the stunting rate was 13 and 15 percentage points higher in 1993 and 2008 respectively. While the effect of consumption per capita on the probability of being stunted was not significantly different in 1988, in 2008 a 1% increase in consumption per capita was associated with a 0.04 percentage point more in the probability of being stunted relative to 1988.
+According to Table \ref{tbl-stunting_by_income}, the 1988 baseline stunting rate is 37\%, where a 1\% consumption increase decreases stunting probability by 0.07 percentage points. Baseline stunting shifted 13 and 15 percentage points higher in 1993 and 2008, respectively. The consumption gradient changed slightly in 2008, with a 1\% consumption increase associated with a 0.04 percentage point higher penalty relative to 1988.
 
-The consumption terciles show a distinct pattern over time than the general population. In 1988, the stunting rate for low consumption children was 42% while the high consumption was 33%, a difference of 9 percentage points. In 1993, the stunting rate for medium and high consumption households was 15 and 21 percentage points higher than in 1988 for medium and high consumption households respectively, while the stunting rate for low consumption households was not significantly different from 1988. The change in the effect of consumption per capita on the probability of being stunted relative to 1988 was significantly different from zero for the high consumption tercile, indicating that the socioeconomic gradient of stunting was more pronounced in 1993 than in 1988 for high consumption households. In 1993, a 1% increase in consumption per capita was associated with a 0.12 percentage point decrease in the probability of being stunted relative to 1988 for high consumption households. In 2008 this difference was 0.08 percentage points for high consumption households and significant at the 10% level only.
+Analyzing by consumption terciles reveals heterogeneous patterns. In 1988, low-consumption children had a 42\% stunting rate versus 33\% for high-consumption. By 1993, stunting increased by 15 and 21 percentage points for medium and high-consumption households respectively, while remaining unchanged for low-consumption households. The protective effect of consumption was significantly stronger in 1993 exclusively for the high-consumption tercile, where a 1\% consumption increase reduced stunting by an additional 0.12 percentage points relative to 1988 (and 0.08 points in 2008, significant at 10\%).
 
-Overall, the results indicate that baseline stunting rates have increased over time, while the protective effect of household consumption has fluctuated. The socioeconomic gradient of stunting was notably steeper in 1993 compared to both 1988 and 2008. Furthermore, the stratified model demonstrates that the relationship between consumption and stunting is not uniform across the consumption distribution, with high consumption households experiencing a more pronounced effect of consumption on stunting in 1993 than in 1988 and 2008.
+Overall, baseline stunting rates increased over time while the protective effect of household consumption fluctuated, becoming notably steeper in 1993. The stratified model confirms this relationship is not uniform: high-consumption households experienced a significantly more pronounced protective effect of consumption against stunting in 1993 than in 1988 or 2008.
 
 ```{r}
 #| label: fig-over_time
 #| fig-cap: "Log household consumption ventiles vs stunting rate for 2-4 years old children by year"
 #| fig-subcap: "Outliers are removed from the analysis. Includes linear regression lines with 95% confidence intervals."
+#| out-width: "50%"
 
 civ_2_4years <- civ_2_4years %>% filter(z_score >= -6 & z_score <= 6)
 
@@ -659,23 +654,23 @@ outreg_quantiles
 ```
 
 # 3 A meaningful table (6 pts)
-In classical economics, the Tiebout model predicts that in the absence of friction, individuals will "vote with their feet" and relocate to countries offering the optimal bundle of public services, economic opportunities, and living conditions. In reality, cross-border mobility is heavily constrained by structural frictions, including relocation costs, social capital networks, and national border regimes. In this policy note, I evaluate the average share of foreign populations (non-citizens) across OECD countries from 2013 to 2023, comparing national baselines to understand how legal frameworks and integration policies shape global demographic stocks.
+The Tiebout model predicts individuals will "vote with their feet" to relocate for optimal public services and economic opportunities, though mobility remains heavily constrained by structural frictions like relocation costs and border regimes. Here, I evaluate the average share of foreign populations (non-citizens) across OECD countries (2013–2023) to understand how national policies shape demographic stocks.
 
-Figure \ref{fig-migration} illustrates the OECD average share of foreign population from 2013 to 2023, defined as usual residents residing in a host country for at least twelve months without holding citizenship. Following standard OECD and UN definitions, this metric captures long-term foreign residents—including those on work visas, student visas, and permanent residency permits, while strictly excluding short-term tourists and temporary visitors. Across the OECD sample, this non-citizen share grew from 5.5\% in 2013 to 7.2\% in 2023, reflecting an increment in long-term international mobility despite persistent institutional barriers. Confidence intervals for the OECD are shown in the figure, but individual country-level confidence intervals are omitted because they come from aggregated data.
+Figure \ref{fig-migration} illustrates the OECD average foreign population share, capturing long-term residents (over 12 months) while excluding temporary visitors. This non-citizen share grew from 5.5\% in 2013 to 7.2\% in 2023, reflecting increasing international mobility. OECD-level confidence intervals are displayed, while individual country-level intervals are omitted due to data aggregation.
 
-Figure \ref{fig-migration} further demonstrates substantial cross-country variance around this global baseline, which can be evaluated across three distinct policy models:
+Figure \ref{fig-migration} demonstrates cross-country variance driven by distinct policy models and historical migration patterns:
 
-1. \textbf{Countries above the mean}: Germany maintains an high foreign population share of 15.8\% as of 2023. Historically, Germany has absorbed large-scale labor and humanitarian inflows, including post-WWII reconstruction labor, the 2015 Syrian refugee crisis, and displacement from the 2022 war in Ukraine. This high stock is sustained by active policy engineering, such as recent legislative reforms designed to lower administrative friction for skilled foreign workers.
-2. \textbf{Countries below the mean}: Poland exhibits a deeply suppressed foreign population share of just 1.1\% in 2023. Unlike Western Europe, Poland maintained extreme demographic homogeneity throughout the post-WWII era and underwent a difficult post-communist economic transition that historically made it an exporter, rather than a destination, for labor. Furthermore, Polish immigration policy has traditionally favored temporary or seasonal labor migration from neighboring states over long-term structural integration.
-3. \textbf{Countries near the mean}: The United States (8.4\%) and France (7.1\%) hover near the OECD baseline. Both nations maintain long-standing immigration traditions and strong international appeal for students and workers. However, their foreign national stocks remain moderate primarily due to robust naturalization pathways. As long-term residents acquire citizenship, they exit the "foreign population" metric, keeping non-citizen stocks stable despite continuous inbound migration.
+1. \textbf{Above the mean}: Germany has a high foreign population share (15.8\% in 2023), driven by historic labor and humanitarian inflows and active policy engineering designed to attract skilled foreign workers.
+2. \textbf{Below the mean}: Poland exhibits a low share (1.1\% in 2023) due to post-WWII demographic homogeneity, an economic transition that historically exported labor, and immigration policies favoring temporary rather than permanent structural migration.
+3. \textbf{Near the mean}: The U.S. (8.4\%) and France (7.1\%) maintain strong international appeal, but robust naturalization pathways continuously convert residents into citizens, removing them from the "foreign population" metric and keeping stocks stable.
 
-Evaluating these structural differences is vital for economic policy. Nations with high foreign population stocks must focus on removing labor market hurdles and enhancing civic integration, whereas countries with suppressed foreign shares must streamline administrative visa processes to remain competitive in attracting global talent.
+Evaluating these differences is critical as nations with high stocks must enhance foreigners integration, whereas countries with suppressed shares must streamline visa processes to attract global talent.
 
 ```{r, policy_table}
 #| label: fig-migration
 #| fig-cap: "Stock of foreign population (non-citizens) over time"
 #| fig-subcap: "The dashed line represents the OECD stock of foreign population (non-citizens), while the solid lines are selected countries."
-
+#| out-width: "50%"
 
 # # validate countries have population and migration data for all years
 # migration_pop %>%
