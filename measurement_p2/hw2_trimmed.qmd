@@ -537,7 +537,7 @@ Overall, baseline stunting rates increased over time while the protective effect
 #| label: fig-over_time
 #| fig-cap: "Log household consumption ventiles vs stunting rate for 2-4 years old children by year"
 #| fig-subcap: "Outliers are removed from the analysis. Includes linear regression lines with 95% confidence intervals."
-#| out-width: "50%"
+#| out-width: "100%"
 
 civ_2_4years <- civ_2_4years %>% filter(z_score >= -6 & z_score <= 6)
 
@@ -680,7 +680,9 @@ Evaluating these differences is critical as nations with high stocks must enhanc
 #     n_years = n_distinct(year),
 #     n_population = sum(!is.na(population)),
 #     n_migration = sum(!is.na(migration_flow))
-#   )
+#   ) %>%
+#   # sort asc on n_migration
+#   arrange(n_migration) %>% print(50)
 
 # read data/population.csv and data/migration.csv
 population <- read_csv(here::here("measurement_p2/data/population.csv"))
@@ -747,13 +749,13 @@ ggplot(selected_migration_rates, aes(x = year)) +
   geom_ribbon(
     data = oecd_yearly_stats,
     aes(x = year, ymin = ci_lower, ymax = ci_upper, fill = "OECD rate"),
-    alpha = 0.2, inherit.aes = FALSE
+    alpha = 0.1, inherit.aes = FALSE, show.legend = FALSE
   ) +
   
   # Weighted yearly macroeconomic aggregate line (~7.29% in 2023)
   geom_line(
     data = oecd_yearly_stats,
-    aes(x = year, y = mean_rate, color = "OECD rate"),
+    aes(x = year, y = mean_rate, color = "OECD avg"),
     linetype = "dashed", size = 0.8, inherit.aes = FALSE
   ) +
   
@@ -769,12 +771,13 @@ ggplot(selected_migration_rates, aes(x = year)) +
       "Sweden" = "#2ca02c",
       "Germany" = "#9467bd",
       "Poland" = "#8c564b",
-      "OECD rate" = "red"
+      "OECD avg" = "red"
     )
   ) +
   
   scale_fill_manual(
-    values = c("OECD rate" = "red")
+    values = c("OECD rate" = "red"),
+    labels = c("OECD rate" = "OECD 95% CI")
   ) +
   
   scale_y_continuous(
@@ -789,7 +792,10 @@ ggplot(selected_migration_rates, aes(x = year)) +
   ) +
   
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 8)
+  )
 ```
 
 # Appendix R Script
