@@ -254,14 +254,14 @@
 \NormalTok{model\_1\_boys }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
 \NormalTok{  (dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
   \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(boys\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ boys\_l5}
+  \AttributeTok{weights =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ boys\_l5}
 \NormalTok{)}
 
 \CommentTok{\# Girls}
 \NormalTok{model\_1\_girls }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
 \NormalTok{  (dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
   \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(girls\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ girls\_l5}
+  \AttributeTok{weights =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ girls\_l5}
 \NormalTok{)}
 
 \CommentTok{\# Method 2}
@@ -269,34 +269,34 @@
 \NormalTok{model\_2\_boys }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
 \NormalTok{  (dboys\_u5 }\SpecialCharTok{{-}}\NormalTok{ dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
   \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{((boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5)}
+  \AttributeTok{weights =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5)}
 \NormalTok{)}
 
 \CommentTok{\# Girls}
 \NormalTok{model\_2\_girls }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}
 \NormalTok{  (dgirls\_u5 }\SpecialCharTok{{-}}\NormalTok{ dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }
   \AttributeTok{data =}\NormalTok{ civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{((girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{), }
-  \AttributeTok{weights =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5)}
+  \AttributeTok{weights =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5)}
 \NormalTok{)}
 
 \CommentTok{\# 1. Create Pooled Data for Boys}
 \NormalTok{boys\_pooled }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
 \NormalTok{  civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} 
     \FunctionTok{filter}\NormalTok{(boys\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ dboys\_l5 }\SpecialCharTok{/}\NormalTok{ boys\_l5, }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ boys\_l5, }\AttributeTok{is\_m2 =} \DecValTok{0}\NormalTok{),}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ dboys\_l5 }\SpecialCharTok{/}\NormalTok{ boys\_l5, }\AttributeTok{w =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ boys\_l5, }\AttributeTok{is\_m2 =} \DecValTok{0}\NormalTok{),}
 \NormalTok{  civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} 
     \FunctionTok{filter}\NormalTok{((boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dboys\_u5 }\SpecialCharTok{{-}}\NormalTok{ dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{is\_m2 =} \DecValTok{1}\NormalTok{)}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dboys\_u5 }\SpecialCharTok{{-}}\NormalTok{ dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{w =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{is\_m2 =} \DecValTok{1}\NormalTok{)}
 \NormalTok{)}
 
 \CommentTok{\# 2. Create Pooled Data for Girls}
 \NormalTok{girls\_pooled }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
 \NormalTok{  civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} 
     \FunctionTok{filter}\NormalTok{(girls\_l5 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ dgirls\_l5 }\SpecialCharTok{/}\NormalTok{ girls\_l5, }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ girls\_l5, }\AttributeTok{is\_m2 =} \DecValTok{0}\NormalTok{),}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ dgirls\_l5 }\SpecialCharTok{/}\NormalTok{ girls\_l5, }\AttributeTok{w =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ girls\_l5, }\AttributeTok{is\_m2 =} \DecValTok{0}\NormalTok{),}
 \NormalTok{  civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} 
     \FunctionTok{filter}\NormalTok{((girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dgirls\_u5 }\SpecialCharTok{{-}}\NormalTok{ dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{is\_m2 =} \DecValTok{1}\NormalTok{)}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dgirls\_u5 }\SpecialCharTok{{-}}\NormalTok{ dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{w =}\NormalTok{ (pweight }\SpecialCharTok{*}\NormalTok{ n\_wom) }\SpecialCharTok{*}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{is\_m2 =} \DecValTok{1}\NormalTok{)}
 \NormalTok{)}
 
 \CommentTok{\# 3. Run the Difference Regressions}
@@ -322,11 +322,11 @@
   \CommentTok{\# Boys Method 2 (Indicator = 0)}
 \NormalTok{  civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} 
     \FunctionTok{filter}\NormalTok{((boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dboys\_u5 }\SpecialCharTok{{-}}\NormalTok{ dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{is\_girl =} \DecValTok{0}\NormalTok{),}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dboys\_u5 }\SpecialCharTok{{-}}\NormalTok{ dboys\_l5) }\SpecialCharTok{/}\NormalTok{ (boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ n\_wom }\SpecialCharTok{*}\NormalTok{(boys }\SpecialCharTok{{-}}\NormalTok{ boys\_l5), }\AttributeTok{is\_girl =} \DecValTok{0}\NormalTok{),}
   \CommentTok{\# Girls Method 2 (Indicator = 1)}
 \NormalTok{  civ\_mortality }\SpecialCharTok{\%\textgreater{}\%} 
     \FunctionTok{filter}\NormalTok{((girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dgirls\_u5 }\SpecialCharTok{{-}}\NormalTok{ dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{is\_girl =} \DecValTok{1}\NormalTok{)}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{rate =}\NormalTok{ (dgirls\_u5 }\SpecialCharTok{{-}}\NormalTok{ dgirls\_l5) }\SpecialCharTok{/}\NormalTok{ (girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{w =}\NormalTok{ pweight }\SpecialCharTok{*}\NormalTok{ n\_wom }\SpecialCharTok{*}\NormalTok{(girls }\SpecialCharTok{{-}}\NormalTok{ girls\_l5), }\AttributeTok{is\_girl =} \DecValTok{1}\NormalTok{)}
 \NormalTok{)}
 
 \CommentTok{\# 2. Run the Difference Regression (Girls M2 {-} Boys M2)}
