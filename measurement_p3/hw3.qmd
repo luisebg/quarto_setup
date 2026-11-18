@@ -13,6 +13,7 @@ format:
     margin-top: 2.5cm
     margin-bottom: 2.5cm
 editor: source
+editor: source
 ---
 
 # Sampling and Outliers
