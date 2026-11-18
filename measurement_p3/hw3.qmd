@@ -12,7 +12,7 @@ format:
     margin-right: 2.5cm
     margin-top: 2.5cm
     margin-bottom: 2.5cm
-editor: visual
+editor: source
 ---
 
 # Sampling and Outliers
@@ -58,9 +58,43 @@ library(ggplot2)
 ```{r}
 # Load data civ88-08_nutri.dta and civ88-08_mortality.dta
 civ_87_08 <- read_dta(here::here("measurement_p3/civ_87_08.dta"))
-civ_mortality <- read_dta(here::here("measurement_p2/data/civ88_mort.dta"))
-# save as csv
-write_csv(civ_87_08, "measurement_p3/civ_87_08.csv")
+```
+
+```{r}
+# compute consumption per capita
+civ_87_08 <- civ_87_08 %>%
+  mutate(conspc_compute = (exp_food + exp_othr) / hhsize)
+
+# create a table to compare conspc and conspc_compute by year. Estimate the unweighted mean, weighted mean, min, max, standard deviation, median, number of observations, and number of missing values for conspc and conspc_compute by year.
+civ_87_08 %>%
+  group_by(year) %>%
+  summarise(
+    across(
+      c(conspc, conspc_compute),
+      list(
+        Mean = ~mean(.x, na.rm = TRUE),
+        `Weighted mean` = ~weighted.mean(.x, w = weight, na.rm = TRUE),
+        Min = ~min(.x, na.rm = TRUE),
+        Max = ~max(.x, na.rm = TRUE),
+        `Std dev` = ~sd(.x, na.rm = TRUE),
+        Median = ~median(.x, na.rm = TRUE),
+        Obs = ~sum(!is.na(.x)),
+        `NAs` = ~sum(is.na(.x))
+      ),
+      .names = "{.col}__{.fn}"
+    ),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(
+    cols = -year,
+    names_to = c("Variable", ".value"),
+    names_sep = "__"
+  ) %>%
+  rename(Year = year) %>%
+  kable(
+    digits = 2,
+    caption = "Comparison of conspc and conspc_compute by year"
+  )
 ```
 
 ------------------------------------------------------------------------
@@ -68,11 +102,78 @@ write_csv(civ_87_08, "measurement_p3/civ_87_08.csv")
 ## Outlier Identification and Trimming Protocol
 
 **Question 4:**
+```{r}
+# For each year, estimate the unweighted median and standard deviation of log(conspc), then exclude observations that are more than 3 standard deviations away from the median. Report the number of observations excluded for each year.
+civ_87_08 %>%
+  group_by(year) %>%
+  summarise(
+    Median = median(log(conspc), na.rm = TRUE),
+    SD = sd(log(conspc), na.rm = TRUE),
+    Lower_bound = Median - 3 * SD,
+    Upper_bound = Median + 3 * SD,
+    Excluded = sum(log(conspc) < Lower_bound | log(conspc) > Upper_bound, na.rm = TRUE),
+    .groups = "drop"
+  )
 
+# Withdraw the excluded observations from the dataset
+civ_87_08_cleaned <- civ_87_08 %>%
+  group_by(year) %>%
+  filter(log(conspc) >= median(log(conspc), na.rm = TRUE) - 3 * sd(log(conspc), na.rm = TRUE) & log(conspc) <= median(log(conspc), na.rm = TRUE) + 3 * sd(log(conspc), na.rm = TRUE)) %>%
+  ungroup()
+```
 - **Why is it suggested to take the logarithm? Why can** $\pm 3$ standard deviations be deemed rather safe?
-- **Why should you use the unweighted median rather than the weighted median to identify outliers?**
-- **Withdraw these observations from your database (should drop** $\le 157$ observations in total).
+First, it is necessary to take the logarithm of the distribution because the distribution of consumption per capita is highly right-skewed, meaning the mean is greater than the median as shown in Table XXX. Taking the logarithm of the distribution makes it more symmetric and closer to a normal distribution which allows to use the standard deviation for outlier detection.
+Using $\pm 3$ standard deviations is considered safe because, under the assumption of a normal distribution, approximately 99.7% of the data points lie within three standard deviations from the mean. Therefore, excluding observations beyond this range effectively removes extreme outliers while keeping a 99.7\% of the data.
 
+- **Why should you use the unweighted median rather than the weighted median to identify outliers?**
+The unweighted median is preferred for outlier detection because it identifies errors in the data capturing process rather than the underlying population distribution. The weighted median reflects the population distribution and may be influenced by extreme values (specially when measuring inequality), which could lead to misidentifying outliers. Using the unweighted median ensures that the focus is on the actual data points and not on their representation in the population.
+
+- **Withdraw these observations from your database (should drop** $\le 157$ observations in total).
+After applying the outlier identification and dropping these observations, the cleaned dataset `civ_87_08_cleaned` contains fewer than 121 observations removed in total. See Table XXX for the general statistics of the cleaned dataset.
+
+```{r}
+civ_87_08_cleaned %>%
+  group_by(year) %>%
+  summarise(
+    across(
+      c(conspc),
+      list(
+        Mean = ~mean(.x, na.rm = TRUE),
+        `Weighted mean` = ~weighted.mean(.x, w = weight, na.rm = TRUE),
+        Min = ~min(.x, na.rm = TRUE),
+        Max = ~max(.x, na.rm = TRUE),
+        `Std dev` = ~sd(.x, na.rm = TRUE),
+        Median = ~median(.x, na.rm = TRUE),
+        Obs = ~sum(!is.na(.x)),
+        `NAs` = ~sum(is.na(.x))
+      ),
+      .names = "{.col}__{.fn}"
+    ),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(
+    cols = -year,
+    names_to = c("Variable", ".value"),
+    names_sep = "__"
+  ) %>%
+  rename(Year = year) %>%
+  kable(
+    digits = 2,
+    caption = "Comparison of conspc and conspc_compute by year"
+  )
+```
+
+```{r, conspc_distributions}
+ggplot(civ_87_08_cleaned, aes(x = conspc)) +
+  geom_histogram(bins = 30, fill = "blue", alpha = 0.5) +
+  facet_wrap(~year) +
+  labs(title = "Distribution of Conspc", x = "Conspc", y = "Frequency")
+
+ggplot(civ_87_08_cleaned, aes(x = log(conspc))) +
+  geom_histogram(bins = 30, fill = "red", alpha = 0.5) +
+  facet_wrap(~year) +
+  labs(title = "Distribution of Log(Conspc)", x = "Log(Conspc)", y = "Frequency")
+```
 ------------------------------------------------------------------------
 
 # Consumer Price Index (CPI) and Purchasing Power Parities (PPP)
@@ -81,12 +182,41 @@ write_csv(civ_87_08, "measurement_p3/civ_87_08.csv")
 
 **Question 1:** Compute the budget shares of food and non-food consumption for representative households, and derive the mathematical proof for the required weights.
 
+```{r}
+# create a dummy variable is_representative = 1 if hhsize == 4, femalehead == 0, work_farmer == 1 | work_selfem == 1
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(is_representative = ifelse(hhsize == 4 & femalehead == 0 & (work_farmer == 1 | work_selfem == 1), 1, 0),
+         food_share = exp_food)
+```
+
+
+```{r, exercise_2_a}
+# 1. Dummy identifying representative households
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(is_representative = ifelse(hhsize == 4 & femalehead == 0 & (work_farmer == 1 | work_selfem == 1), 1, 0),
+         food_share = exp_food,
+         food_share = exp_food / constot,
+         exp_weight = hhsize * weight * conspc
+         )
+
+civ_87_08_cleaned %>%
+  filter(is_representative == 1) %>%
+  group_by(north, year) %>%
+  summarise(
+    food_bdgshr = weighted.mean(food_share, w = exp_weight),
+    other_bdgshr = 1 - food_bdgshr
+  ) %>% head()
+```
+
 ------------------------------------------------------------------------
 
 ## Laspeyres vs. Paasche CPI
 
 **Question 2:** With 1987 as the base year, compute Laspeyres and Paasche CPI for each region and comment on theoretical differences.
 
+```{r}
+
+```
 ------------------------------------------------------------------------
 
 ## PPP Aggregates (Laspeyres, Paasche, Fisher)
@@ -106,6 +236,126 @@ write_csv(civ_87_08, "measurement_p3/civ_87_08.csv")
 ## Poverty Headcount Rate at \$1/Day (237 FCFA)
 
 **Question 1:** Compute poverty headcount at 237 FCFA/day (\$1/day PPP).
+```{r}
+## 237 FCFA/day poverty headcount rate by year and region
+# Create a dummy variable = 1 if conspc < 237 per day, 0 otherwise.
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(poverty_headcount = ifelse(conspc < 237, 1, 0))
+# create a weight equal to the household size times weight
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(weight_pop = hhsize * weight)
+
+# compute the poverty headcount rate by year and region using ols
+model_pov_national_237 <- lm(poverty_headcount ~ 0+factor(year), data = civ_87_08_cleaned, weights = weight_pop)
+model_pov_nregion_237 <- lm(poverty_headcount ~ 0 + factor(year):factor(nregion), data = civ_87_08_cleaned, weights = weight_pop)
+
+## 474 FCFA/day poverty headcount rate by year and region
+# Create a dummy variable = 1 if conspc < 474 per day, 0 otherwise.
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(poverty_headcount = ifelse(conspc < 474, 1, 0))
+
+# compute the poverty headcount rate by year and region using ols and the new_threshold
+model_pov_national_474 <- lm(poverty_headcount ~ 0 + factor(year), data = civ_87_08_cleaned, weights = weight_pop)
+model_pov_nregion_474 <- lm(poverty_headcount ~ 0 + factor(year):factor(nregion), data = civ_87_08_cleaned, weights = weight_pop)
+
+# create a pooled model to compare
+# 1. Stack the two threshold definitions into a pooled dataset
+civ_pooled <- bind_rows(
+  civ_87_08_cleaned %>%
+    mutate(
+      threshold = 237,
+      is_474 = 0,
+      poverty_headcount = as.integer(conspc < 237)
+    ),
+  civ_87_08_cleaned %>%
+    mutate(
+      threshold = 474,
+      is_474 = 1,
+      poverty_headcount = as.integer(conspc < 474)
+    )
+) %>%
+  mutate(weight_pop = hhsize * weight)
+
+# 2. Pooled national model:
+#    - factor(year) terms = 237 headcount rate
+#    - factor(year):is_474 terms = (474 - 237) difference + SE
+model_pooled_national <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):is_474,
+  data = civ_pooled,
+  weights = weight_pop
+)
+
+# 3. Pooled regional model:
+#    - factor(year):factor(nregion) terms = 237 headcount rate
+#    - factor(year):factor(nregion):is_474 terms = (474 - 237) difference + SE
+model_pooled_nregion <- lm(
+  poverty_headcount ~ 0 + factor(year):factor(nregion) + factor(year):factor(nregion):is_474,
+  data = civ_pooled,
+  weights = weight_pop
+)
+
+# Extract tidy results from your separate models and the pooled difference models
+nat_237  <- tidy(model_pov_national_237)
+reg_237  <- tidy(model_pov_nregion_237)
+
+nat_474  <- tidy(model_pov_national_474)
+reg_474  <- tidy(model_pov_nregion_474)
+
+nat_diff <- tidy(model_pooled_national) %>% filter(grepl(":is_474$", term))
+reg_diff <- tidy(model_pooled_nregion)  %>% filter(grepl(":is_474$", term))
+
+# Register minimal S3 methods so huxreg() reads our custom column objects
+tidy.pov_col   <- function(x, ...) x$tidy
+glance.pov_col <- function(x, ...) x$glance
+
+years   <- c(1987, 1998, 2008)
+regions <- sort(unique(civ_87_08_cleaned$nregion))
+
+# Helper to assemble the 6 rows (National + Regions 1-5) for a given year and column type
+make_pov_col <- function(yr, nat_df, reg_df, suffix = "", n_obs = NA_integer_) {
+  nat_term  <- paste0("factor(year)", yr, suffix)
+  reg_terms <- paste0("factor(year)", yr, ":factor(nregion)", regions, suffix)
+
+  rows <- bind_rows(
+    nat_df %>% filter(term == nat_term),
+    reg_df %>% slice(match(reg_terms, term))
+  ) %>%
+    mutate(term = c("National", paste("Region", regions)))
+
+  structure(
+    list(
+      tidy = rows,
+      glance = tibble(nobs = n_obs)
+    ),
+    class = "pov_col"
+  )
+}
+
+# Build all 9 columns in display order
+n_single <- nobs(model_pov_national_237)
+n_pooled <- nobs(model_pooled_national)
+
+col_list <- list()
+for (yr in years) {
+  col_list[[paste0(yr, " (237)")]]  <- make_pov_col(yr, nat_237,  reg_237,  "",        n_single)
+  col_list[[paste0(yr, " (474)")]]  <- make_pov_col(yr, nat_474,  reg_474,  "",        n_single)
+  col_list[[paste0(yr, " (Diff)")]] <- make_pov_col(yr, nat_diff, reg_diff, ":is_474", n_pooled)
+}
+
+# Generate the 9-column x 6-row huxreg table
+pov_table <- huxreg(
+  col_list,
+  number_format = 3,
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  statistics = c(N = "nobs", R2 = "r.squared"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+
+pov_table
+```
 
 ------------------------------------------------------------------------
 
