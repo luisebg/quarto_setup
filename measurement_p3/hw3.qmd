@@ -12,7 +12,7 @@ format:
     margin-right: 2.5cm
     margin-top: 2.5cm
     margin-bottom: 2.5cm
-editor: visual
+editor: source
 ---
 
 # Sampling and Outliers
@@ -58,9 +58,43 @@ library(ggplot2)
 ```{r}
 # Load data civ88-08_nutri.dta and civ88-08_mortality.dta
 civ_87_08 <- read_dta(here::here("measurement_p3/civ_87_08.dta"))
-civ_mortality <- read_dta(here::here("measurement_p2/data/civ88_mort.dta"))
-# save as csv
-write_csv(civ_87_08, "measurement_p3/civ_87_08.csv")
+```
+
+```{r}
+# compute consumption per capita
+civ_87_08 <- civ_87_08 %>%
+  mutate(conspc_compute = (exp_food + exp_othr) / hhsize)
+
+# create a table to compare conspc and conspc_compute by year. Estimate the unweighted mean, weighted mean, min, max, standard deviation, median, number of observations, and number of missing values for conspc and conspc_compute by year.
+civ_87_08 %>%
+  group_by(year) %>%
+  summarise(
+    across(
+      c(conspc, conspc_compute),
+      list(
+        Mean = ~mean(.x, na.rm = TRUE),
+        `Weighted mean` = ~weighted.mean(.x, w = your_weight_var, na.rm = TRUE),
+        Minimum = ~min(.x, na.rm = TRUE),
+        Maximum = ~max(.x, na.rm = TRUE),
+        `Standard deviation` = ~sd(.x, na.rm = TRUE),
+        Median = ~median(.x, na.rm = TRUE),
+        Observations = ~sum(!is.na(.x)),
+        `Missing values` = ~sum(is.na(.x))
+      ),
+      .names = "{.col}__{.fn}"
+    ),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(
+    cols = -year,
+    names_to = c("Variable", ".value"),
+    names_sep = "__"
+  ) %>%
+  rename(Year = year) %>%
+  kable(
+    digits = 2,
+    caption = "Comparison of conspc and conspc_compute by year"
+  )
 ```
 
 ------------------------------------------------------------------------
@@ -68,7 +102,25 @@ write_csv(civ_87_08, "measurement_p3/civ_87_08.csv")
 ## Outlier Identification and Trimming Protocol
 
 **Question 4:**
+```{r}
+# For each year, estimate the unweighted median and standard deviation of log(conspc), then exclude observations that are more than 3 standard deviations away from the median. Report the number of observations excluded for each year.
+civ_87_08 %>%
+  group_by(year) %>%
+  summarise(
+    Median = median(log(conspc), na.rm = TRUE),
+    SD = sd(log(conspc), na.rm = TRUE),
+    Lower_bound = Median - 3 * SD,
+    Upper_bound = Median + 3 * SD,
+    Excluded = sum(log(conspc) < Lower_bound | log(conspc) > Upper_bound, na.rm = TRUE),
+    .groups = "drop"
+  )
 
+# Withdraw the excluded observations from the dataset
+civ_87_08_cleaned <- civ_87_08 %>%
+  group_by(year) %>%
+  filter(log(conspc) >= Median - 3 * SD & log(conspc) <= Median + 3 * SD) %>%
+  ungroup()
+```
 - **Why is it suggested to take the logarithm? Why can** $\pm 3$ standard deviations be deemed rather safe?
 - **Why should you use the unweighted median rather than the weighted median to identify outliers?**
 - **Withdraw these observations from your database (should drop** $\le 157$ observations in total).
@@ -106,6 +158,28 @@ write_csv(civ_87_08, "measurement_p3/civ_87_08.csv")
 ## Poverty Headcount Rate at \$1/Day (237 FCFA)
 
 **Question 1:** Compute poverty headcount at 237 FCFA/day (\$1/day PPP).
+
+```{r}
+# Create a dummy variable = 1 if conspc < 237 per day, 0 otherwise.
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(poverty_headcount = ifelse(conspc < 237, 1, 0))
+# create a weight equal to the household size times weight
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(weight_poverty = hhsize * weight)
+
+# compute the poverty headcount rate by year and region using ols
+model_pov_national <- lm(poverty_headcount ~ factor(year), data = civ_87_08_cleaned, weights = weight_poverty)
+summary(model_pov_national)
+model_pov_nregion <- lm(poverty_headcount ~ factor(year) * factor(nregion), data = civ_87_08_cleaned, weights = weight_poverty)
+
+# Summarize in a huxreg table in a three rows (3 years), 5 columns (national, plus four regions) with the coefficients of the model and the standard errors in parentheses.
+huxreg(model_pov_national, model_pov_nregion,
+       coefs = c("1987" = "(Intercept)", "1998" = "factor(year)1998", "2008" = "factor(year)2008"),
+       statistics = c("N" = "nobs"),
+       stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+       tidy_fun = broom::tidy,
+       error_pos = "below"
+```
 
 ------------------------------------------------------------------------
 
