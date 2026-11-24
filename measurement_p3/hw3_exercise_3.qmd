@@ -1,0 +1,403 @@
+---
+title: "Measurement of Policy Outcomes: Homework 3"
+subtitle: "Applied Analysis of Living Standards and Economic Inequality in Côte d'Ivoire"
+author: "BELTRAN GONZALEZ Luis Enrique"
+date: "today"
+format:
+  pdf:
+    keep-tex: true
+    toc: false
+    number-sections: true
+    colorlinks: true
+    margin-left: 2.5cm
+    margin-right: 2.5cm
+    margin-top: 2.5cm
+    margin-bottom: 2.5cm
+    include-in-header:
+      text: |
+        \usepackage{cancel}
+execute:
+  echo: false
+  warning: false
+  message: false
+editor: source
+---
+
+```{r, 0_libraries}
+library(tidyverse)
+library(rio)
+library(haven)
+library(knitr)
+library(DT)
+library(huxtable)
+library(lmtest)
+library(sandwich)
+library(here)
+library(dplyr)
+library(broom)
+library(gridExtra)
+library(ggridges)
+library(ggplot2)
+```
+
+```{r, 0_import_data}
+# Load data civ88-08_nutri.dta and civ88-08_mortality.dta
+civ_87_08 <- read_dta(here::here("measurement_p3/civ_87_08.dta"))
+```
+
+```{r, 1_conspc_summary}
+#| label: tbl-conspc_summary
+
+```{r, 1_filter_outliers}
+# For each year, estimate the unweighted median and standard deviation of log(conspc), then exclude observations that are more than 3 standard deviations away from the median. Report the number of observations excluded for each year.
+# civ_87_08 %>%
+#   group_by(year) %>%
+#   summarise(
+#     Median = median(log(conspc), na.rm = TRUE),
+#     SD = sd(log(conspc), na.rm = TRUE),
+#     Lower_bound = Median - 3 * SD,
+#     Upper_bound = Median + 3 * SD,
+#     Excluded = sum(log(conspc) < Lower_bound | log(conspc) > Upper_bound, na.rm = TRUE),
+#     .groups = "drop"
+#   )
+
+# Withdraw the excluded observations from the dataset
+civ_87_08_cleaned <- civ_87_08 %>%
+  group_by(year) %>%
+  filter(log(conspc) >= median(log(conspc), na.rm = TRUE) - 3 * sd(log(conspc), na.rm = TRUE) & log(conspc) <= median(log(conspc), na.rm = TRUE) + 3 * sd(log(conspc), na.rm = TRUE)) %>%
+  ungroup()
+```
+
+# Absolute Poverty Measures
+## Poverty Headcount Rate at \$1/Day (237 FCFA)
+
+**Question 1:** Compute poverty headcount at 237 FCFA/day (\$1/day PPP).
+
+Table \ref{tbl-poor_headcount_237} shows the poverty headcount rates at the extreme poverty threshold of 237 FCFA/dayacross regions and over time. Nationally, the poverty headcount rate increased substantially from 21.8\% in 1987 to 44.2\% in 1998 and 51.4\% in 2008, representing an overall rise of 29.6 percentage points. Most of this national deterioration occurred during the first decade (+22.4 percentage points between 1987 and 1998) before decelerating between 1998 and 2008 (7.2 percentage points).
+Across regions, both the North and the South show increases in extreme poverty over the data period, though along different paths. In the South, the poverty headcount rate rose by 30.6 percentage points overall, jumping sharply from 20.9\% in 1987 to 45.8\% in 1998 (24.9 percentage points) and then increasing slower to 51.5\% in 2008 (5.7 percentage points). In the North, extreme poverty rose more steadily by 26.6 percentage points overall, from 24.4\% in 1987 to 38.9\% in 1998 (+14.5 percentage points) and 51.0\% in 2008 (+12.1 percentage points). Comparing the two regions directly, the North–South difference is not statistically significant from zero in 1987. However, because the South suffered a higher initial shock between 1987 and 1998, extreme poverty became 6.9 percentage points higher in the South than in the North in 1998. Faster poverty growth in the North between 1998 and 2008 eventually closed this gap, leading to a convergence around 51% by 2008.
+
+
+```{r, 3_1_poor_headcount_237}
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(
+    poor_237   = as.integer(conspc87 < 237),
+    weight_pop = hhsize * weight
+  )
+
+# 1. Interaction OLS: coefficients on factor(year):north give (North - South) directly
+mod_diff_237 <- lm(poor_237 ~ 0 + factor(year) + factor(year):north,
+                   data = civ_87_08_cleaned,
+                   weights = weight_pop)
+
+mod_nat   <- lm(poor_237 ~ 0 + factor(year), data = civ_87_08_cleaned, weights = weight_pop)
+mod_north <- lm(poor_237 ~ 0 + factor(year), data = filter(civ_87_08_cleaned, north == 1), weights = weight_pop)
+mod_south <- lm(poor_237 ~ 0 + factor(year), data = filter(civ_87_08_cleaned, north == 0), weights = weight_pop)
+
+# Extract the three North - South interaction rows and align row names to factor(year)
+ct_diff <- summary(mod_diff_237)$coefficients[
+  c("factor(year)1987:north", "factor(year)1998:north", "factor(year)2008:north"),
+  , drop = FALSE
+]
+rownames(ct_diff) <- c("factor(year)1987", "factor(year)1998", "factor(year)2008")
+class(ct_diff) <- "coeftest"
+
+outreg <- huxreg(
+  "National"           = mod_nat,
+  "North"              = mod_north,
+  "South"              = mod_south,
+  "Diff (North-South)" = ct_diff,
+  coefs = c(
+    "1987" = "factor(year)1987",
+    "1998" = "factor(year)1998",
+    "2008" = "factor(year)2008"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  number_format = 3,
+  statistics = c(N = "nobs"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}"
+)
+
+outreg <-outreg %>%
+  set_label("tbl-poor_headcount_237") %>%
+  set_caption("Poverty Headcount Rate at 237 FCFA/day")
+
+outreg <- set_all_padding(outreg, 1.5)
+
+outreg
+```
+
+------------------------------------------------------------------------
+
+## Poverty Headcount Rate at \$2/Day (474 FCFA)
+
+**Question 2:** Compute poverty headcount at 474 FCFA/day and compare.
+
+Columns 1-4 of Table \ref{tbl-poor_headcount_474} show the poverty headcount rates at the 474 FCFA/day threshold and the regional gap, while Columns 5-8 show the difference between the two thresholds (${474} - {237}$), which measures the share of the population living in moderate poverty between 237 and 474 FCFA/day. Doubling the poverty line raises measured poverty dramatically, revealing that a large share of the population is clustered just above the extreme poverty line. Nationally in 1987, the poverty headcount rate at 474 FCFA/day was 62.8\%  higher than at 237 FCFA/day (21.8\%), meaning that 41.0\% of the population lived on between 237 and 474 FCFA/day. Mirroring the \$1/day trajectory, national poverty at 474 FCFA/day surged between 1987 and 1998 (+18.0 percentage points to 80.8\%) before slowing between 1998 and 2008 (+1.9 percentage points to 82.7\%). Over the period of the survey, the 19.9 percentage point increase in poverty at the 474 FCFA/day threshold reflects a 29.6 percentage point increase in extreme poverty below 237 FCFA/day (from 21.8\% to 51.4\%) combined with a 9.7 percentage point contraction in the moderate poverty bracket (from 41.0\% to 31.3\%), indicating peole moved from moderate into extreme poverty.
+
+Within regions, the time and composition of this poverty increase differ between North and South:
+
+\begin{itemize}
+\item \textbf{North:} In 1987, 58.7\% of the North population lived below 474 FCFA/day, split between extreme poverty below 237 FCFA/day (24.4\%) and moderate poverty between 237 and 474 FCFA/day (34.3\%). Between 1987 and 1998, poverty at 474 FCFA/day jumped by 22.2 percentage points to 80.9\%, driven by both rising extreme poverty (+14.5 percentage points) and an increment of the moderate poverty bracket (+7.7 percentage points to 42.0\%). Between 1998 and 2008, the \$2/day rate increased more to 83.1\% overall since 1987, as people in the moderate poverty group fell into extreme poverty (the moderate poverty share decreased by 9.9 percentage points back to 32.1\%, while extreme poverty increased another 12.1 percentage points to 51.0\%).
+
+\item \textbf{South:} In 1987, 64.1\% of the South population lived below 474 FCFA/day 43.1 percentage points higher than at 237 FCFA/day (20.9\%). In 1998, the South poverty rate increased sharply by 16.7 percentage points to 80.8\%, driven by a 24.9 percentage point raise in extreme poverty (from 20.9\% to 45.8\%) partially compensated by an 8.1 percentage point reduction in the moderate poverty bracket (from 43.1\% to 35.0\%). Between 1998 and 2008, poverty at 474 FCFA/day increased by 1.8 percentage points to 82.6\% overall, as extreme poverty rose another 5.7 percentage points to 51.5\% while the moderate bracket reduced more to 31.1\%.
+\end{itemize}
+
+Comparing across regions (Columns 4 and 8) highlights both regional convergence and a shift in the distribution of poverty. In 1987, the North actually show a statistically significant lower poverty headcount rate at 474 FCFA/day than the South by 5.4 percentage points (58.7\% vs. 64.1\%), because the moderate poverty bracket was 8.9 percentage points smaller in the North than in the South (34.3\% vs. 43.1\%). In 1998, because the South show a fall into extreme poverty while the North fell primarily into the intermediate bracket, the moderate poverty share became 7.0 percentage points larger in the North than in the South (42.0\% vs. 35.0\%), while total poverty at 474 FCFA/day converged across regions. By 2008, after the North also experienced a fall into the extreme poverty group, both the overall \$2/day poverty rate and the moderate poverty share converged completely, with no regions gap statistically different from zero.
+
+```{r, 3_2_poverty_headcount}
+# 1. Create poverty indicators and population weight using unmodified conspc87
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(
+    poor_237   = as.integer(conspc87 < 237),
+    poor_474   = as.integer(conspc87 < 474),
+    weight_pop = hhsize * weight
+  )
+
+# Helper to extract interaction terms and align row names to factor(year)
+extract_coefs <- function(mod, terms) {
+  ct <- summary(mod)$coefficients[terms, , drop = FALSE]
+  rownames(ct) <- c("factor(year)1987", "factor(year)1998", "factor(year)2008")
+  class(ct) <- "coeftest"
+  ct
+}
+
+# 2. Columns 1-3: Separate sub-sample models at 474 FCFA/day (true sub-sample N)
+mod_nat_474   <- lm(poor_474 ~ 0 + factor(year),
+                    data = civ_87_08_cleaned, weights = weight_pop)
+mod_north_474 <- lm(poor_474 ~ 0 + factor(year),
+                    data = filter(civ_87_08_cleaned, north == 1), weights = weight_pop)
+mod_south_474 <- lm(poor_474 ~ 0 + factor(year),
+                    data = filter(civ_87_08_cleaned, north == 0), weights = weight_pop)
+
+# 3. Column 4: Regional difference at 474 FCFA/day (North - South)
+mod_reg_diff_474 <- lm(poor_474 ~ 0 + factor(year) + factor(year):north,
+                       data = civ_87_08_cleaned, weights = weight_pop)
+
+ct_reg_diff_474 <- extract_coefs(
+  mod_reg_diff_474,
+  c("factor(year)1987:north", "factor(year)1998:north", "factor(year)2008:north")
+)
+
+# 4. Stack 237 and 474 FCFA indicators for Columns 5-8
+civ_pooled <- bind_rows(
+  civ_87_08_cleaned %>% mutate(is_474 = 0, poverty_headcount = poor_237),
+  civ_87_08_cleaned %>% mutate(is_474 = 1, poverty_headcount = poor_474)
+)
+
+# Column 5: Diff (474 - 237) for National
+model_pooled_national <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):is_474,
+  data = civ_pooled, weights = weight_pop
+)
+ct_thresh_nat <- extract_coefs(
+  model_pooled_national,
+  c("factor(year)1987:is_474", "factor(year)1998:is_474", "factor(year)2008:is_474")
+)
+
+# Columns 6-7: Diff (474 - 237) for North and South
+model_pooled_nregion <- lm(
+  poverty_headcount ~ 0 + factor(year):factor(north) + factor(year):factor(north):is_474,
+  data = civ_pooled, weights = weight_pop
+)
+ct_thresh_north <- extract_coefs(
+  model_pooled_nregion,
+  c("factor(year)1987:factor(north)1:is_474",
+    "factor(year)1998:factor(north)1:is_474",
+    "factor(year)2008:factor(north)1:is_474")
+)
+ct_thresh_south <- extract_coefs(
+  model_pooled_nregion,
+  c("factor(year)1987:factor(north)0:is_474",
+    "factor(year)1998:factor(north)0:is_474",
+    "factor(year)2008:factor(north)0:is_474")
+)
+
+# Column 8: DiD (474 - 237, North vs. South)
+mod_did_474 <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):north +
+    factor(year):is_474 + factor(year):north:is_474,
+  data = civ_pooled, weights = weight_pop
+)
+ct_did_474 <- extract_coefs(
+  mod_did_474,
+  c("factor(year)1987:north:is_474",
+    "factor(year)1998:north:is_474",
+    "factor(year)2008:north:is_474")
+)
+
+# 5. Build the 3-row (years) x 8-column huxreg table with spanning group headers
+pov_table_474 <- huxreg(
+  "National"     = mod_nat_474,
+  "North"        = mod_north_474,
+  "South"        = mod_south_474,
+  "Diff (N - S)" = ct_reg_diff_474,
+  "National"     = ct_thresh_nat,
+  "North"        = ct_thresh_north,
+  "South"        = ct_thresh_south,
+  "Diff (N - S)" = ct_did_474,
+  coefs = c(
+    "1987" = "factor(year)1987",
+    "1998" = "factor(year)1998",
+    "2008" = "factor(year)2008"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  number_format = 3,
+  statistics = c(N = "nobs"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}."
+) %>%
+  insert_row("", "Threshold 474 FCFA/day", "", "", "", "Diff (474 - 237)", "", "", "", after = 0) %>%
+  merge_cells(1, 2:5) %>%
+  merge_cells(1, 6:9) %>%
+  set_align(1, 2:9, "center") %>%
+  set_bold(1, 2:9, TRUE) %>%
+  set_bottom_border(1, 2:5, 0.4) %>%
+  set_bottom_border(1, 6:9, 0.4) %>%
+  set_label("tbl-poor_headcount_474") %>%
+  set_caption("Poverty Headcount Rate at 474 FCFA/day and Comparison with 237 FCFA/day by Year and Region") %>%
+  set_font_size(11)
+
+pov_table_474 <- set_all_padding(pov_table_474, 1.5)
+
+pov_table_474
+```
+
+------------------------------------------------------------------------
+
+## Impact of Unadjusted Spatial Prices
+
+**Question 3:** Recompute poverty assuming uniform CPI (South CPI) and PPP = 1 across regions.
+
+By setting the CPI to the South's CPI and PPP to 1, we can assess how much of the measured poverty differences are due to spatial price differences essentially ignoring the fact that the north has lower prices than the south. Table \ref{tbl-poor_headcount_uniform} shows the poverty headcount rates at 237 FCFA/day (columns 1-4) and their differences when setting different CPI for the north region (columns 5-7). By definition the South estimates are unaffected by the CPI adjustment because it is the reference region (column 7).
+
+The results shows that at the national level, the poverty headcount rate is sistematically higher when using the South CPI and PPP = 1, with a difference of 3.3 percentage points in 1987, 6.9 percentage points in 1998 and 5.1 percentage points in 2008, relative to setting the proper CPI for the north region (Question 3.a). The North-South difference is also systematically higher because the North higher extreme poverty rates: 38.1\% in 1987, 68.6\% in 1998, and 73.8\% in 2008 which correspond to 13.7, 29.6, and 22.8 percentage points difference realative to previous estimates. Overall, omitting spatial price differences overestimates the actual poverty rates in the North, while the South is unaffected by the CPI adjustment.
+
+```{r, 3_3_poverty_headcount_uniform}
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(
+    weight_pop = hhsize * weight,
+    poor_237   = as.integer(conspc87 < 237)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    new_cpi = first(cpi[north == 0])
+  ) %>%
+  ungroup() %>%
+  mutate(
+    newconspc87 = conspc / new_cpi,
+    poor_new_1d = as.integer(newconspc87 < 237)
+  )
+
+# Helper to extract interaction coefficients and align row names to factor(year)
+extract_coefs <- function(mod, terms) {
+  ct <- summary(mod)$coefficients[terms, , drop = FALSE]
+  rownames(ct) <- c("factor(year)1987", "factor(year)1998", "factor(year)2008")
+  class(ct) <- "coeftest"
+  ct
+}
+
+# 2. Columns 1-3: Separate sub-sample models for Q3.c (so each column displays its true N)
+mod_nat_3c   <- lm(poor_new_1d ~ 0 + factor(year),
+                   data = civ_87_08_cleaned, weights = weight_pop)
+mod_north_3c <- lm(poor_new_1d ~ 0 + factor(year),
+                   data = filter(civ_87_08_cleaned, north == 1), weights = weight_pop)
+mod_south_3c <- lm(poor_new_1d ~ 0 + factor(year),
+                   data = filter(civ_87_08_cleaned, north == 0), weights = weight_pop)
+
+# 3. Column 4: Pooled regional model for Q3.c (North - South)
+mod_reg_diff_3c <- lm(poor_new_1d ~ 0 + factor(year) + factor(year):north,
+                      data = civ_87_08_cleaned, weights = weight_pop)
+
+ct_reg_diff_3c <- extract_coefs(
+  mod_reg_diff_3c,
+  c("factor(year)1987:north", "factor(year)1998:north", "factor(year)2008:north")
+)
+
+# 4. Stack Q3.a (is_3c = 0) and Q3.c (is_3c = 1) to estimate differences (Q3.c - Q3.a)
+civ_pooled_3c_3a <- bind_rows(
+  civ_87_08_cleaned %>% mutate(is_3c = 0, poverty_headcount = poor_237),
+  civ_87_08_cleaned %>% mutate(is_3c = 1, poverty_headcount = poor_new_1d)
+)
+
+# Column 5: Diff (Q3.c - Q3.a) for National
+mod_diff_nat_3c_3a <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):is_3c,
+  data = civ_pooled_3c_3a, weights = weight_pop
+)
+ct_diff_nat_3c_3a <- extract_coefs(
+  mod_diff_nat_3c_3a,
+  c("factor(year)1987:is_3c", "factor(year)1998:is_3c", "factor(year)2008:is_3c")
+)
+
+# Columns 6-7: Diff (Q3.c - Q3.a) for North and South
+mod_diff_reg_3c_3a <- lm(
+  poverty_headcount ~ 0 + factor(year):factor(north) + factor(year):factor(north):is_3c,
+  data = civ_pooled_3c_3a, weights = weight_pop
+)
+ct_diff_north_3c_3a <- extract_coefs(
+  mod_diff_reg_3c_3a,
+  c("factor(year)1987:factor(north)1:is_3c",
+    "factor(year)1998:factor(north)1:is_3c",
+    "factor(year)2008:factor(north)1:is_3c")
+)
+ct_diff_south_3c_3a <- extract_coefs(
+  mod_diff_reg_3c_3a,
+  c("factor(year)1987:factor(north)0:is_3c",
+    "factor(year)1998:factor(north)0:is_3c",
+    "factor(year)2008:factor(north)0:is_3c")
+)
+
+# Column 8: Triple-difference (North - South under Q3.c minus North - South under Q3.a)
+mod_did_3c_3a <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):north +
+    factor(year):is_3c + factor(year):north:is_3c,
+  data = civ_pooled_3c_3a, weights = weight_pop
+)
+ct_did_3c_3a <- extract_coefs(
+  mod_did_3c_3a,
+  c("factor(year)1987:north:is_3c",
+    "factor(year)1998:north:is_3c",
+    "factor(year)2008:north:is_3c")
+)
+
+# 5. Build the 3-row (years) x 8-column huxreg table
+tab_pov_new <- huxreg(
+  "National"     = mod_nat_3c,
+  "North"        = mod_north_3c,
+  "South"        = mod_south_3c,
+  "Diff (N - S)" = ct_reg_diff_3c,
+  "National"     = ct_diff_nat_3c_3a,
+  "North"        = ct_diff_north_3c_3a,
+  "South"        = ct_diff_south_3c_3a,
+  coefs = c(
+    "1987" = "factor(year)1987",
+    "1998" = "factor(year)1998",
+    "2008" = "factor(year)2008"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  number_format = 3,
+  statistics = c(N = "nobs"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}."
+) %>%
+  insert_row("", "Uniform CPI & PPP = 1", "", "", "", "Diff (Q3.c - Q3.a)", "", "", after = 0) %>%
+  merge_cells(1, 2:5) %>%
+  merge_cells(1, 6:8) %>%
+  set_align(1, 2:8, "center") %>%
+  set_bold(1, 2:8, TRUE) %>%
+  set_bottom_border(1, 2:5, 0.4) %>%
+  set_bottom_border(1, 6:8, 0.4) %>%
+  set_label("tbl-poor_headcount_uniform") %>%
+  set_caption("Poverty Headcount Rate at 237 FCFA/day under Uniform CPI and PPP Assumptions and Comparison with Question 3.a") %>%
+  set_font_size(11)
+
+tab_pov_new <- set_all_padding(tab_pov_new, 1.5)
+
+tab_pov_new
+```

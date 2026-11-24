@@ -5,39 +5,30 @@ author: "BELTRAN GONZALEZ Luis Enrique"
 date: "today"
 format:
   pdf:
+    keep-tex: true
     toc: false
     number-sections: true
     colorlinks: true
-    margin-left: 2.5cm
-    margin-right: 2.5cm
-    margin-top: 2.5cm
-    margin-bottom: 2.5cm
-editor: source
+    margin-left: 1.5cm
+    margin-right: 1.5cm
+    margin-top: 1.5cm
+    margin-bottom: 1.5cm
+    include-in-header:
+      text: |
+        \usepackage{cancel}
+execute:
+  echo: false
+  warning: false
+  message: false
 editor: source
 ---
 
 # Sampling and Outliers
+\textbf{1.a} **Highly unequal samples are difficult to measure and could be underrepresented.** Groups in rural settings or difficult survey conditions are likely underrepresented because the costs and efforts to reach them are high. For example, in Mexico, indigenous people face high inequality and often live in hard-to-reach rural areas, have lower literacy levels, and do not speak Spanish, making them difficult to measure and underrepresented in surveys. **Low sample number and high variance.** By definition, inequality implies measuring samples far from the population mean (e.g., households with extreme low income). Measuring the left or right tail requires sampling from a small group, which limits the number of potential samples and increases the variance and confidence intervals for that group. **People might lie or misreport their income or consumption.** Respondents may misreport income or consumption because they fear being taxed, feel ashamed of low income, or struggle to recall their consumption accurately.
 
-## Limitations of Survey Data for Measuring Inequality
+\textbf{1.b} It changes the inequality threshold and might leave out people under inequality conditions. Outliers affect the estimates used to identify people facing inequality conditions. For example, under the [Palma Ratio](https://ourworldindata.org/grapher/palma-ratio-wid?welfare_type=before_tax), which compares the income of the top 10% versus the bottom 40%, keeping *artificial* rich or poor outliers overestimates income inequality, whereas excluding *real* outliers (e.g., billionaires or homeless people) underestimates it.
 
-**Question 1:** In terms of sampling, what are the main limitations of survey data for measuring inequality?
-
-- **Highly unequal samples are difficult to measure** **and could be underrepresented.** In settings where inequality is spread in rural settings or face conditions that make their survey more difficult, it is very likely they are underrepresented in the survey data because the costs and efforts to reach them are high. For example, in Mexico, indigenous people is group who face high inequality and often live in rural settings where surveyors can not go easily, they have lower levels of literacy and often do not speak Spanish. These factors make their inequality difficult to measure and consequently they often are underrepresented in surveys.
-- **Low sample number and high variance.** Almost by definition, inequality implies measuring samples that are unequal to the population mean (e.g. households with extreme low income) this reduces the number of potential samples to survey and therefore increasing the variance and confidence intervals applied to the analysis of the unequal group. In other words, measuring the left or right tail of the distribution of any inequality measure in the population requires picking samples from a small group and as a result the number of samples are limited.
-
-------------------------------------------------------------------------
-
-## Importance of Excluding Outliers
-
-**Question 2:** Why can it be important to exclude outliers for measuring inequality?
-
-- **It changes the inequality threshold and might leave out people under inequality conditions.** Excluding outliers affect the estimates used to identify people who face inequality conditions. Leaving outliers might exclude people from the inequality measure. For example, using the [Palma Ratio](https://ourworldindata.org/grapher/palma-ratio-wid?welfare_type=before_tax) which compares the income of the top 10% vs the bottom 40% of the population, keeping rich outliers will increase the inequality measure likewise, keeping poor outliers will overestimate the inequality of income.
-
-------------------------------------------------------------------------
-
-## Household Consumption Per Capita
-
-```{r}
+```{r, 0_libraries}
 library(tidyverse)
 library(rio)
 library(haven)
@@ -52,29 +43,32 @@ library(broom)
 library(gridExtra)
 library(ggridges)
 library(ggplot2)
+library(spatstat)
 ```
 
-**Question 3:** Compute the level of consumption per capita for each household.
+\textbf{1.c} @tbl-conspc_summary shows the summary statistics of the consumption per capita computed across years. Notice that the mean is greater than the median in all years, indicating a right-skewed distribution.
 
-```{r}
+```{r, 0_import_data}
+
 # Load data civ88-08_nutri.dta and civ88-08_mortality.dta
 civ_87_08 <- read_dta(here::here("measurement_p3/civ_87_08.dta"))
 ```
 
-```{r}
+```{r, 1_conspc_summary}
+#| label: tbl-conspc_summary
+
 # compute consumption per capita
 civ_87_08 <- civ_87_08 %>%
-  mutate(conspc_compute = (exp_food + exp_othr) / hhsize)
+  mutate(conspc_com = (exp_food + exp_othr) / hhsize)
 
 # create a table to compare conspc and conspc_compute by year. Estimate the unweighted mean, weighted mean, min, max, standard deviation, median, number of observations, and number of missing values for conspc and conspc_compute by year.
 civ_87_08 %>%
   group_by(year) %>%
   summarise(
     across(
-      c(conspc, conspc_compute),
+      c(conspc_com),
       list(
         Mean = ~mean(.x, na.rm = TRUE),
-        `Weighted mean` = ~weighted.mean(.x, w = weight, na.rm = TRUE),
         Min = ~min(.x, na.rm = TRUE),
         Max = ~max(.x, na.rm = TRUE),
         `Std dev` = ~sd(.x, na.rm = TRUE),
@@ -94,27 +88,22 @@ civ_87_08 %>%
   rename(Year = year) %>%
   kable(
     digits = 2,
-    caption = "Comparison of conspc and conspc_compute by year"
+    caption = "Summary statistics of consumption per capita computed."
   )
 ```
 
-------------------------------------------------------------------------
-
-## Outlier Identification and Trimming Protocol
-
-**Question 4:**
-```{r}
+```{r, 1_filter_outliers}
 # For each year, estimate the unweighted median and standard deviation of log(conspc), then exclude observations that are more than 3 standard deviations away from the median. Report the number of observations excluded for each year.
-civ_87_08 %>%
-  group_by(year) %>%
-  summarise(
-    Median = median(log(conspc), na.rm = TRUE),
-    SD = sd(log(conspc), na.rm = TRUE),
-    Lower_bound = Median - 3 * SD,
-    Upper_bound = Median + 3 * SD,
-    Excluded = sum(log(conspc) < Lower_bound | log(conspc) > Upper_bound, na.rm = TRUE),
-    .groups = "drop"
-  )
+# civ_87_08 %>%
+#   group_by(year) %>%
+#   summarise(
+#     Median = median(log(conspc), na.rm = TRUE),
+#     SD = sd(log(conspc), na.rm = TRUE),
+#     Lower_bound = Median - 3 * SD,
+#     Upper_bound = Median + 3 * SD,
+#     Excluded = sum(log(conspc) < Lower_bound | log(conspc) > Upper_bound, na.rm = TRUE),
+#     .groups = "drop"
+#   )
 
 # Withdraw the excluded observations from the dataset
 civ_87_08_cleaned <- civ_87_08 %>%
@@ -122,17 +111,18 @@ civ_87_08_cleaned <- civ_87_08 %>%
   filter(log(conspc) >= median(log(conspc), na.rm = TRUE) - 3 * sd(log(conspc), na.rm = TRUE) & log(conspc) <= median(log(conspc), na.rm = TRUE) + 3 * sd(log(conspc), na.rm = TRUE)) %>%
   ungroup()
 ```
-- **Why is it suggested to take the logarithm? Why can** $\pm 3$ standard deviations be deemed rather safe?
-First, it is necessary to take the logarithm of the distribution because the distribution of consumption per capita is highly right-skewed, meaning the mean is greater than the median as shown in Table XXX. Taking the logarithm of the distribution makes it more symmetric and closer to a normal distribution which allows to use the standard deviation for outlier detection.
-Using $\pm 3$ standard deviations is considered safe because, under the assumption of a normal distribution, approximately 99.7% of the data points lie within three standard deviations from the mean. Therefore, excluding observations beyond this range effectively removes extreme outliers while keeping a 99.7\% of the data.
 
-- **Why should you use the unweighted median rather than the weighted median to identify outliers?**
-The unweighted median is preferred for outlier detection because it identifies errors in the data capturing process rather than the underlying population distribution. The weighted median reflects the population distribution and may be influenced by extreme values (specially when measuring inequality), which could lead to misidentifying outliers. Using the unweighted median ensures that the focus is on the actual data points and not on their representation in the population.
+**1.d.1** First, it is necessary to take the logarithm because consumption per capita is highly right-skewed, meaning the mean is greater than the median (@tbl-conspc_summary). Taking the logarithm makes the distribution more symmetric and closer to normal, which allows using the standard deviation for outlier detection.
 
-- **Withdraw these observations from your database (should drop** $\le 157$ observations in total).
-After applying the outlier identification and dropping these observations, the cleaned dataset `civ_87_08_cleaned` contains fewer than 121 observations removed in total. See Table XXX for the general statistics of the cleaned dataset.
+Using $\pm 3$ standard deviations is considered safe because, under a normal distribution, approximately 99.7% of data points lie within three standard deviations from the mean. Therefore, excluding observations beyond this range removes extreme outliers while keeping 99.7% of the data.
+
+**1.d.2** The unweighted median is preferred for outlier detection because it identifies errors in the data capturing process rather than the underlying population distribution. The weighted median reflects the population distribution and may be influenced by extreme values, which could lead to misidentifying outliers. Using the unweighted median ensures the focus is on actual data points rather than their population representation.
+
+**1.d.3** After dropping the identified outliers, the cleaned dataset contains 121 observations less than the original (see Table @tbl-conspc_summary_cleaned for its general statistics).
 
 ```{r}
+#| label: tbl-conspc_summary_cleaned
+
 civ_87_08_cleaned %>%
   group_by(year) %>%
   summarise(
@@ -140,7 +130,6 @@ civ_87_08_cleaned %>%
       c(conspc),
       list(
         Mean = ~mean(.x, na.rm = TRUE),
-        `Weighted mean` = ~weighted.mean(.x, w = weight, na.rm = TRUE),
         Min = ~min(.x, na.rm = TRUE),
         Max = ~max(.x, na.rm = TRUE),
         `Std dev` = ~sd(.x, na.rm = TRUE),
@@ -160,39 +149,25 @@ civ_87_08_cleaned %>%
   rename(Year = year) %>%
   kable(
     digits = 2,
-    caption = "Comparison of conspc and conspc_compute by year"
+    caption = "Summary statistics of consumption per capita after removing outliers"
   )
 ```
 
-```{r, conspc_distributions}
-ggplot(civ_87_08_cleaned, aes(x = conspc)) +
-  geom_histogram(bins = 30, fill = "blue", alpha = 0.5) +
-  facet_wrap(~year) +
-  labs(title = "Distribution of Conspc", x = "Conspc", y = "Frequency")
-
-ggplot(civ_87_08_cleaned, aes(x = log(conspc))) +
-  geom_histogram(bins = 30, fill = "red", alpha = 0.5) +
-  facet_wrap(~year) +
-  labs(title = "Distribution of Log(Conspc)", x = "Log(Conspc)", y = "Frequency")
-```
-------------------------------------------------------------------------
-
 # Consumer Price Index (CPI) and Purchasing Power Parities (PPP)
 
-## Budget Shares and Weighted Average Proof
+**2.a** Using weights defined as the survey weight times household size times consumption per capita prevents estimating an average of the budget shares. By cancelling the total consumption denominator in the budget share formula, it estimates the aggregated consumption share, while the survey weights account for the survey design and ensure population representativeness.
 
-**Question 1:** Compute the budget shares of food and non-food consumption for representative households, and derive the mathematical proof for the required weights.
-Using the weights defined as the survey weight times the household size times the consumption per capita, prevents estimating an average of the budget shares. The way it works is by cancelling the total consumption denominator  in the budget share formula, allowing to estimate the aggregated food or other consumption share for the whole survey population. Finally, the survey weights are used to account for the survey design and ensure that the estimates are representative of the population.
 Mathematically, the budget share for food consumption is defined as:
-\[
+$$
 \text{Food Share} = \frac{\sum_{i=1}^{N} w_i \cdot \text{exp\_food}_i}{\sum_{i=1}^{N} w_i \cdot \text{constot}_i}
-\]
+$$ {#eq-food-share}
 
 When estimating the weighted average share of food expenditure $S_f$ across all households, we sum all households' food expenditures and divide by the total consumption expenditure, weighted by the survey weights $w_i$ and household size $hhsize_i$:
-\[
-\hat{S_f} = \frac{\sum_{i=1}^{N} w_i \cdot \cancel{hhsize_i} \cdot \cancel{\text{conspc}_i} \cdot \frac{\text{exp_food}_i}{\cancel{\text{constot}_i}}}{\sum_{i=1}^{N} w_i \cdot hhsize_i \cdot \text{conspc}_i}= \frac{\sum_{i=1}^{N} w_i \cdot \text{exp_food}_i}{\sum_{i=1}^{N} w_i \cdot \text{constot}_i}
-\]
-```{r, exercise_2_a}
+$$
+\hat{S}_f = \frac{\sum_{i=1}^{N} w_i \cdot \cancel{\text{hhsize}_i} \cdot \cancel{\text{conspc}_i} \cdot \frac{\text{exp\_food}_i}{\cancel{\text{constot}_i}}}{\sum_{i=1}^{N} w_i \cdot \text{hhsize}_i \cdot \text{conspc}_i} = \frac{\sum_{i=1}^{N} w_i \cdot \text{exp\_food}_i}{\sum_{i=1}^{N} w_i \cdot \text{constot}_i}
+$$ {#eq-food-share-derivation}
+
+```{r, 2_representative}
 # 1. Dummy identifying representative households
 civ_87_08_cleaned <- civ_87_08_cleaned %>%
   mutate(is_representative = ifelse(hhsize == 4 & femalehead == 0 & (work_farmer == 1 | work_selfem == 1), 1, 0),
@@ -207,7 +182,7 @@ model_o_share <- lm(other_share ~ 0 + factor(year):factor(north), data = civ_87_
 ```
 
 
-```{r}
+```{r, 2_cpi}
 # 1. Prepare data and filter representative households
 rep_data <- civ_87_08_cleaned %>%
   mutate(
@@ -254,14 +229,14 @@ tab_shares <- tab_shares %>%
   set_bottom_border(1, 5:7, 0.4) %>%
   set_caption("Budget Shares in Cote d'Ivoire from 1987 to 2008")
 
+
+tab_shares <- set_label(tab_shares, "tbl-food_shares")
+tab_shares <- set_all_padding(tab_shares, 1.5)
+
 tab_shares
 ```
-------------------------------------------------------------------------
 
-## Laspeyres vs. Paasche CPI
-
-**Question 2:** With 1987 as the base year, compute Laspeyres and Paasche CPI for each region and comment on theoretical differences.
-To compute the Laspeyres and Paasche price index, it is necessary to use the budget share and the average price of each consumption category because quantities $q_i^0$ or $q_i^1$ are not available in the dataset. The Laspeyres index can be expressed as the product of the budget share and the ratio of the average price in the current year to the average price in the base year. See Equation \ref{eq:laspeyres} for the Laspeyres index formula. The Paasche index is computed similarly, but it uses the current year budget share instead of the base year budget share. 
+**2.b** To compute the Laspeyres and Paasche price indices, it is necessary to use the budget share and average price of each category because quantities $q_i^0$ or $q_i^1$ are unavailable in the dataset. The Laspeyres index can be expressed as the product of the budget share and the ratio of current-year to base-year average prices (Equation \ref{eq:laspeyres}). The Paasche index is computed similarly, using current-year instead of base-year budget shares.
 
 \begin{equation}
 \label{eq:laspeyres}
@@ -271,47 +246,12 @@ To compute the Laspeyres and Paasche price index, it is necessary to use the bud
     \frac{\sum_{i} \left(p_{i,o}^{1987} \cdot q_{i,o}^{1987}\right)\frac{p_{i,o}^{1998}}{p_{i,o}^{1987}}}{\sum_{i} p_{i,f}^{1987} \cdot q_{i,f}^{1987} + \sum_{i} p_{i,o}^{1987} \cdot q_{i,o}^{1987}}
   \end{aligned}
 \end{equation}
-```{r}
-# 1. Compute Laspeyres and Paasche CPI on each row using dataset variables
-civ_87_08_cleaned <- civ_87_08_cleaned %>%
-  group_by(north) %>%
-  mutate(
-    # Extract 1987 base prices and base shares within each region
-    p_food_87 = first(avprice_food[year == 1987]),
-    p_othr_87 = first(avprice_othr[year == 1987]),
-    s_food_87 = first(bdgshr_food[year == 1987]),
-    s_othr_87 = first(bdgshr_othr[year == 1987]),
-    
-    # Laspeyres CPI (Base 1987 = 100)
-    cpi_laspeyres = (s_food_87 * (avprice_food / p_food_87) +
-                           s_othr_87 * (avprice_othr / p_othr_87)),
-    
-    # Paasche CPI (Base 1987 = 100)
-    cpi_paasche   = (s_food * (p_food_87 / avprice_food) +
-                           s_othr * (p_othr_87 / avprice_othr))
-  ) %>%
-  ungroup()
 
-# 2. Estimate both indices via saturated OLS
-laspeyres <- lm(cpi_laspeyres ~ 0 + factor(year):factor(north), data = civ_87_08_cleaned)
-paasche   <- lm(cpi_paasche   ~ 0 + factor(year):factor(north), data = civ_87_08_cleaned)
+The theoretical differences between the Laspeyres and Paasche indices are that Laspeyres uses base-year quantities as weights, while Paasche uses current-year quantities. Thus, when prices increase, Laspeyres overestimates the price index because it ignores the substitution effect (assuming consumers do not change their consumption basket), while Paasche underestimates it because it accounts for the substitution effect (assuming consumers change their basket).
 
-# 3. Display in a clean huxreg table
-huxreg(
-  "Laspeyres CPI" = laspeyres,
-  "Paasche CPI"   = paasche,
-  coefs = c(
-    "North 1987" = "factor(year)1987:factor(north)1",
-    "North 1998" = "factor(year)1998:factor(north)1",
-    "North 2008" = "factor(year)2008:factor(north)1",
-    "South 1987" = "factor(year)1987:factor(north)0",
-    "South 1998" = "factor(year)1998:factor(north)0",
-    "South 2008" = "factor(year)2008:factor(north)0"
-  )
-)
-```
+The results from Table \ref{tbl-cpi} show increasing prices and high substitution effects in both the North and South regions. First, starting at 100 FCFAs in 1987, the Laspeyres index increases to 180 in 1998 and 240 in 2008 in the North, meaning the 1987 goods basket cost 2.4 times what it cost in 1987, and reaches 255 FCFAs in 2008 in the South (2.55 times 1987 prices). Second, from 100 FCFAs in 1987, the Paasche index decreases to 55 in 1998 and 41 in 2008 in the North, and to 51 in 1998 and 30 in 2008 in the South, indicating a strong substitution effect as consumers shifted toward cheaper alternatives. Because we cannot assume the same goods basket is consumed in both regions, direct cross-region comparisons are not possible, though comparing trends allows comparing relative price increments and substitution effects.
 
-```{r}
+```{r 3_1_laspeyres_paasche}
 # 1. Compute Laspeyres and Paasche CPI on the 1987 = 100 scale (shares already in 0-1)
 civ_87_08_cleaned <- civ_87_08_cleaned %>%
   group_by(north) %>%
@@ -326,7 +266,7 @@ civ_87_08_cleaned <- civ_87_08_cleaned %>%
                            s_othr_87 * (avprice_othr / p_othr_87)),
     
     # Paasche CPI (Base 1987 = 100, harmonic mean)
-    cpi_paasche   = (bdgshr_food * (p_food_87 / avprice_food) +
+    cpi_paasche = (bdgshr_food * (p_food_87 / avprice_food) +
                            bdgshr_othr * (p_othr_87 / avprice_othr))
   ) %>%
   ungroup()
@@ -376,12 +316,12 @@ tab_cpi <- huxreg(
     "North" = "factor(north)1",
     "South" = "factor(north)0"
   ),
-  error_format = "({std.error})",
+  error_format = "",
   error_pos = "below",
   number_format = 2,
   statistics = c(N = "nobs"),
-  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
-  note = "Notes: Base year 1987 = 100. Differences (L - P) estimated via pooled OLS. {stars}"
+  stars = NULL,
+  note = "Notes: Base year 1987 = 100. Differences (L - P) estimated via pooled OLS. Significance stars omitted since all estimates are highly significant."
 )
 
 # 5. Add spanning headers
@@ -395,241 +335,663 @@ tab_cpi <- tab_cpi %>%
   set_bottom_border(1, 2:4, 0.4) %>%
   set_bottom_border(1, 5:7, 0.4) %>%
   set_bottom_border(1, 8:10, 0.4) %>%
-  set_caption("Laspeyres and Paasche Consumer Price Indices by Region (1987–2008)")
+  set_caption("Laspeyres and Paasche Consumer Price Indices by region and year")
+
+tab_cpi <- set_label(tab_cpi, "tbl-cpi")
+tab_cpi <- set_all_padding(tab_cpi, 1.5)
 
 tab_cpi
 ```
-------------------------------------------------------------------------
 
-## PPP Aggregates (Laspeyres, Paasche, Fisher)
+**2.c** The Laspeyres index answers "how much money it takes to buy the south basket in the north" and ignores that people in the north have a different consumption pattern, excluding substitution effects. Whereas the Paasche index captures "how much money it takes to buy the north basket in the north relative to what the same basket costs in the south," including substitution effects. The Fisher index is the geometric mean of the two.
 
-**Question 3:** Compute PPP aggregates for the North relative to the South for each year.
+Table \ref{tbl-ppp} shows all indices are below 1, meaning the north is cheaper than the south across measures. The Laspeyres and Paasche indices decrease over time, indicating the north was becoming relatively cheaper: the Laspeyres index falls from 72.9% in 1987 (meaning it takes 72.9% of the money to buy the south basket in the north) to 68.9% in 1998 and 66.4% in 2008. Finally, the widening gap between the Laspeyres and Paasche indices over time indicates that regional consumption baskets are diverging.
 
-```{r}
-# 1. Compute Laspeyres, Paasche, and Fisher PPP (South = 100 each year)
+```{r 2_3_ppp}
+# 1. Compute Laspeyres, Paasche, Fisher PPP (South = 1 each year), and L - P difference
 civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(
+    s_food = bdgshr_food / 100,
+    s_othr = bdgshr_othr / 100
+  ) %>%
   group_by(year) %>%
   mutate(
     # Reference region (South, north == 0) prices and budget shares in year t
     p_food_S = first(avprice_food[north == 0]),
     p_othr_S = first(avprice_othr[north == 0]),
-    s_food_S = first(bdgshr_food[north == 0]),
-    s_othr_S = first(bdgshr_othr[north == 0]),
+    s_food_S = first(s_food[north == 0]),
+    s_othr_S = first(s_othr[north == 0]),
     
-    # Laspeyres PPP (uses South's basket; equals 100 for South)
-    ppp_laspeyres = (s_food_S * (avprice_food / p_food_S) +
-                           s_othr_S * (avprice_othr / p_othr_S)),
+    # Laspeyres PPP (South = 1)
+    ppp_laspeyres = s_food_S * (avprice_food / p_food_S) +
+                    s_othr_S * (avprice_othr / p_othr_S),
     
-    # Paasche PPP (uses North's own basket; equals 100 for South)
-    ppp_paasche   = (bdgshr_food * (p_food_S / avprice_food) +
-                           bdgshr_othr * (p_othr_S / avprice_othr)),
+    # Paasche PPP (South = 1)
+    ppp_paasche = 1 / (s_food * (p_food_S / avprice_food) +
+                       s_othr * (p_othr_S / avprice_othr)),
     
-    # Fisher PPP (geometric mean of Laspeyres and Paasche)
-    ppp_fisher    = sqrt(ppp_laspeyres * ppp_paasche)
+    # Fisher PPP (geometric mean of Laspeyres and Paasche, South = 1)
+    ppp_fisher = sqrt(ppp_laspeyres * ppp_paasche),
+    
+    # Difference between Laspeyres and Paasche PPP
+    ppp_diff = ppp_laspeyres - ppp_paasche
   ) %>%
   ungroup()
 
 # 2. Estimate via saturated OLS on Northern households (north == 1)
 north_data <- filter(civ_87_08_cleaned, north == 1)
 
-ols_ppp_L <- lm(ppp_laspeyres ~ 0 + factor(year), data = north_data)
-ols_ppp_P <- lm(ppp_paasche   ~ 0 + factor(year), data = north_data)
-ols_ppp_F <- lm(ppp_fisher    ~ 0 + factor(year), data = north_data)
+ols_ppp_L    <- lm(ppp_laspeyres ~ 0 + factor(year), data = north_data)
+ols_ppp_P    <- lm(ppp_paasche   ~ 0 + factor(year), data = north_data)
+ols_ppp_F    <- lm(ppp_fisher    ~ 0 + factor(year), data = north_data)
+ols_ppp_diff <- lm(ppp_diff      ~ 0 + factor(year), data = north_data)
 
-# 3. Display in a clean huxreg table
-huxreg(
+# 3. Display in a clean 4-column huxreg table
+outreg <- huxreg(
   "Laspeyres PPP" = ols_ppp_L,
-  "Paasche PPP"   = ols_ppp_P,
-  "Fisher PPP"    = ols_ppp_F,
+  "Paasche PPP" = ols_ppp_P,
+  "Fisher PPP" = ols_ppp_F,
+  "Diff (L - P)" = ols_ppp_diff,
   coefs = c(
     "1987" = "factor(year)1987",
     "1998" = "factor(year)1998",
     "2008" = "factor(year)2008"
   ),
-  number_format = 2,
+  number_format = 4,
   statistics = c(N = "nobs"),
-  note = "Notes: Northern Côte d'Ivoire PPP with respect to the South (South = 100 in each year)."
-)
+  stars = NULL,
+  note = "Notes: South = 1.0000 in each year. Diff (L - P) = Laspeyres PPP - Paasche PPP. Significance stars omitted since all estimates are highly significant."
+) %>%
+  set_label("tbl-ppp") %>%
+  set_caption("North PPP with respect to the South region.") %>%
+  set_all_padding(1.5)
+
+outreg
 ```
 
-------------------------------------------------------------------------
+**2.d** To deflate per capita consumption into 1987 South constant prices, we divide nominal consumption by the product of the Laspeyres CPI and PPP from Table 3 (in ratio form). Table \ref{consumption_deflation} shows the differences between nominal (columns 1–3) and real (columns 4–6) consumption per capita. In 1987, adjusting for PPP scales up Northern real consumption, narrowing the gap with the South, while Southern consumption remains unchanged. In subsequent years, real consumption per capita decreases while nominal consumption per capita increases in both regions, meaning people spent more money over time but were able to buy less in real terms.
 
-## d Paasche ($\text{PPP}_{\text{Fisher}} = \sqrt{\text{PPP}_{\text{Laspeyres}} \times \text{PPP}_{\text{Paasche}}}$). It satisfies spatial symmetry and balances regional consumption preferences.Conversion to Real Constant Consumption
-
-**Question 4:** Convert per capita consumption into 1987 South constant prices using Laspeyres CPI and PPP.
-
-------------------------------------------------------------------------
-
-# Absolute Poverty Measures
-
-## Poverty Headcount Rate at \$1/Day (237 FCFA)
-
-**Question 1:** Compute poverty headcount at 237 FCFA/day (\$1/day PPP).
-```{r}
-## 237 FCFA/day poverty headcount rate by year and region
-# Create a dummy variable = 1 if conspc < 237 per day, 0 otherwise.
-civ_87_08_cleaned <- civ_87_08_cleaned %>%
-  mutate(poverty_headcount = ifelse(conspc < 237, 1, 0))
-# create a weight equal to the household size times weight
-civ_87_08_cleaned <- civ_87_08_cleaned %>%
-  mutate(weight_pop = hhsize * weight)
-
-# compute the poverty headcount rate by year and region using ols
-model_pov_national_237 <- lm(poverty_headcount ~ 0+factor(year), data = civ_87_08_cleaned, weights = weight_pop)
-model_pov_nregion_237 <- lm(poverty_headcount ~ 0 + factor(year):factor(nregion), data = civ_87_08_cleaned, weights = weight_pop)
-
-## 474 FCFA/day poverty headcount rate by year and region
-# Create a dummy variable = 1 if conspc < 474 per day, 0 otherwise.
-civ_87_08_cleaned <- civ_87_08_cleaned %>%
-  mutate(poverty_headcount = ifelse(conspc < 474, 1, 0))
-
-# compute the poverty headcount rate by year and region using ols and the new_threshold
-model_pov_national_474 <- lm(poverty_headcount ~ 0 + factor(year), data = civ_87_08_cleaned, weights = weight_pop)
-model_pov_nregion_474 <- lm(poverty_headcount ~ 0 + factor(year):factor(nregion), data = civ_87_08_cleaned, weights = weight_pop)
-
-# create a pooled model to compare
-# 1. Stack the two threshold definitions into a pooled dataset
-civ_pooled <- bind_rows(
-  civ_87_08_cleaned %>%
-    mutate(
-      threshold = 237,
-      is_474 = 0,
-      poverty_headcount = as.integer(conspc < 237)
-    ),
-  civ_87_08_cleaned %>%
-    mutate(
-      threshold = 474,
-      is_474 = 1,
-      poverty_headcount = as.integer(conspc < 474)
-    )
-) %>%
-  mutate(weight_pop = hhsize * weight)
-
-# 2. Pooled national model:
-#    - factor(year) terms = 237 headcount rate
-#    - factor(year):is_474 terms = (474 - 237) difference + SE
-model_pooled_national <- lm(
-  poverty_headcount ~ 0 + factor(year) + factor(year):is_474,
-  data = civ_pooled,
-  weights = weight_pop
+```{r, 2_4_real_consumption}
+deflators <- tibble(
+  north = c(1, 1, 1, 0, 0, 0),
+  year  = c(1987, 1998, 2008, 1987, 1998, 2008),
+  cpi_t3 = c(100.00, 180.00, 240.36, 100.00, 192.45, 255.73),
+  ppp_t3 = c(72.91,  68.91,  66.39,  100.00, 100.00, 100.00)
 )
 
-# 3. Pooled regional model:
-#    - factor(year):factor(nregion) terms = 237 headcount rate
-#    - factor(year):factor(nregion):is_474 terms = (474 - 237) difference + SE
-model_pooled_nregion <- lm(
-  poverty_headcount ~ 0 + factor(year):factor(nregion) + factor(year):factor(nregion):is_474,
-  data = civ_pooled,
-  weights = weight_pop
-)
-
-# Extract tidy results from your separate models and the pooled difference models
-nat_237  <- tidy(model_pov_national_237)
-reg_237  <- tidy(model_pov_nregion_237)
-
-nat_474  <- tidy(model_pov_national_474)
-reg_474  <- tidy(model_pov_nregion_474)
-
-nat_diff <- tidy(model_pooled_national) %>% filter(grepl(":is_474$", term))
-reg_diff <- tidy(model_pooled_nregion)  %>% filter(grepl(":is_474$", term))
-
-# Register minimal S3 methods so huxreg() reads our custom column objects
-tidy.pov_col   <- function(x, ...) x$tidy
-glance.pov_col <- function(x, ...) x$glance
-
-years   <- c(1987, 1998, 2008)
-regions <- sort(unique(civ_87_08_cleaned$nregion))
-
-# Helper to assemble the 6 rows (National + Regions 1-5) for a given year and column type
-make_pov_col <- function(yr, nat_df, reg_df, suffix = "", n_obs = NA_integer_) {
-  nat_term  <- paste0("factor(year)", yr, suffix)
-  reg_terms <- paste0("factor(year)", yr, ":factor(nregion)", regions, suffix)
-
-  rows <- bind_rows(
-    nat_df %>% filter(term == nat_term),
-    reg_df %>% slice(match(reg_terms, term))
-  ) %>%
-    mutate(term = c("National", paste("Region", regions)))
-
-  structure(
-    list(
-      tidy = rows,
-      glance = tibble(nobs = n_obs)
-    ),
-    class = "pov_col"
+civ_24 <- civ_87_08_cleaned %>%
+  left_join(deflators, by = c("north", "year")) %>%
+  mutate(
+    weight_pop  = hhsize * weight,
+    conspc_1987 = conspc / ((cpi_t3 / 100) * (ppp_t3 / 100))
   )
+
+# 2. Estimate mean consumption before (nominal) and after (real 1987 South PPP) via weighted OLS
+nom_87  <- lm(conspc ~ 0 + factor(north), data = filter(civ_24, year == 1987), weights = weight_pop)
+nom_98  <- lm(conspc ~ 0 + factor(north), data = filter(civ_24, year == 1998), weights = weight_pop)
+nom_08  <- lm(conspc ~ 0 + factor(north), data = filter(civ_24, year == 2008), weights = weight_pop)
+
+real_87 <- lm(conspc_1987 ~ 0 + factor(north), data = filter(civ_24, year == 1987), weights = weight_pop)
+real_98 <- lm(conspc_1987 ~ 0 + factor(north), data = filter(civ_24, year == 1998), weights = weight_pop)
+real_08 <- lm(conspc_1987 ~ 0 + factor(north), data = filter(civ_24, year == 2008), weights = weight_pop)
+
+# 3. Stack nominal (is_real = 0) and deflated (is_real = 1) consumption for the pooled model
+civ_24_pooled <- bind_rows(
+  civ_24 %>% mutate(is_real = 0, cons_val = conspc),
+  civ_24 %>% mutate(is_real = 1, cons_val = conspc_1987)
+)
+
+pool_87 <- lm(cons_val ~ 0 + factor(north) + factor(north):is_real,
+              data = filter(civ_24_pooled, year == 1987), weights = weight_pop)
+pool_98 <- lm(cons_val ~ 0 + factor(north) + factor(north):is_real,
+              data = filter(civ_24_pooled, year == 1998), weights = weight_pop)
+pool_08 <- lm(cons_val ~ 0 + factor(north) + factor(north):is_real,
+              data = filter(civ_24_pooled, year == 2008), weights = weight_pop)
+
+# Helper to extract (After - Before) interaction terms and align row names to North / South
+extract_diff <- function(mod) {
+  ct <- summary(mod)$coefficients
+  ct_diff <- ct[c("factor(north)1:is_real", "factor(north)0:is_real"), , drop = FALSE]
+  rownames(ct_diff) <- c("factor(north)1", "factor(north)0")
+  class(ct_diff) <- "coeftest"
+  ct_diff
 }
 
-# Build all 9 columns in display order
-n_single <- nobs(model_pov_national_237)
-n_pooled <- nobs(model_pooled_national)
+diff_87 <- extract_diff(pool_87)
+diff_98 <- extract_diff(pool_98)
+diff_08 <- extract_diff(pool_08)
 
-col_list <- list()
-for (yr in years) {
-  col_list[[paste0(yr, " (237)")]]  <- make_pov_col(yr, nat_237,  reg_237,  "",        n_single)
-  col_list[[paste0(yr, " (474)")]]  <- make_pov_col(yr, nat_474,  reg_474,  "",        n_single)
-  col_list[[paste0(yr, " (Diff)")]] <- make_pov_col(yr, nat_diff, reg_diff, ":is_474", n_pooled)
-}
-
-# Generate the 9-column x 6-row huxreg table
-pov_table <- huxreg(
-  col_list,
-  number_format = 3,
+# 4. Present Before, After, and Difference (After - Before) in a 9-column huxreg table
+tab_cons_24 <- huxreg(
+  "1987" = nom_87,  "1998" = nom_98,  "2008" = nom_08,
+  "1987" = real_87, "1998" = real_98, "2008" = real_08,
+  "1987" = diff_87, "1998" = diff_98, "2008" = diff_08,
+  coefs = c(
+    "North" = "factor(north)1",
+    "South" = "factor(north)0"
+  ),
   error_format = "({std.error})",
   error_pos = "below",
-  align = "c",
-  statistics = c(N = "nobs", R2 = "r.squared"),
+  number_format = 2,
+  statistics = c(N = "nobs"),
+  stars = NULL,
+  note = "Notes: Population-weighted daily per capita consumption in current CFA francs (columns 1-3), constant 1987 South PPP CFA francs (columns 4-6), and differences. Significance stars omitted since all estimates are highly significant."
+) %>%
+  insert_row(
+    "",
+    "Before Deflation", "", "",
+    "After Deflation", "", "",
+    "Difference (After - Before)", "", "",
+    after = 0
+  ) %>%
+  merge_cells(1, 2:4) %>%
+  merge_cells(1, 5:7) %>%
+  merge_cells(1, 8:10) %>%
+  set_align(1, 2:10, "center") %>%
+  set_bold(1, 2:10, TRUE) %>%
+  set_caption("Average Daily Per Capita Consumption Before and After CPI and PPP Deflation") %>%
+  set_label("tbl-consumption_deflation")
+
+tab_cons_24 <- set_all_padding(tab_cons_24, 1.5)
+tab_cons_24
+```
+
+# Absolute Poverty Measures
+**3.a** Table \ref{tbl-poor_headcount_237} shows the poverty headcount rates at the 237 FCFA/day extreme poverty threshold across regions and over time. Nationally, the poverty headcount rate increased substantially from 21.8% in 1987 to 44.2% in 1998 and 51.4% in 2008 (an overall rise of 29.6 percentage points), occurring mostly in the first decade (+22.4 pp in 1987–1998) before decelerating (+7.2 pp in 1998–2008).
+
+Across regions, both the North and South show increases in extreme poverty, though along different paths. In the South, the poverty rate rose by 30.6 percentage points overall, jumping sharply from 20.9% in 1987 to 45.8% in 1998 (+24.9 pp) and increasing slower to 51.5% in 2008 (+5.7 pp). In the North, extreme poverty rose more steadily by 26.6 percentage points overall, from 24.4% in 1987 to 38.9% in 1998 (+14.5 pp) and 51.0% in 2008 (+12.1 pp). The North–South difference was not statistically significant in 1987, but the South's higher initial shock made extreme poverty 6.9 percentage points higher in the South in 1998; faster poverty growth in the North between 1998 and 2008 closed this gap, leading to convergence around 51% by 2008.
+
+
+```{r, 3_1_poor_headcount_237}
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(
+    poor_237   = as.integer(conspc87 < 237),
+    weight_pop = hhsize * weight
+  )
+
+# 1. Interaction OLS: coefficients on factor(year):north give (North - South) directly
+mod_diff_237 <- lm(poor_237 ~ 0 + factor(year) + factor(year):north,
+                   data = civ_87_08_cleaned,
+                   weights = weight_pop)
+
+mod_nat   <- lm(poor_237 ~ 0 + factor(year), data = civ_87_08_cleaned, weights = weight_pop)
+mod_north <- lm(poor_237 ~ 0 + factor(year), data = filter(civ_87_08_cleaned, north == 1), weights = weight_pop)
+mod_south <- lm(poor_237 ~ 0 + factor(year), data = filter(civ_87_08_cleaned, north == 0), weights = weight_pop)
+
+# Extract the three North - South interaction rows and align row names to factor(year)
+ct_diff <- summary(mod_diff_237)$coefficients[
+  c("factor(year)1987:north", "factor(year)1998:north", "factor(year)2008:north"),
+  , drop = FALSE
+]
+rownames(ct_diff) <- c("factor(year)1987", "factor(year)1998", "factor(year)2008")
+class(ct_diff) <- "coeftest"
+
+outreg <- huxreg(
+  "National"           = mod_nat,
+  "North"              = mod_north,
+  "South"              = mod_south,
+  "Diff (North-South)" = ct_diff,
+  coefs = c(
+    "1987" = "factor(year)1987",
+    "1998" = "factor(year)1998",
+    "2008" = "factor(year)2008"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  number_format = 3,
+  statistics = c(N = "nobs"),
   stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
   note = "Significance: {stars}"
 )
 
-pov_table
+outreg <-outreg %>%
+  set_label("tbl-poor_headcount_237") %>%
+  set_caption("Poverty Headcount Rate at 237 FCFA/day")
+
+outreg <- set_all_padding(outreg, 1.5)
+
+outreg
 ```
 
-------------------------------------------------------------------------
+**3.b** Columns 1–4 of Table \ref{tbl-poor_headcount_474} show the poverty headcount rates at the 474 FCFA/day threshold and the regional gap, while Columns 5–8 show the difference between the two thresholds (${474} - {237}$), measuring the share of the population living in moderate poverty (237–474 FCFA/day). Doubling the poverty line raises measured poverty dramatically, revealing a large share of the population clustered just above the extreme poverty line. Nationally in 1987, poverty at 474 FCFA/day was 62.8%, 41.0 percentage points higher than at 237 FCFA/day (21.8%), meaning 41.0% of the population lived between 237 and 474 FCFA/day. Mirroring the \$1/day trajectory, national poverty at 474 FCFA/day surged in 1987–1998 (+18.0 pp to 80.8%) before slowing in 1998–2008 (+1.9 pp to 82.7%). Overall, the 19.9 pp increase at 474 FCFA/day reflects a 29.6 pp rise in extreme poverty (21.8% to 51.4%) and a 9.7 pp contraction in the moderate poverty bracket (41.0% to 31.3%), indicating people moved from moderate into extreme poverty.
 
-## Poverty Headcount Rate at \$2/Day (474 FCFA)
+Within regions, the timing and composition of this poverty increase differ between North and South:
 
-**Question 2:** Compute poverty headcount at 474 FCFA/day (\$2/day PPP) and compare.
+- **North:** In 1987, 58.7% of the North lived below 474 FCFA/day, split between extreme poverty (24.4%) and moderate poverty (34.3%). Between 1987 and 1998, poverty at 474 FCFA/day jumped by 22.2 pp to 80.9%, driven by rising extreme poverty (+14.5 pp) and an expanding moderate poverty bracket (+7.7 pp to 42.0%). Between 1998 and 2008, the \$2/day rate rose to 83.1% overall as people in moderate poverty fell into extreme poverty (the moderate share decreased by 9.9 pp back to 32.1%, while extreme poverty increased another 12.1 pp to 51.0%).
+- **South:** In 1987, 64.1% of the South lived below 474 FCFA/day, 43.1 pp higher than at 237 FCFA/day (20.9%). In 1998, the South poverty rate increased sharply by 16.7 pp to 80.8%, driven by a 24.9 pp rise in extreme poverty (20.9% to 45.8%) partially offset by an 8.1 pp reduction in the moderate poverty bracket (43.1% to 35.0%). Between 1998 and 2008, poverty at 474 FCFA/day rose by 1.8 pp to 82.6% overall, as extreme poverty increased another 5.7 pp to 51.5% while the moderate bracket fell further to 31.1%.
 
-------------------------------------------------------------------------
+Comparing across regions (Columns 4 and 8) highlights both regional convergence and a shift in the distribution of poverty. In 1987, the North showed a statistically significantly lower poverty rate at 474 FCFA/day than the South by 5.4 pp (58.7% vs. 64.1%), because its moderate poverty bracket was 8.9 pp smaller (34.3% vs. 43.1%). In 1998, because the South fell sharply into extreme poverty while the North fell primarily into the intermediate bracket, the moderate share became 7.0 pp larger in the North (42.0% vs. 35.0%), while total poverty at 474 FCFA/day converged across regions. By 2008, after the North also fell into extreme poverty, both the overall \$2/day poverty rate and the moderate poverty share converged completely, with no regional gap statistically different from zero.
 
-## Impact of Unadjusted Spatial Prices
+```{r, 3_2_poverty_headcount}
+# 1. Create poverty indicators and population weight using unmodified conspc87
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(
+    poor_237   = as.integer(conspc87 < 237),
+    poor_474   = as.integer(conspc87 < 474),
+    weight_pop = hhsize * weight
+  )
 
-**Question 3:** Recompute poverty assuming uniform CPI (South CPI) and PPP = 1 across regions.
+# Helper to extract interaction terms and align row names to factor(year)
+extract_coefs <- function(mod, terms) {
+  ct <- summary(mod)$coefficients[terms, , drop = FALSE]
+  rownames(ct) <- c("factor(year)1987", "factor(year)1998", "factor(year)2008")
+  class(ct) <- "coeftest"
+  ct
+}
 
-------------------------------------------------------------------------
+# 2. Columns 1-3: Separate sub-sample models at 474 FCFA/day (true sub-sample N)
+mod_nat_474 <- lm(poor_474 ~ 0 + factor(year),
+                    data = civ_87_08_cleaned, weights = weight_pop)
+mod_north_474 <- lm(poor_474 ~ 0 + factor(year),
+                    data = filter(civ_87_08_cleaned, north == 1), weights = weight_pop)
+mod_south_474 <- lm(poor_474 ~ 0 + factor(year),
+                    data = filter(civ_87_08_cleaned, north == 0), weights = weight_pop)
 
-# Growth Incidence Curves (GIC)
+# 3. Column 4: Regional difference at 474 FCFA/day (North - South)
+mod_reg_diff_474 <- lm(poor_474 ~ 0 + factor(year) + factor(year):north,
+                       data = civ_87_08_cleaned, weights = weight_pop)
 
-## GIC Construction and Analysis
+ct_reg_diff_474 <- extract_coefs(
+  mod_reg_diff_474,
+  c("factor(year)1987:north", "factor(year)1998:north", "factor(year)2008:north")
+)
 
-**Question 1–3:** Percentile growth calculations and curve plotting.
+# 4. Stack 237 and 474 FCFA indicators for Columns 5-8
+civ_pooled <- bind_rows(
+  civ_87_08_cleaned %>% mutate(is_474 = 0, poverty_headcount = poor_237),
+  civ_87_08_cleaned %>% mutate(is_474 = 1, poverty_headcount = poor_474)
+)
 
-``` r
-# Compute mean consumption by percentile for each year
-# Calculate annualized growth g(p) = (y_t2(p) / y_t1(p))^(1/n) - 1
-# Plot g(p) against percentiles p for 1987-1998 and 1998-2008
+# Column 5: Diff (474 - 237) for National
+model_pooled_national <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):is_474,
+  data = civ_pooled, weights = weight_pop
+)
+ct_thresh_nat <- extract_coefs(
+  model_pooled_national,
+  c("factor(year)1987:is_474", "factor(year)1998:is_474", "factor(year)2008:is_474")
+)
+
+# Columns 6-7: Diff (474 - 237) for North and South
+model_pooled_nregion <- lm(
+  poverty_headcount ~ 0 + factor(year):factor(north) + factor(year):factor(north):is_474,
+  data = civ_pooled, weights = weight_pop
+)
+ct_thresh_north <- extract_coefs(
+  model_pooled_nregion,
+  c("factor(year)1987:factor(north)1:is_474",
+    "factor(year)1998:factor(north)1:is_474",
+    "factor(year)2008:factor(north)1:is_474")
+)
+ct_thresh_south <- extract_coefs(
+  model_pooled_nregion,
+  c("factor(year)1987:factor(north)0:is_474",
+    "factor(year)1998:factor(north)0:is_474",
+    "factor(year)2008:factor(north)0:is_474")
+)
+
+# Column 8: DiD (474 - 237, North vs. South)
+mod_did_474 <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):north +
+    factor(year):is_474 + factor(year):north:is_474,
+  data = civ_pooled, weights = weight_pop
+)
+ct_did_474 <- extract_coefs(
+  mod_did_474,
+  c("factor(year)1987:north:is_474",
+    "factor(year)1998:north:is_474",
+    "factor(year)2008:north:is_474")
+)
+
+# 5. Build the 3-row (years) x 8-column huxreg table with spanning group headers
+pov_table_474 <- huxreg(
+  "National" = mod_nat_474,
+  "North" = mod_north_474,
+  "South" = mod_south_474,
+  "Diff (N - S)" = ct_reg_diff_474,
+  "National" = ct_thresh_nat,
+  "North" = ct_thresh_north,
+  "South" = ct_thresh_south,
+  "Diff (N - S)" = ct_did_474,
+  coefs = c(
+    "1987" = "factor(year)1987",
+    "1998" = "factor(year)1998",
+    "2008" = "factor(year)2008"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  number_format = 3,
+  statistics = c(N = "nobs"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}."
+) %>%
+  insert_row("", "Threshold 474 FCFA/day", "", "", "", "Diff (474 - 237)", "", "", "", after = 0) %>%
+  merge_cells(1, 2:5) %>%
+  merge_cells(1, 6:9) %>%
+  set_align(1, 2:9, "center") %>%
+  set_bold(1, 2:9, TRUE) %>%
+  set_bottom_border(1, 2:5, 0.4) %>%
+  set_bottom_border(1, 6:9, 0.4) %>%
+  set_label("tbl-poor_headcount_474") %>%
+  set_caption("Poverty Headcount Rate at 474 FCFA/day and Comparison with 237 FCFA/day by Year and Region") %>%
+  set_font_size(11)
+
+pov_table_474 <- set_all_padding(pov_table_474, 1.5)
+
+pov_table_474
 ```
 
-**Question 4 (Max 3 Sentences Comment):** Between 1987 and 1998, growth was largely negative across most percentiles due to national economic contraction, with lower percentiles suffering steeper declines. In contrast, the 1998–2008 period showed modest recovery, though growth rates varied across the income distribution. Overall, macroeconomic shocks disproportionately impacted poorer households during downturns.
+**3.c** Setting the CPI to the South's CPI and PPP to 1 assesses how much measured poverty differences stem from spatial price differences, ignoring that the North has lower prices than the South. Table \ref{tbl-poor_headcount_uniform} shows the poverty headcount rates at 237 FCFA/day (columns 1–4) and their differences relative to Question 3.a (columns 5–8). By definition, the South is unaffected because it is the reference region (column 7).
 
-**Question 5 (Inequality Trend 1998–2008, 2–3 Sentences):** If the growth incidence curve between 1998 and 2008 slopes upward (higher growth for upper percentiles), inequality is likely to rise. Conversely, if lower percentiles experienced higher relative growth than top percentiles, inequality would fall over the period.
+The results show that nationally, the poverty headcount rate is systematically higher under the South CPI and PPP = 1, increasing by 3.3 percentage points in 1987, 6.9 percentage points in 1998, and 5.1 percentage points in 2008 relative to Question 3.a. The North–South gap is also systematically higher because Northern extreme poverty rises to 38.1% in 1987, 68.6% in 1998, and 73.8% in 2008, overestimating actual Northern poverty by 13.7, 29.6, and 22.8 percentage points, respectively.
 
-------------------------------------------------------------------------
+```{r, 3_3_poverty_headcount_uniform}
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(
+    weight_pop = hhsize * weight,
+    poor_237   = as.integer(conspc87 < 237)
+  ) %>%
+  group_by(year) %>%
+  mutate(
+    new_cpi = first(cpi[north == 0])
+  ) %>%
+  ungroup() %>%
+  mutate(
+    newconspc87 = conspc / new_cpi,
+    poor_new_1d = as.integer(newconspc87 < 237)
+  )
+
+# Helper to extract interaction coefficients and align row names to factor(year)
+extract_coefs <- function(mod, terms) {
+  ct <- summary(mod)$coefficients[terms, , drop = FALSE]
+  rownames(ct) <- c("factor(year)1987", "factor(year)1998", "factor(year)2008")
+  class(ct) <- "coeftest"
+  ct
+}
+
+# 2. Columns 1-3: Separate sub-sample models for Q3.c (so each column displays its true N)
+mod_nat_3c   <- lm(poor_new_1d ~ 0 + factor(year),
+                   data = civ_87_08_cleaned, weights = weight_pop)
+mod_north_3c <- lm(poor_new_1d ~ 0 + factor(year),
+                   data = filter(civ_87_08_cleaned, north == 1), weights = weight_pop)
+mod_south_3c <- lm(poor_new_1d ~ 0 + factor(year),
+                   data = filter(civ_87_08_cleaned, north == 0), weights = weight_pop)
+
+# 3. Column 4: Pooled regional model for Q3.c (North - South)
+mod_reg_diff_3c <- lm(poor_new_1d ~ 0 + factor(year) + factor(year):north,
+                      data = civ_87_08_cleaned, weights = weight_pop)
+
+ct_reg_diff_3c <- extract_coefs(
+  mod_reg_diff_3c,
+  c("factor(year)1987:north", "factor(year)1998:north", "factor(year)2008:north")
+)
+
+# 4. Stack Q3.a (is_3c = 0) and Q3.c (is_3c = 1) to estimate differences (Q3.c - Q3.a)
+civ_pooled_3c_3a <- bind_rows(
+  civ_87_08_cleaned %>% mutate(is_3c = 0, poverty_headcount = poor_237),
+  civ_87_08_cleaned %>% mutate(is_3c = 1, poverty_headcount = poor_new_1d)
+)
+
+# Column 5: Diff (Q3.c - Q3.a) for National
+mod_diff_nat_3c_3a <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):is_3c,
+  data = civ_pooled_3c_3a, weights = weight_pop
+)
+ct_diff_nat_3c_3a <- extract_coefs(
+  mod_diff_nat_3c_3a,
+  c("factor(year)1987:is_3c", "factor(year)1998:is_3c", "factor(year)2008:is_3c")
+)
+
+# Columns 6-7: Diff (Q3.c - Q3.a) for North and South
+mod_diff_reg_3c_3a <- lm(
+  poverty_headcount ~ 0 + factor(year):factor(north) + factor(year):factor(north):is_3c,
+  data = civ_pooled_3c_3a, weights = weight_pop
+)
+ct_diff_north_3c_3a <- extract_coefs(
+  mod_diff_reg_3c_3a,
+  c("factor(year)1987:factor(north)1:is_3c",
+    "factor(year)1998:factor(north)1:is_3c",
+    "factor(year)2008:factor(north)1:is_3c")
+)
+ct_diff_south_3c_3a <- extract_coefs(
+  mod_diff_reg_3c_3a,
+  c("factor(year)1987:factor(north)0:is_3c",
+    "factor(year)1998:factor(north)0:is_3c",
+    "factor(year)2008:factor(north)0:is_3c")
+)
+
+# Column 8: Triple-difference (North - South under Q3.c minus North - South under Q3.a)
+mod_did_3c_3a <- lm(
+  poverty_headcount ~ 0 + factor(year) + factor(year):north +
+    factor(year):is_3c + factor(year):north:is_3c,
+  data = civ_pooled_3c_3a, weights = weight_pop
+)
+ct_did_3c_3a <- extract_coefs(
+  mod_did_3c_3a,
+  c("factor(year)1987:north:is_3c",
+    "factor(year)1998:north:is_3c",
+    "factor(year)2008:north:is_3c")
+)
+
+# 5. Build the 3-row (years) x 8-column huxreg table
+tab_pov_new <- huxreg(
+  "National" = mod_nat_3c,
+  "North" = mod_north_3c,
+  "South" = mod_south_3c,
+  "Diff (N - S)" = ct_reg_diff_3c,
+  "National" = ct_diff_nat_3c_3a,
+  "North" = ct_diff_north_3c_3a,
+  "South" = ct_diff_south_3c_3a,
+  coefs = c(
+    "1987" = "factor(year)1987",
+    "1998" = "factor(year)1998",
+    "2008" = "factor(year)2008"
+  ),
+  error_format = "({std.error})",
+  error_pos = "below",
+  align = "c",
+  number_format = 3,
+  statistics = c(N = "nobs"),
+  stars = c(`***` = 0.01, `**` = 0.05, `*` = 0.1),
+  note = "Significance: {stars}."
+) %>%
+  insert_row("", "Uniform CPI & PPP = 1", "", "", "", "Diff (Q3.c - Q3.a)", "", "", after = 0) %>%
+  merge_cells(1, 2:5) %>%
+  merge_cells(1, 6:8) %>%
+  set_align(1, 2:8, "center") %>%
+  set_bold(1, 2:8, TRUE) %>%
+  set_bottom_border(1, 2:5, 0.4) %>%
+  set_bottom_border(1, 6:8, 0.4) %>%
+  set_label("tbl-poor_headcount_uniform") %>%
+  set_caption("Poverty Headcount Rate at 237 FCFA/day under Uniform CPI and PPP Assumptions and Comparison with Question 3.a") %>%
+  set_font_size(11)
+
+tab_pov_new <- set_all_padding(tab_pov_new, 1.5)
+
+tab_pov_new
+```
+# Growth Incidence Curves 
+**4.d** During 1987–1998, the GIC stays below zero and flat around $-3.5\%$ per year across almost the entire distribution, dipping to $-5.3\%$ above the 95th percentile, indicating a nearly uniform consumption reduction. Conversely, the 1998–2008 curve is upward-sloping, rising from $-3.3\%$ at the 1st percentile (overlapping the 1987–1998 curve) to $-1.2\%$ at the median, crossing $0\%$ around the 89th percentile, and reaching $+2.1\%$ at the 99th. Thus, while the poorest percentiles continued losing real consumption in both decades, middle-income groups suffered a lighter contraction after 1998 and top percentiles achieved positive real growth.
+
+```{r}
+set.seed(123)
+B <- 500 # Number of bootstrap replications (use 500–1000 for final report)
+probs_grid <- seq(0.01, 0.99, by = 0.01)
+
+# 1. Point estimates from the actual sample
+civ_87_08_cleaned <- civ_87_08_cleaned %>%
+  mutate(weight_pop = hhsize * weight)
+
+gic_point <- civ_87_08_cleaned %>%
+  group_by(year) %>%
+  reframe(
+    percentile = 1:99,
+    y = as.numeric(quantile(ewcdf(conspc87, weights = weight_pop), probs = probs_grid))
+  ) %>%
+  pivot_wider(names_from = year, values_from = y, names_prefix = "y_") %>%
+  mutate(
+    g_87_98 = ((y_1998 / y_1987)^(1 / 11) - 1) * 100,
+    g_98_08 = ((y_2008 / y_1998)^(1 / 10) - 1) * 100
+  ) %>%
+  select(percentile, g_87_98, g_98_08) %>%
+  pivot_longer(
+    cols = c(g_87_98, g_98_08),
+    names_to = "period",
+    values_to = "estimate"
+  )
+
+# 2. Split data by year for fast stratified household bootstrap
+data_87 <- filter(civ_87_08_cleaned, year == 1987)
+data_98 <- filter(civ_87_08_cleaned, year == 1998)
+data_08 <- filter(civ_87_08_cleaned, year == 2008)
+
+boot_one <- function(b) {
+  idx_87 <- sample.int(nrow(data_87), replace = TRUE)
+  idx_98 <- sample.int(nrow(data_98), replace = TRUE)
+  idx_08 <- sample.int(nrow(data_08), replace = TRUE)
+
+  q_87 <- as.numeric(quantile(ewcdf(data_87$conspc87[idx_87], weights = data_87$weight_pop[idx_87]), probs = probs_grid))
+  q_98 <- as.numeric(quantile(ewcdf(data_98$conspc87[idx_98], weights = data_98$weight_pop[idx_98]), probs = probs_grid))
+  q_08 <- as.numeric(quantile(ewcdf(data_08$conspc87[idx_08], weights = data_08$weight_pop[idx_08]), probs = probs_grid))
+
+  tibble(
+    percentile = 1:99,
+    g_87_98 = ((q_98 / q_87)^(1 / 11) - 1) * 100,
+    g_98_08 = ((q_08 / q_98)^(1 / 10) - 1) * 100
+  )
+}
+
+boot_results <- bind_rows(lapply(seq_len(B), boot_one)) %>%
+  pivot_longer(cols = c(g_87_98, g_98_08), names_to = "period", values_to = "g_boot") %>%
+  group_by(period, percentile) %>%
+  summarise(
+    ci_low  = quantile(g_boot, 0.025),
+    ci_high = quantile(g_boot, 0.975),
+    .groups = "drop"
+  )
+
+# 3. Merge point estimates with 95% CIs and plot
+gic_ci_df <- gic_point %>%
+  left_join(boot_results, by = c("period", "percentile")) %>%
+  mutate(
+    period = recode(
+      period,
+      "g_87_98" = "1987–1998",
+      "g_98_08" = "1998–2008"
+    )
+  )
+
+ggplot(gic_ci_df, aes(x = percentile, y = estimate, color = period, fill = period)) +
+  geom_ribbon(aes(ymin = ci_low, ymax = ci_high, show.legend = FALSE), alpha = 0.2, color = NA) +
+  geom_line(aes(linetype = period), linetype = "solid", linewidth = 0.9) +
+  labs(
+    title = "Growth Incidence Curves with 95% CI",
+    subtitle = "National consumption per capita in 1987 PPP FCFA",
+    x = "Consumption Percentile",
+    y = "CAGR (%)",
+    color = "Period",
+    fill = "Period",
+    linetype = "Period"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "bottom")
+```
+
+**4.e** Inequality is very likely to rise in 2008 because, between 1998 and 2008, the lowest percentiles continued to experience negative growth while the top percentiles reached positive growth. This means richer percentiles likely increased their consumption share while poorer percentiles lost theirs, widening the gap between the top and bottom percentiles.
 
 # Lorenz Curves
+**5.a** See @fig-lorenz for the Lorenz curves by region and year. The x-axis and y-axis show the cumulative shares (0% to 100%) of the population and consumption, respectively. The dotted line represents perfect equality, where each percentile holds an equal share of total consumption, while curves further below it indicate greater inequality.
+```{r, 5_lorenz_curves}
+#| label: fig-lorenz
+#| fig-cap: "Lorenz Curves of Daily Per Capita Consumption by Region (1987–2008)"
+#| fig-width: 11
+#| fig-height: 4.5
+#| out-width: "100%"
 
-## Construction of Lorenz Curves
+# 1. Prepare data: stack Côte d'Ivoire (National), North, and South with population weights
+civ_lorenz_base <- civ_87_08_cleaned %>%
+  mutate(weight_pop = hhsize * weight)
 
-**Question 1:** Compute cumulative population shares and cumulative consumption shares by region and year.
+lorenz_input <- bind_rows(
+  civ_lorenz_base %>% mutate(region = "National"),
+  civ_lorenz_base %>% filter(north == 1) %>% mutate(region = "North"),
+  civ_lorenz_base %>% filter(north == 0) %>% mutate(region = "South")
+)
 
-``` r
-# Sort observations by conspc87 within region and year
-# Compute cumulative weighted population share (x-axis)
-# Compute cumulative weighted consumption share (y-axis)
+# 2. Compute exact empirical Lorenz coordinates and interpolate onto percentiles 0..100
+p_grid <- seq(0, 1, by = 0.01) # 0% to 100% in 1-percentile steps
+
+lorenz_df <- lorenz_input %>%
+  group_by(region, year) %>%
+  arrange(conspc87, .by_group = TRUE) %>%
+  mutate(
+    # Hint 4 & 5: Weighted empirical CDF gives cumulative population share p_i
+    F_ecdf = list(ewcdf(conspc87, weights = weight_pop)),
+    p_i    = F_ecdf[[1]](conspc87),
+    # Hint 6: Cumulative share of total real consumption up to household i
+    l_i    = cumsum(weight_pop * conspc87) / sum(weight_pop * conspc87)
+  ) %>%
+  reframe(
+    percentile = 0:100,
+    p          = p_grid,
+    # Piecewise-linear interpolation anchored at (0, 0) and (1, 1)
+    l_p        = approx(
+      x      = c(0, p_i, 1),
+      y      = c(0, l_i, 1),
+      xout   = p_grid,
+      ties   = "ordered"
+    )$y
+  ) %>%
+  mutate(
+    year   = factor(year),
+    region = factor(region, levels = c("National", "North", "South"))
+  )
+
+# 3. Plot all three regions in one faceted figure with a single shared legend
+ggplot(lorenz_df, aes(x = percentile, y = l_p * 100, color = year, linetype = year)) +
+  geom_abline(intercept = 0, slope = 1, color = "grey45", linetype = "dotted", linewidth = 0.6) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ region, ncol = 3) +
+  scale_x_continuous(breaks = seq(0, 100, by = 20), expand = c(0.01, 0.01)) +
+  scale_y_continuous(breaks = seq(0, 100, by = 20), expand = c(0.01, 0.01)) +
+  coord_equal() +
+  labs(
+    x        = "Cumulative Population Share (%)",
+    y        = "Cumulative Consumption Share (%)",
+    color    = "Year",
+    linetype = "Year"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position  = "bottom",
+    legend.title     = element_text(face = "bold"),
+    legend.key.width = unit(1.2, "cm"),
+    strip.text       = element_text(face = "bold", size = 13),
+    panel.spacing    = unit(1.2, "lines"),
+    plot.margin      = margin(5, 5, 5, 5)
+  )
 ```
 
-## Lorenz Curve Crossing and Inequality Analysis
+**5.b** Nationally and in the North, the Lorenz curves do not cross, while in the South the 1987 and 1998 curves cross at the 72nd percentile. This means that in the South, low- and middle-income people held a smaller consumption share (higher inequality) in 1998 than in 1987, while top percentiles had lower inequality. Across all regions, the 2008 curve lies below the others, indicating inequality unambiguously increased in 2008 relative to 1987 and 1998. Nationally, the 1998 curve sits above the others, indicating inequality decreased in 1998, driven mostly by the North, where the 1998 curve sits well above the others, while the South's crossing curves indicate a more complex change.
 
-**Question 2 (Max 200 Words):** Comparing Lorenz curves across 1987, 1998, and 2008 reveals shifts in consumption inequality within Northern and Southern Côte d'Ivoire. When Lorenz curves do not intersect, one distribution strictly Lorenz-dominates another, indicating unambiguously lower inequality. However, when curves cross (often in the lower-middle quantiles), welfare rankings depend on the specific inequality measure or social welfare function applied. Overall, national inequality expanded during economic crises as structural shifts altered rural-urban terms of trade.
+<!-- ```{r, 5_crossings}
+lorenz_crossings <- lorenz_df %>%
+  select(region, percentile, year, l_p) %>%
+  pivot_wider(names_from = year, values_from = l_p, names_prefix = "l_") %>%
+  group_by(region) %>%
+  mutate(
+    diff_98_87 = l_1998 - l_1987,
+    diff_08_98 = l_2008 - l_1998,
+    diff_08_87 = l_2008 - l_1987
+  ) %>%
+  filter(
+    percentile > 0 & percentile < 100 & (
+      sign(diff_98_87) != lag(sign(diff_98_87)) |
+      sign(diff_08_98) != lag(sign(diff_08_98)) |
+      sign(diff_08_87) != lag(sign(diff_08_87))
+    )
+  )
+
+print(lorenz_crossings)
+``` -->

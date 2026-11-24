@@ -1,0 +1,20 @@
+---
+title: "Measurement of Policy Outcomes: Homework 3"
+subtitle: "Applied Analysis of Living Standards and Economic Inequality in Côte d'Ivoire"
+author: "BELTRAN GONZALEZ Luis Enrique"
+date: "today"
+format:
+  pdf:
+    toc: false
+    number-sections: true
+    colorlinks: true
+    margin-left: 2.5cm
+    margin-right: 2.5cm
+    margin-top: 2.5cm
+    margin-bottom: 2.5cm
+editor: source
+---
+
+$$
+\text{Food Share} = \frac{\sum_{i=1}^{N} w_i \cdot \text{exp\_food}_i}{\sum_{i=1}^{N} w_i \cdot \text{constot}_i}
+$$ {#eq-food-share}
