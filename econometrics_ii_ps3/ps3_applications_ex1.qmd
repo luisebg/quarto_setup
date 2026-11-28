@@ -1,0 +1,336 @@
+---
+title: "Econometrics II - Problem Set 3: RDD Empirical Application"
+author: ""
+date: "today"
+format:
+  pdf:
+    keep-tex: true
+    toc: false
+    number-sections: true
+    colorlinks: true
+    margin-left: 1.5cm
+    margin-right: 1.5cm
+    margin-top: 1.5cm
+    margin-bottom: 1.5cm
+execute:
+  echo: false
+  warning: false
+  message: false
+editor: source
+---
+
+# Context
+
+In this exercise, our goal is to replicate the key findings from the research article "Politics and Local Economic Growth: Evidence from India" by Asher and Novosad (AEJ: Applied Economics, 2017). This paper investigates whether political favoritism influences the allocation of public resources and its potential impact on local economic growth. To identify causal effects, the authors employ a Regression Discontinuity Design (RDD) based on closed elections, identifying constituencies where the ruling party narrowly won and comparing with those where they barely lost. Thus, the authors use the margin of victory as the forcing variable.
+
+---
+
+```{r, 0_libraries}
+library(tidyverse)
+library(rio)
+library(haven)
+library(knitr)
+library(DT)
+library(huxtable)
+library(lmtest)
+library(sandwich)
+library(here)
+library(dplyr)
+library(broom)
+library(gridExtra)
+library(ggridges)
+library(ggplot2)
+library(spatstat)
+```
+
+\textbf{1.c} @tbl-conspc_summary shows the summary statistics of the consumption per capita computed across years. Notice that the mean is greater than the median in all years, indicating a right-skewed distribution.
+
+# Question 1
+
+One of the assumptions for the validity of the RDD design is the absence of manipulation around the threshold. The authors run a McCrary test to reject discontinuity of the density around the threshold. Illustrate this visually by examining the forcing variable (*margin*). Are there any discontinuities around the threshold (0)? *(You can evaluate it visually by building a histogram).*
+
+### Answer
+As seen in @fig-histogram, the distribution of the forcing variable (*margin*) appears to be continuous around the threshold ($margin = 0$). The distribution looks smooth, and normal, slightly left-skewed, with no apparent gaps or spikes at the threshold. This visual evidence supports the assumption that there is no manipulation around the threshold.
+
+```{r, 0_import_data}
+elections <- read_dta(here::here("econometrics_ii_ps3/elections_con_panel.dta"))
+lights <- read_dta(here::here("econometrics_ii_ps3/pols_lights_cons.dta"))
+# # save elections as a csv file
+write.csv(lights, here::here("econometrics_ii_ps3/pols_lights_cons.csv"))
+```
+```{r, 1_histogram}
+#| label: fig-histogram
+#| fig-cap: "Histogram of Margin of Victory"
+
+# plot a histogram of margin
+ggplot(elections, aes(x = margin)) +
+  geom_histogram(binwidth = 0.01, fill = "blue") +
+  labs(title = "Histogram of Margin of Victory", x = "Margin of Victory", y = "Frequency") +
+  theme_minimal()
+```
+
+
+---
+
+# Question 2
+
+Make a scatter plot with the outcome variable being the *logarithm of employment growth* (y-axis) and the running variable *margin* (x-axis). Distinguish data points by treatment groups (*alignment with the ruling party*). Additionally, include linear adjustments for each treatment section (margin > 0 and margin $\le$ 0) *(Make sure to use method = lm for both lines)*. 
+
+Repeat the same procedure for the second outcome variable: *change in log average night light emissions over the five years following an election*. 
+
+What can you conclude from these graphs?
+Looking at @fig-scatter_plot_employment_growth, we can see that there is a pronounced difference between the two groups (aligned = 1 vs 0) around the threshold. The linear fits for each group show a clear divergence, suggesting that alignment with the ruling party has a positive effect on employment growth. Moreover, the slope of the linear fit for the aligned group is steeper than that of the non-aligned group, indicating that the effect of alignment on employment growth is more pronounced as the margin increases.
+On the other hand, @fig-scatter_plot_night_lights shows no significant difference between the two groups around the threshold (at least visually). The linear fits for each group are relatively close to each other, indicating that alignment with the ruling party does not have a significant effect on night light emissions. The slope of the linear-fit lines for both groups is also relatively flat, suggesting that the effect of alignment on night light emissions is not substantial.
+
+### Answer
+
+```{r, 2_scatter_plot_employment_growth}
+#| label: fig-scatter_plot_employment_growth
+#| fig-cap: "Scatter Plot of Log Employment Growth vs Margin of Victory"
+
+# estimate right and left linear fits
+right_fit <- lm(growth ~ margin, data = elections %>% filter(margin > 0))
+left_fit <- lm(growth ~ margin, data = elections %>%filter(margin <= 0))
+
+# predict values for right and left fits
+elections <- elections %>%
+  mutate(predicted_right = ifelse(margin > 0, predict(right_fit, newdata = .), NA),
+         predicted_left = ifelse(margin <= 0, predict(left_fit, newdata = .), NA))
+
+
+# plot employment growth vs margin with linear fits
+ggplot(elections, aes(x = margin, y = growth, color = as.factor(aligned))) + 
+  scale_color_brewer(palette = "Set1") + 
+  geom_point(alpha = 0.5) +
+  geom_line(aes(y = predicted_right), color = "blue", size = 1) +
+  geom_line(aes(y = predicted_left), color = "red", size = 1) +
+  labs(title = "Log Employment Growth vs Margin of Victory", x = "Margin of Victory", y = "Log Employment Growth") +
+  theme_minimal()
+```
+
+```{r, 2_scatter_plot_night_lights}
+#| label: fig-scatter_plot_night_lights
+#| fig-cap: "Scatter Plot of Log Night Lights vs Margin of Victory"
+
+# estimate right and left linear fits
+right_fit <- lm(ln_diff ~ margin, data = lights %>% filter(margin > 0))
+left_fit <- lm(ln_diff ~ margin, data = lights %>%filter(margin <= 0))
+
+# predict values for right and left fits
+lights <- lights %>%
+  mutate(predicted_right = ifelse(margin > 0, predict(right_fit, newdata = .), NA),
+         predicted_left = ifelse(margin <= 0, predict(left_fit, newdata = .), NA))
+
+
+# plot employment growth vs margin with linear fits
+ggplot(lights, aes(x = margin, y = ln_diff, color = as.factor(aligned))) + 
+  scale_color_brewer(palette = "Set1") + 
+  geom_point(alpha = 0.5) +
+  geom_line(aes(y = predicted_right), color = "blue", size = 1) +
+  geom_line(aes(y = predicted_left), color = "red", size = 1) +
+  labs(title = "Log Night Lights vs Margin of Victory", x = "Margin of Victory", y = "Log Night Lights") +
+  theme_minimal()
+```
+
+
+
+---
+
+# Question 3
+
+Calculate the magnitudes of the effects through various methods: 
+
+*Note: You need to calculate equation 3 in the paper. Only focus on the variables "aligned", "margin", "m a", we will include control variables in the next exercise.*
+
+## 3.1 Linear Approximation
+Use a linear approximation.
+
+### Answer
+
+```{r, 3_employment_growth_regression}
+# 1. Linear model
+linear_model <- lm(growth ~ aligned + margin + m_a, data = elections)
+
+# 2. Third-order polynomial model (explicit I() terms keep cutoff at 0 and align rows)
+cleaned_employment <- elections %>%
+  select(growth, aligned, margin, m_a) %>%
+  drop_na()
+
+poly_model <- lm(
+  growth ~ aligned + margin + m_a +
+    I(margin^2) + I(margin^3) +
+    aligned:I(margin^2) + aligned:I(margin^3),
+  data = cleaned_employment
+)
+
+# 3. Local linear regression (bandwidth = 5.1%)
+loc_linear_data <- elections %>%
+  select(growth, aligned, margin, m_a) %>%
+  filter(abs(margin) <= 0.051)
+
+loc_linear_model <- lm(growth ~ aligned + margin + m_a, data = loc_linear_data)
+
+# Print regression table with huxreg()
+reg_table <- huxreg(
+  "(1) Linear"       = linear_model,
+  "(2) Cubic Poly"   = poly_model,
+  "(3) Local Linear" = loc_linear_model,
+  coefs = c(
+    "Ruling Party (aligned)" = "aligned",
+    "Margin of victory"      = "margin",
+    "Margin × Ruling"        = "m_a"
+  ),
+  statistics = c("N" = "nobs", "R²" = "r.squared"),
+  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+  number_format = "%.3f"
+)
+
+reg_table
+```
+
+```{r, 3_employment_ln_diff_regression}
+# 1. Linear model
+linear_model <- lm(ln_diff ~ aligned + margin + m_a, data = lights)
+
+# 2. Third-order polynomial model (explicit I() terms keep cutoff at 0 and align rows)
+cleaned_employment <- lights %>%
+  select(ln_diff, aligned, margin, m_a) %>%
+  drop_na()
+
+poly_model <- lm(
+  ln_diff ~ aligned + margin + m_a +
+    I(margin^2) + I(margin^3) +
+    aligned:I(margin^2) + aligned:I(margin^3),
+  data = cleaned_employment
+)
+
+# 3. Local linear regression (bandwidth = 5.1%)
+loc_linear_data <- lights %>%
+  select(ln_diff, aligned, margin, m_a) %>%
+  filter(abs(margin) <= 0.051)
+
+loc_linear_model <- lm(ln_diff ~ aligned + margin + m_a, data = loc_linear_data)
+
+# Print regression table with huxreg()
+reg_table <- huxreg(
+  "(1) Linear"       = linear_model,
+  "(2) Cubic Poly"   = poly_model,
+  "(3) Local Linear" = loc_linear_model,
+  coefs = c(
+    "Ruling Party (aligned)" = "aligned",
+    "Margin of victory"      = "margin",
+    "Margin × Ruling"        = "m_a"
+  ),
+  statistics = c("N" = "nobs", "R²" = "r.squared"),
+  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+  number_format = "%.3f"
+)
+
+reg_table
+```
+---
+
+# Question 4
+
+Building on the specification of point 3 (c), include the necessary controls to replicate the outcomes presented in Table 2 of the original study. Note that the authors use a non-parametric regression, while we are using a parametric linear regression. Therefore, we will obtain slightly different estimates. These are described in Table 2(adj):
+
+### Table 2(adj): Effect of Ruling Party Status on log Employment Growth
+
+| | Jobs: Local linear (1) | Jobs: Local linear (2) | Jobs: Polynomial (3) | Jobs: Polynomial (4) | Lights: Local linear (5) | Lights: Local linear (6) |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Ruling Party** | 0.017<br>(0.005) | 0.017<br>(0.005) | 0.009<br>(0.004) | 0.009<br>(0.004) | 0.033<br>(0.013) | 0.033<br>(0.013) |
+| **Margin of victory** | -0.362<br>(0.104) | -0.304<br>(0.088) | | | -0.713<br>(0.364) | -0.820<br>(0.408) |
+| **Margin $\times$ Ruling** | 0.343<br>(0.160) | 0.214<br>(0.156) | | | 0.697<br>(0.570) | 0.900<br>(0.585) |
+| **Baseline log empl.** | | -0.020<br>(0.004) | | -0.019<br>(0.002) | | -0.121<br>(0.023) |
+| **State-Year F.E.** | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Const. Controls** | No | Yes | No | Yes | No | No |
+| **Observations** | 768 | 742 | 3712 | 3521 | 2240 | 2240 |
+| **$R^2$** | 0.17 | 0.26 | 0.15 | 0.24 | 0.48 | 0.59 |
+
+*Notes: This table replicates the findings from Table 2 of Asher and Novosad’s 2017 study, using a local linear approximation method instead of non-parametric estimation. All other relevant notes from the table apply.*
+
+```{r, 4_mixed_regression}
+# 2. Third-order polynomial model (explicit I() terms keep cutoff at 0 and align rows)
+cleaned_employment <- elections %>%
+  select(growth, aligned, margin, m_a) %>%
+  drop_na()
+
+poly_model <- lm(
+  growth ~ aligned + margin + m_a +
+    I(margin^2) + I(margin^3) +
+    aligned:I(margin^2) + aligned:I(margin^3),
+  data = cleaned_employment
+)
+
+# 3. Local linear regression (bandwidth = 5.1%)
+loc_linear_data <- elections %>%
+  mutate(state_f = as.factor(pc01_state_id)) %>%
+  select(growth, aligned, margin, m_a, baseline, state_f) %>% 
+  filter(abs(margin) <= 0.051)
+
+loc_linear_model <- lm(growth ~ aligned + margin + m_a, data = loc_linear_data)
+log_linear_model_w_controls <- lm(growth ~ aligned + margin + m_a + baseline + state_f, data = loc_linear_data) 
+
+# 2. Third-order polynomial model (explicit I() terms keep cutoff at 0 and align rows)
+cleaned_employment <- elections %>%
+  mutate(state_f = as.factor(pc01_state_id)) %>%
+  select(growth, aligned, margin, m_a, baseline, state_f) %>%
+  drop_na()
+
+poly_model <- lm(
+  growth ~ aligned + margin + m_a +
+    I(margin^2) + I(margin^3) +
+    aligned:I(margin^2) + aligned:I(margin^3),
+  data = cleaned_employment
+)
+
+poly_model_w_controls <- lm(
+  growth ~ aligned + margin + m_a +
+    I(margin^2) + I(margin^3) +
+    aligned:I(margin^2) + aligned:I(margin^3) +
+    baseline + state_f,
+  data = cleaned_employment
+)
+
+# 3. Local linear regression (bandwidth = 5.1%)
+lights_loc_linear_data <- lights %>%
+  mutate(state_f = as.factor(pc01_state_id)) %>%
+  select(ln_diff, aligned, margin, m_a, ln_baseline, state_f) %>%
+  filter(abs(margin) <= 0.051)
+
+lights_loc_linear_model <- lm(ln_diff ~ aligned + margin + m_a, data = lights_loc_linear_data)
+lights_loc_linear_model_w_controls <- lm(ln_diff ~ aligned + margin + m_a + ln_baseline + state_f, data = lights_loc_linear_data)
+
+# Print regression table with huxreg()
+reg_table <- huxreg(
+  "(1) Jobs Local Linear" = loc_linear_model,
+  "(2) Jobs Local Linear (with controls)" = log_linear_model_w_controls,
+  "(3) Jobs Polynomial" = poly_model,
+  "(4) Jobs Polynomial (with controls)" = poly_model_w_controls,
+  "(5) Lights Local Linear" = lights_loc_linear_model,
+  "(6) Lights Local Linear (with controls)" = lights_loc_linear_model_w_controls,
+  coefs = c(
+    "Ruling Party (aligned)" = "aligned",
+    "Margin of victory"      = "margin",
+    "Margin × Ruling"        = "m_a"
+  ),
+  statistics = c("N" = "nobs", "R²" = "r.squared"),
+  stars = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+  number_format = "%.3f"
+)
+
+reg_table
+```
+## 4.1 Interpretation
+Provide interpretations for the coefficients.
+
+### Answer
+
+
+
+## 4.2 Comparison
+Compare the estimates in Columns 1 and 3. What can you conclude about the RDD coefficient of Column 1?
+
+### Answer
+
+
